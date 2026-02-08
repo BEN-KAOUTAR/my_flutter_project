@@ -8,6 +8,8 @@ import '../../theme/app_theme.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import '../../widgets/responsive_layout.dart';
+import '../common/dashboard_components.dart';
 
 class PresenceScreen extends StatefulWidget {
   final VoidCallback? onBack;
@@ -250,7 +252,6 @@ class _PresenceScreenState extends State<PresenceScreen> {
   Widget _buildStatsRow() {
     int totalPresences = 0;
     int totalAbsences = 0;
-    int totalSeances = 0;
     
     for (var s in _filteredStats) {
       totalPresences += (s['presences'] as int);
@@ -269,71 +270,62 @@ class _PresenceScreenState extends State<PresenceScreen> {
     }
     final avgRate = ratedCount > 0 ? (totalRate / ratedCount) : 0.0;
     
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: _buildStatCard('Présences', totalPresences.toString(), Icons.check_circle_outline_rounded, AppTheme.accentGreen)),
-            const SizedBox(width: 16),
-            Expanded(child: _buildStatCard('Absences', totalAbsences.toString(), Icons.cancel_outlined, AppTheme.accentRed)),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(child: _buildStatCard('Total Appels', (totalPresences + totalAbsences).toString(), Icons.history_rounded, AppTheme.primaryBlue)),
-            const SizedBox(width: 16),
-            Expanded(child: _buildStatCard('Taux moyen', '${(avgRate * 100).toStringAsFixed(1)}%', Icons.analytics_outlined, const Color(0xFF0EA5E9))),
-          ],
-        ),
-      ],
-    );
-  }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double width = constraints.maxWidth;
+        int crossAxisCount;
+        double aspectRatio;
+        
+        if (width > 800) {
+          crossAxisCount = 4;
+          aspectRatio = 2.4;
+        } else if (width > 600) {
+          crossAxisCount = 2;
+          aspectRatio = 2.2;
+        } else {
+          crossAxisCount = 1;
+          aspectRatio = 2.8;
+        }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: aspectRatio,
+          children: [
+            DashboardSummaryCard(
+              label: 'Présences',
+              value: totalPresences.toString(),
+              icon: Icons.check_circle_outline_rounded,
+              color: AppTheme.accentGreen,
+              width: double.infinity,
             ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            value,
-            style: GoogleFonts.poppins(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
+            DashboardSummaryCard(
+              label: 'Absences',
+              value: totalAbsences.toString(),
+              icon: Icons.cancel_outlined,
+              color: AppTheme.accentRed,
+              width: double.infinity,
             ),
-          ),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              color: AppTheme.textSecondary,
-              fontWeight: FontWeight.w500,
+            DashboardSummaryCard(
+              label: 'Total Appels',
+              value: (totalPresences + totalAbsences).toString(),
+              icon: Icons.history_rounded,
+              color: AppTheme.primaryBlue,
+              width: double.infinity,
             ),
-          ),
-        ],
-      ),
+            DashboardSummaryCard(
+              label: 'Taux moyen',
+              value: '${(avgRate * 100).toStringAsFixed(1)}%',
+              icon: Icons.analytics_outlined,
+              color: const Color(0xFF0EA5E9),
+              width: double.infinity,
+            ),
+          ],
+        );
+      },
     );
   }
 

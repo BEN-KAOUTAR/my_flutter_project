@@ -298,7 +298,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                       ],
                     ),
                     Text(
-                      'Année scolaire 2023 - 2025',
+                      'Année scolaire ${groupe.anneeScolaire}',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -399,6 +399,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
 
   Future<void> _showAddEditDialog({Groupe? groupe}) async {
     final nomController = TextEditingController(text: groupe?.nom ?? '');
+    final anneeScolaireController = TextEditingController(text: groupe?.anneeScolaire ?? '2023 - 2025');
     int? selectedFiliereId = groupe?.filiereId ?? _filieres.firstOrNull?.id;
     int selectedAnnee = groupe?.annee ?? 1;
     String? currentPhotoUrl = groupe?.photoUrl;
@@ -449,6 +450,29 @@ class _GroupesScreenState extends State<GroupesScreen> {
                     controller: nomController,
                     decoration: InputDecoration(
                       hintText: 'Ex: DEV101',
+                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Année scolaire *',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: anneeScolaireController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9\-\/\s]')),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: 'Ex: 2024 - 2025',
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
@@ -534,12 +558,15 @@ class _GroupesScreenState extends State<GroupesScreen> {
                       const SizedBox(width: 12),
                       ElevatedButton(
                         onPressed: () async {
-                          if (nomController.text.trim().isEmpty || selectedFiliereId == null) return;
+                          if (nomController.text.trim().isEmpty || 
+                              anneeScolaireController.text.trim().isEmpty ||
+                              selectedFiliereId == null) return;
                           final newGroupe = Groupe(
                             id: groupe?.id,
                             nom: nomController.text.trim(),
                             filiereId: selectedFiliereId!,
                             annee: selectedAnnee,
+                            anneeScolaire: anneeScolaireController.text.trim(),
                             photoUrl: currentPhotoUrl,
                           );
                           try {

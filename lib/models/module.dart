@@ -4,6 +4,8 @@ class Module {
   final double masseHoraireTotale;
   final int filiereId;
   final int coefficient;
+  final int annee;
+  final int semestre;
   final String? photoUrl;
 
   Module({
@@ -12,6 +14,8 @@ class Module {
     required this.masseHoraireTotale,
     required this.filiereId,
     this.coefficient = 1,
+    this.annee = 1,
+    this.semestre = 1,
     this.photoUrl,
   });
 
@@ -22,6 +26,8 @@ class Module {
       'masse_horaire_totale': masseHoraireTotale,
       'filiere_id': filiereId,
       'coefficient': coefficient,
+      'annee': annee,
+      'semestre': semestre,
       'photo_url': photoUrl,
     };
   }
@@ -33,6 +39,8 @@ class Module {
       masseHoraireTotale: (map['masse_horaire_totale'] as num).toDouble(),
       filiereId: map['filiere_id'] as int,
       coefficient: map['coefficient'] as int? ?? 1,
+      annee: map['annee'] as int? ?? 1,
+      semestre: map['semestre'] as int? ?? 1,
       photoUrl: map['photo_url'] as String?,
     );
   }
@@ -43,6 +51,8 @@ class Module {
     double? masseHoraireTotale,
     int? filiereId,
     int? coefficient,
+    int? annee,
+    int? semestre,
     String? photoUrl,
   }) {
     return Module(
@@ -51,6 +61,8 @@ class Module {
       masseHoraireTotale: masseHoraireTotale ?? this.masseHoraireTotale,
       filiereId: filiereId ?? this.filiereId,
       coefficient: coefficient ?? this.coefficient,
+      annee: annee ?? this.annee,
+      semestre: semestre ?? this.semestre,
       photoUrl: photoUrl ?? this.photoUrl,
     );
   }

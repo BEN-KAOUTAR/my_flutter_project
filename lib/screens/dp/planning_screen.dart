@@ -107,6 +107,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
     };
   }
 
+
   String _getMonthlyWeekDisplay(int yearlyWeekNum) {
     final info = _getMonthlyWeekInfo(yearlyWeekNum);
     return info['display'] as String;
@@ -156,7 +157,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
 
   pw.Widget _buildPdfTable(Emploi emploi) {
     const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-    const slots = ['08:30 - 10:30', '10:30 - 12:30', '14:00 - 16:00', '16:00 - 18:00'];
+    const slots = ['08:30 - 11:00', '11:00 - 13:00', '13:30 - 15:30', '15:30 - 18:30'];
 
     return pw.Table(
       border: pw.TableBorder.all(),
@@ -996,6 +997,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
         formateurId: affectation.formateurId,
         formateurName: form?.nom ?? 'N/A',
         salle: ['Salle 1', 'Salle A1', 'Salle B2', 'Amphi A', 'Labo 1', 'Labo 2'][Random().nextInt(6)],
+        groupeName: _getGroupeName(_selectedGroupeId!),
       ));
     }
   }

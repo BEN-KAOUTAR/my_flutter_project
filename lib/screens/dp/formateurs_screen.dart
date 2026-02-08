@@ -69,7 +69,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
     if (showLoading) setState(() => _isLoading = true);
     final user = Provider.of<AuthService>(context, listen: false).currentUser;
     final directorId = user?.id;
-    final formateurs = await DatabaseHelper.instance.getUsersByRole(UserRole.formateur, directorId: directorId);
+    final formateurs = await DatabaseHelper.instance.getFormateursWithModuleCount(directorId: directorId);
     setState(() {
       _formateurs = formateurs;
       _isLoading = false;
@@ -304,7 +304,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                       ),
                     ),
                     Text(
-                      'Formateur Expert • Digital Web',
+                      formateur.specialite ?? "Digital Web",
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -333,7 +333,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
           const SizedBox(height: 24),
           Row(
             children: [
-              _buildFactItem('Modules', '4 assigned'),
+              _buildFactItem('Modules', '${formateur.moduleCount} assigned${formateur.moduleCount > 1 ? "s" : ""}'),
               const SizedBox(width: 32),
               _buildFactItem('Heures', '${heures.toInt()}h / $maxHeures h'),
             ],
@@ -414,6 +414,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
     final emailController = TextEditingController(text: formateur?.email ?? '');
     final phoneController = TextEditingController(text: formateur?.phone ?? '');
     final passwordController = TextEditingController(text: formateur?.password ?? '');
+    final specialiteController = TextEditingController(text: formateur?.specialite ?? '');
     bool obscurePassword = true;
     final isEdit = formateur != null;
 
@@ -424,204 +425,226 @@ class _FormateursScreenState extends State<FormateursScreen> {
         child: StatefulBuilder(
           builder: (context, setModalState) => Container(
             width: 500,
-          padding: const EdgeInsets.all(32),
-          child: SingleChildScrollView(
-            child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(32),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        isEdit ? 'Modifier le formateur' : 'Nouveau formateur',
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close),
+                        padding: EdgeInsets.zero,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
                   Text(
-                    isEdit ? 'Modifier le formateur' : 'Nouveau formateur',
+                    'Nom complet *',
                     style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                    padding: EdgeInsets.zero,
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: nomController,
+                    decoration: InputDecoration(
+                      hintText: 'Ex: Mohammed Alami',
+                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Email académique *',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: 'formateur@academicpro.ma',
+                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Téléphone',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: phoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: 'Ex: 06 12 34 56 78',
+                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    isEdit ? 'Nouveau mot de passe (optionnel)' : 'Mot de passe initial *',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: obscurePassword,
+                    decoration: InputDecoration(
+                      hintText: '••••••••',
+                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                          size: 18,
+                        ),
+                        onPressed: () => setModalState(() => obscurePassword = !obscurePassword),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Spécialité',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: specialiteController,
+                    decoration: InputDecoration(
+                      hintText: 'Ex: Développement Web',
+                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Annuler', style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (nomController.text.trim().isEmpty || emailController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Veuillez remplir tous les champs obligatoires', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
+                            );
+                            return;
+                          }
+
+                          final email = emailController.text.trim();
+                          final emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+                          if (!emailRegex.hasMatch(email)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Format d\'email invalide', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
+                            );
+                            return;
+                          }
+
+                          final phone = phoneController.text.trim();
+                          if (phone.isNotEmpty) {
+                            final phoneRegex = RegExp(r'^(0|\+212)\d{9}$');
+                            if (!phoneRegex.hasMatch(phone.replaceAll(' ', ''))) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Format de téléphone invalide (Ex: 06... ou +212...)', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
+                              );
+                              return;
+                            }
+                          }
+
+                          if (!isEdit && passwordController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Veuillez entrer un mot de passe initial', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
+                            );
+                            return;
+                          }
+                          final user = Provider.of<AuthService>(context, listen: false).currentUser;
+                          final newUser = User(
+                            id: formateur?.id,
+                            nom: nomController.text.trim(),
+                            email: emailController.text.trim(),
+                            phone: phoneController.text.trim(),
+                            password: passwordController.text.isNotEmpty ? passwordController.text : (formateur?.password ?? '123456'),
+                            role: UserRole.formateur,
+                            totalHeuresAffectees: formateur?.totalHeuresAffectees ?? 0,
+                            directorId: user?.id,
+                            specialite: specialiteController.text.trim(),
+                            isExpert: false,
+                          );
+                          if (isEdit) {
+                            await DatabaseHelper.instance.updateUser(newUser);
+                          } else {
+                            await DatabaseHelper.instance.insertUser(newUser);
+                          }
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            _loadFormateurs();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryBlue,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        child: Text(
+                          isEdit ? 'Modifier' : 'Ajouter',
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              Text(
-                'Nom complet *',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: nomController,
-                decoration: InputDecoration(
-                  hintText: 'Ex: Mohammed Alami',
-                  hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Email académique *',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: 'formateur@academicpro.ma',
-                  hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Téléphone',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  hintText: 'Ex: 06 12 34 56 78',
-                  hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                isEdit ? 'Nouveau mot de passe (optionnel)' : 'Mot de passe initial *',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: passwordController,
-                obscureText: obscurePassword,
-                decoration: InputDecoration(
-                  hintText: '••••••••',
-                  hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      size: 18,
-                    ),
-                    onPressed: () => setModalState(() => obscurePassword = !obscurePassword),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('Annuler', style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (nomController.text.trim().isEmpty || emailController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Veuillez remplir tous les champs obligatoires', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
-                        );
-                        return;
-                      }
-
-                      final email = emailController.text.trim();
-                      final emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-                      if (!emailRegex.hasMatch(email)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Format d\'email invalide', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
-                        );
-                        return;
-                      }
-
-                      final phone = phoneController.text.trim();
-                      if (phone.isNotEmpty) {
-                        final phoneRegex = RegExp(r'^(0|\+212)\d{9}$');
-                        if (!phoneRegex.hasMatch(phone.replaceAll(' ', ''))) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Format de téléphone invalide (Ex: 06... ou +212...)', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
-                          );
-                          return;
-                        }
-                      }
-
-                      if (!isEdit && passwordController.text.isEmpty) {
-                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Veuillez entrer un mot de passe initial', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
-                        );
-                        return;
-                      }
-                      final user = Provider.of<AuthService>(context, listen: false).currentUser;
-                      final newUser = User(
-                        id: formateur?.id,
-                        nom: nomController.text.trim(),
-                        email: emailController.text.trim(),
-                        phone: phoneController.text.trim(),
-                        password: passwordController.text.isNotEmpty ? passwordController.text : (formateur?.password ?? '123456'),
-                        role: UserRole.formateur,
-                        totalHeuresAffectees: formateur?.totalHeuresAffectees ?? 0,
-                        directorId: user?.id,
-                      );
-                      if (isEdit) {
-                        await DatabaseHelper.instance.updateUser(newUser);
-                      } else {
-                        await DatabaseHelper.instance.insertUser(newUser);
-                      }
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                        _loadFormateurs();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryBlue,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                    child: Text(
-                      isEdit ? 'Modifier' : 'Ajouter',
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 
   Future<void> _confirmDelete(User formateur) async {

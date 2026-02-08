@@ -9,6 +9,7 @@ class Creneau {
   final int formateurId;
   final String formateurName;
   final String salle;
+  final String? groupeName;
 
   Creneau({
     required this.jour,
@@ -19,6 +20,7 @@ class Creneau {
     required this.formateurId,
     required this.formateurName,
     required this.salle,
+    this.groupeName,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class Creneau {
       'formateur_id': formateurId,
       'formateur_name': formateurName,
       'salle': salle,
+      'groupe_name': groupeName,
     };
   }
 
@@ -44,6 +47,7 @@ class Creneau {
       formateurId: map['formateur_id'] as int? ?? 0,
       formateurName: map['formateur_name'] as String? ?? 'N/A',
       salle: map['salle'] as String,
+      groupeName: map['groupe_name'] as String?,
     );
   }
 
@@ -56,6 +60,7 @@ class Creneau {
     int? formateurId,
     String? formateurName,
     String? salle,
+    String? groupeName,
   }) {
     return Creneau(
       jour: jour ?? this.jour,
@@ -66,6 +71,7 @@ class Creneau {
       formateurId: formateurId ?? this.formateurId,
       formateurName: formateurName ?? this.formateurName,
       salle: salle ?? this.salle,
+      groupeName: groupeName ?? this.groupeName,
     );
   }
 }

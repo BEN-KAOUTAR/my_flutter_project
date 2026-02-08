@@ -3,6 +3,7 @@ class Groupe {
   final String nom;
   final int filiereId;
   final int annee;
+  final String anneeScolaire;
   final String? photoUrl;
 
   Groupe({
@@ -10,6 +11,7 @@ class Groupe {
     required this.nom,
     required this.filiereId,
     required this.annee,
+    this.anneeScolaire = '2023 - 2025',
     this.photoUrl,
   });
 
@@ -19,6 +21,7 @@ class Groupe {
       'nom': nom,
       'filiere_id': filiereId,
       'annee': annee,
+      'annee_scolaire': anneeScolaire,
       'photo_url': photoUrl,
     };
   }
@@ -29,6 +32,7 @@ class Groupe {
       nom: map['nom'] as String,
       filiereId: map['filiere_id'] as int,
       annee: map['annee'] as int,
+      anneeScolaire: map['annee_scolaire'] as String? ?? '2023 - 2025',
       photoUrl: map['photo_url'] as String?,
     );
   }
@@ -38,6 +42,7 @@ class Groupe {
     String? nom,
     int? filiereId,
     int? annee,
+    String? anneeScolaire,
     String? photoUrl,
   }) {
     return Groupe(
@@ -45,6 +50,7 @@ class Groupe {
       nom: nom ?? this.nom,
       filiereId: filiereId ?? this.filiereId,
       annee: annee ?? this.annee,
+      anneeScolaire: anneeScolaire ?? this.anneeScolaire,
       photoUrl: photoUrl ?? this.photoUrl,
     );
   }

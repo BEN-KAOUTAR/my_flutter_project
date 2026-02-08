@@ -107,8 +107,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final db = DatabaseHelper.instance;
     if (widget.groupId != null) {
       await db.markGroupMessagesAsRead(widget.groupId!, _currentUserId);
+      await db.markMessageNotificationsAsRead(_currentUserId, groupId: widget.groupId);
     } else {
       await db.markMessagesAsRead(widget.otherUser!.id!, _currentUserId);
+      await db.markMessageNotificationsAsRead(_currentUserId, otherUserId: widget.otherUser!.id);
     }
     
     if (mounted) {

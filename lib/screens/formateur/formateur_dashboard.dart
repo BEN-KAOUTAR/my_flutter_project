@@ -545,6 +545,23 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                     ],
                   ),
                 ),
+                if (!ResponsiveLayout.isMobile(context))
+                  Consumer<NotificationProvider>(
+                    builder: (context, notifProvider, _) => IconButton(
+                      icon: Badge(
+                        label: Text(notifProvider.unreadNotificationCount.toString()),
+                        isLabelVisible: notifProvider.unreadNotificationCount > 0,
+                        child: const Icon(Icons.notifications_none_rounded, color: AppTheme.formateurColor, size: 36),
+                      ),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
+                            .then((_) {
+                          final user = Provider.of<AuthService>(context, listen: false).currentUser;
+                          notifProvider.refreshCounts(user);
+                        });
+                      },
+                    ),
+                  ),
               ],
             ),
             const SizedBox(height: 32),

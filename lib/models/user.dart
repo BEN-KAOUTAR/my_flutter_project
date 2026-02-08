@@ -67,6 +67,9 @@ class User {
   final String? birthDate;
   final String? photoUrl;
   final int? directorId;
+  final bool isExpert;
+  final int moduleCount;
+  final String? anneeScolaire;
 
   User({
     this.id,
@@ -83,6 +86,9 @@ class User {
     this.birthDate,
     this.photoUrl,
     this.directorId,
+    this.isExpert = false,
+    this.moduleCount = 0,
+    this.anneeScolaire,
   });
 
   Map<String, dynamic> toMap() {
@@ -101,6 +107,8 @@ class User {
       'birth_date': birthDate,
       'photo_url': photoUrl,
       'director_id': directorId,
+      'is_expert': isExpert ? 1 : 0,
+      'annee_scolaire': anneeScolaire,
     };
   }
 
@@ -120,6 +128,9 @@ class User {
       birthDate: map['birth_date'] as String?,
       photoUrl: map['photo_url'] as String?,
       directorId: map['director_id'] as int?,
+      isExpert: (map['is_expert'] as int?) == 1,
+      moduleCount: map['module_count'] as int? ?? 0,
+      anneeScolaire: map['annee_scolaire'] as String?,
     );
   }
 
@@ -138,6 +149,9 @@ class User {
     String? birthDate,
     String? photoUrl,
     int? directorId,
+    bool? isExpert,
+    int? moduleCount,
+    String? anneeScolaire,
   }) {
     return User(
       id: id ?? this.id,
@@ -154,6 +168,9 @@ class User {
       birthDate: birthDate ?? this.birthDate,
       photoUrl: photoUrl ?? this.photoUrl,
       directorId: directorId ?? this.directorId,
+      isExpert: isExpert ?? this.isExpert,
+      moduleCount: moduleCount ?? this.moduleCount,
+      anneeScolaire: anneeScolaire ?? this.anneeScolaire,
     );
   }
 }

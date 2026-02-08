@@ -18,7 +18,7 @@ import 'dart:async';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
-  static const int _databaseVersion = 28;
+  static const int _databaseVersion = 31;
   static Database? _database;
 
   DatabaseHelper._init();
@@ -422,6 +422,32 @@ class DatabaseHelper {
         debugPrint('Migration error v28: $e');
       }
     }
+    if (oldVersion < 29) {
+      try {
+        await db.execute('ALTER TABLE groupes ADD COLUMN annee_scolaire TEXT');
+        await db.execute('ALTER TABLE modules ADD COLUMN annee INTEGER DEFAULT 1');
+        await db.execute('ALTER TABLE modules ADD COLUMN semestre INTEGER DEFAULT 1');
+        debugPrint('Migration v29: Added columns to groupes and modules');
+      } catch (e) {
+        debugPrint('Migration error v29: $e');
+      }
+    }
+    if (oldVersion < 30) {
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN is_expert INTEGER DEFAULT 0');
+        debugPrint('Migration v30: Added is_expert to users');
+      } catch (e) {
+        debugPrint('Migration error v30: $e');
+      }
+    }
+    if (oldVersion < 31) {
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN annee_scolaire TEXT');
+        debugPrint('Migration v31: Added annee_scolaire to users');
+      } catch (e) {
+        debugPrint('Migration error v31: $e');
+      }
+    }
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -441,6 +467,8 @@ class DatabaseHelper {
         phone TEXT,
         birth_date TEXT,
         director_id INTEGER,
+        is_expert INTEGER DEFAULT 0,
+        annee_scolaire TEXT,
         FOREIGN KEY (groupe_id) REFERENCES groupes (id),
         FOREIGN KEY (director_id) REFERENCES users (id)
       )
@@ -541,6 +569,7 @@ class DatabaseHelper {
         nom TEXT NOT NULL,
         filiere_id INTEGER NOT NULL,
         annee INTEGER NOT NULL,
+        annee_scolaire TEXT,
         photo_url TEXT,
         FOREIGN KEY (filiere_id) REFERENCES filieres (id)
       )
@@ -553,6 +582,8 @@ class DatabaseHelper {
         masse_horaire_totale REAL NOT NULL,
         filiere_id INTEGER NOT NULL,
         coefficient INTEGER DEFAULT 1,
+        annee INTEGER DEFAULT 1,
+        semestre INTEGER DEFAULT 1,
         photo_url TEXT,
         FOREIGN KEY (filiere_id) REFERENCES filieres (id)
       )
@@ -707,6 +738,27 @@ class DatabaseHelper {
     return result.map((map) => User.fromMap(map)).toList();
   }
 
+  Future<List<User>> getFormateursWithModuleCount({int? directorId}) async {
+    final db = await database;
+    String query = '''
+      SELECT u.*, COUNT(a.id) as module_count
+      FROM users u
+      LEFT JOIN affectations a ON u.id = a.formateur_id
+      WHERE u.role = 'FORMATEUR'
+    ''';
+    
+    List<dynamic> args = [];
+    if (directorId != null) {
+      query += ' AND u.director_id = ?';
+      args.add(directorId);
+    }
+    
+    query += ' GROUP BY u.id';
+    
+    final result = await db.rawQuery(query, args);
+    return result.map((map) => User.fromMap(map)).toList();
+  }
+
   Future<List<User>> getStagiairesByGroupe(int groupeId) async {
     final db = await database;
     final result = await db.query(
@@ -759,7 +811,7 @@ class DatabaseHelper {
           for (var c in creneaux) {
             if (c['formateur_id'] == formateurId && 
                 c['jour'] == jour && 
-                c['heureDebut'] == heureDebut) {
+                c['heure_debut'] == heureDebut) {
               return false;
             }
           }
@@ -887,8 +939,8 @@ class DatabaseHelper {
     final db = await database;
     final existing = await db.query(
       'groupes',
-      where: 'nom = ? AND filiere_id = ?',
-      whereArgs: [groupe.nom, groupe.filiereId],
+      where: 'nom = ? AND filiere_id = ? AND annee = ? AND annee_scolaire = ?',
+      whereArgs: [groupe.nom, groupe.filiereId, groupe.annee, groupe.anneeScolaire],
     );
     if (existing.isNotEmpty) {
       throw Exception('Un groupe avec ce nom existe déjà dans cette filière.');
@@ -953,8 +1005,8 @@ class DatabaseHelper {
     final db = await database;
     final existing = await db.query(
       'modules',
-      where: 'nom = ? AND filiere_id = ?',
-      whereArgs: [module.nom, module.filiereId],
+      where: 'nom = ? AND filiere_id = ? AND annee = ? AND semestre = ?',
+      whereArgs: [module.nom, module.filiereId, module.annee, module.semestre],
     );
     if (existing.isNotEmpty) {
       throw Exception('Un module avec ce nom existe déjà dans cette filière.');
@@ -1995,6 +2047,31 @@ class DatabaseHelper {
     int groupCount = Sqflite.firstIntValue(groupResult) ?? 0;
     
     return privateCount + groupCount;
+  }
+
+  Future<void> markMessageNotificationsAsRead(int userId, {int? otherUserId, int? groupId}) async {
+    final db = await database;
+    
+    if (groupId != null) {
+      await db.update(
+        'notifications',
+        {'is_read': 1},
+        where: 'user_id = ? AND type = ? AND is_read = 0',
+        whereArgs: [userId, 'MESSAGE'],
+      );
+    } else if (otherUserId != null) {
+      final otherUser = await getUserById(otherUserId);
+      if (otherUser != null) {
+        await db.update(
+          'notifications',
+          {'is_read': 1},
+          where: 'user_id = ? AND type = ? AND message LIKE ? AND is_read = 0',
+          whereArgs: [userId, 'MESSAGE', '%${otherUser.nom}%'],
+        );
+      }
+    }
+    
+    notifyDataChanged();
   }
 
   Future<int> getUnreadNotificationsCount(int userId) async {

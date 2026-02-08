@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
@@ -313,7 +314,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
               const SizedBox(width: 32),
               _buildInfoItem(Icons.phone_outlined, 'Téléphone', (stagiaire.phone != null && stagiaire.phone!.isNotEmpty) ? stagiaire.phone! : 'Non renseigné'),
               const SizedBox(width: 32),
-              _buildInfoItem(Icons.calendar_today_rounded, 'Inscription', 'Sept 2023'),
+              _buildInfoItem(Icons.calendar_today_rounded, 'Inscription', stagiaire.anneeScolaire ?? 'Sept 2023'),
             ],
           ),
           const SizedBox(height: 20),
@@ -371,6 +372,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
     final phoneController = TextEditingController(text: stagiaire?.phone ?? '');
     final birthDateController = TextEditingController(text: stagiaire?.birthDate ?? '');
     final passwordController = TextEditingController(text: stagiaire?.password ?? '');
+    final anneeScolaireController = TextEditingController(text: stagiaire?.anneeScolaire ?? '');
     int? selectedGroupeId = stagiaire?.groupeId;
     bool obscurePassword = true;
     final isEdit = stagiaire != null;
@@ -579,6 +581,40 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Année scolaire *',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: anneeScolaireController,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'[0-9\-\/\s]')),
+                              ],
+                              decoration: InputDecoration(
+                                hintText: 'Ex: 2024 - 2025',
+                                hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   Text(
                     isEdit ? 'Nouveau mot de passe (optionnel)' : 'Mot de passe initial *',
                     style: GoogleFonts.poppins(
@@ -617,15 +653,15 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                       const SizedBox(width: 12),
                       ElevatedButton(
                         onPressed: () async {
-                          if (nomController.text.trim().isEmpty || emailController.text.trim().isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Veuillez remplir tous les champs obligatoires', style: GoogleFonts.poppins()),
-                                backgroundColor: AppTheme.accentRed,
-                              ),
-                            );
-                            return;
-                          }
+                      if (nomController.text.trim().isEmpty || emailController.text.trim().isEmpty || anneeScolaireController.text.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Veuillez remplir tous les champs obligatoires (incluant l\'année scolaire)', style: GoogleFonts.poppins()),
+                            backgroundColor: AppTheme.accentRed,
+                          ),
+                        );
+                        return;
+                      }
 
                           final email = emailController.text.trim();
                           if (email.contains('@')) {
@@ -690,6 +726,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                             phone: phoneController.text.trim(),
                             birthDate: birthDateController.text.trim(),
                             directorId: user?.id,
+                            anneeScolaire: anneeScolaireController.text.trim(),
                           );
                           
                           if (isEdit) {

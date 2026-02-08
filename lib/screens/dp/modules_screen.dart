@@ -288,7 +288,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Année 1 • Semestre 1',
+                      'Année ${module.annee} • Semestre ${module.semestre}',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -431,6 +431,8 @@ class _ModulesScreenState extends State<ModulesScreen> {
       text: module?.coefficient.toString() ?? '1',
     );
     int? selectedFiliereId = module?.filiereId ?? _filieres.firstOrNull?.id;
+    int selectedAnnee = module?.annee ?? 1;
+    int selectedSemestre = module?.semestre ?? 1;
     String? currentPhotoUrl = module?.photoUrl;
     final isEdit = module != null;
 
@@ -513,6 +515,71 @@ class _ModulesScreenState extends State<ModulesScreen> {
                                 child: Text(f.nom, style: GoogleFonts.poppins(fontSize: 14)),
                               )).toList(),
                               onChanged: (value) => selectedFiliereId = value,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Année *',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<int>(
+                              value: selectedAnnee,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                              ),
+                              items: [
+                                DropdownMenuItem(value: 1, child: Text('1ère année', style: GoogleFonts.poppins(fontSize: 14))),
+                                DropdownMenuItem(value: 2, child: Text('2ème année', style: GoogleFonts.poppins(fontSize: 14))),
+                                DropdownMenuItem(value: 3, child: Text('3ème année', style: GoogleFonts.poppins(fontSize: 14))),
+                              ],
+                              onChanged: (value) => selectedAnnee = value ?? 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Semestre *',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<int>(
+                              value: selectedSemestre,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                              ),
+                              items: [1, 2, 3].map((s) => DropdownMenuItem(
+                                value: s,
+                                child: Text('Semestre $s', style: GoogleFonts.poppins(fontSize: 14)),
+                              )).toList(),
+                              onChanged: (value) => selectedSemestre = value ?? 1,
                             ),
                           ],
                         ),
@@ -616,6 +683,8 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             masseHoraireTotale: double.tryParse(heuresController.text) ?? 0,
                             filiereId: selectedFiliereId!,
                             coefficient: coeff,
+                            annee: selectedAnnee,
+                            semestre: selectedSemestre,
                             photoUrl: currentPhotoUrl,
                           );
                           

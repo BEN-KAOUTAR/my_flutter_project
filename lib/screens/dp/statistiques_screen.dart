@@ -8,6 +8,7 @@ import '../../data/database_helper.dart';
 import '../../models/filiere.dart';
 import '../../theme/app_theme.dart';
 import '../../services/pdf_service.dart';
+import '../common/dashboard_components.dart';
 
 
 class StatistiquesScreen extends StatefulWidget {
@@ -220,83 +221,60 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
   Widget _buildTopCards() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth > 1200 ? 4 : 2;
+        final double width = constraints.maxWidth;
+        int crossAxisCount;
+        double aspectRatio;
+        
+        if (width > 800) {
+          crossAxisCount = 4;
+          aspectRatio = 2.0;
+        } else if (width > 700) {
+          crossAxisCount = 2;
+          aspectRatio = 2.2;
+        } else {
+          crossAxisCount = 1;
+          aspectRatio = 2.8;
+        }
+
         return GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: crossAxisCount,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
-          childAspectRatio: constraints.maxWidth > 1200 ? 2.2 : (constraints.maxWidth > 700 ? 2.2 : 1.1),
+          childAspectRatio: aspectRatio,
           children: [
-            _buildStatCard('Taux de réussite', '${(_stats['tauxReussite'] * 100).toInt()}%', Icons.trending_up_rounded, AppTheme.accentOrange),
-            _buildStatCard('Stagiaires actifs', _stats['stagiairesActifs'].toString(), Icons.school_rounded, const Color(0xFF3B82F6)),
-            _buildStatCard('Formateurs actifs', _stats['formateursActifs'].toString(), Icons.people_alt_rounded, const Color(0xFF8B5CF6)),
-            _buildStatCard('Heures validées', '${_stats['heuresValidees'].toInt()}h', Icons.access_time_filled_rounded, const Color(0xFF06B6D4)),
+            DashboardSummaryCard(
+              label: 'Taux de réussite',
+              value: '${(_stats['tauxReussite'] * 100).toInt()}%',
+              icon: Icons.trending_up_rounded,
+              color: AppTheme.accentOrange,
+              width: double.infinity,
+            ),
+            DashboardSummaryCard(
+              label: 'Stagiaires actifs',
+              value: _stats['stagiairesActifs'].toString(),
+              icon: Icons.school_rounded,
+              color: const Color(0xFF3B82F6),
+              width: double.infinity,
+            ),
+            DashboardSummaryCard(
+              label: 'Formateurs actifs',
+              value: _stats['formateursActifs'].toString(),
+              icon: Icons.people_alt_rounded,
+              color: const Color(0xFF8B5CF6),
+              width: double.infinity,
+            ),
+            DashboardSummaryCard(
+              label: 'Heures validées',
+              value: '${_stats['heuresValidees'].toInt()}h',
+              icon: Icons.access_time_filled_rounded,
+              color: const Color(0xFF06B6D4),
+              width: double.infinity,
+            ),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.border.withValues(alpha: 0.8)),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  label,
-                  style: GoogleFonts.poppins(
-                    fontSize: 10,
-                    color: AppTheme.textSecondary,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: color, size: 16),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textPrimary,
-              height: 1.1,
-            ),
-          ),
-        ],
-      ),
     );
   }
 

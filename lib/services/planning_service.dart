@@ -78,6 +78,7 @@ class PlanningService {
                   formateurId: formateur?.id ?? 0,
                   formateurName: formateur?.nom ?? 'N/A',
                   salle: 'Salle ${100 + (groupeId % 10) * 10 + (creneaux.length % 5)}',
+                  groupeName: groupe.nom,
                 ));
 
                 hoursAssignedToGroup += slotDuration;

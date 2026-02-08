@@ -132,7 +132,7 @@ class PdfService {
                         children: [
                           pw.Text(creneau.moduleName, style: pw.TextStyle(fontSize: 7, fontWeight: pw.FontWeight.bold), textAlign: pw.TextAlign.center),
                           pw.SizedBox(height: 2),
-                          pw.Text(isFormateurView ? creneau.formateurName : creneau.formateurName, style: pw.TextStyle(fontSize: 6)), 
+                          pw.Text(isFormateurView ? (creneau.groupeName ?? 'N/A') : creneau.formateurName, style: pw.TextStyle(fontSize: 6)), 
                           pw.Text(creneau.salle, style: pw.TextStyle(fontSize: 6, fontStyle: pw.FontStyle.italic)),
                         ],
                       )

@@ -129,17 +129,11 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
           if (_emplois.isNotEmpty && user != null) {
             List<Creneau> myCreneaux = [];
             for (var emploi in _emplois) {
+              final groupName = _groupNames[emploi.groupeId] ?? 'Groupe ${emploi.groupeId}';
               final groupCreneaux = emploi.creneaux
                   .where((c) => c.formateurId == user.id)
-                  .map((c) => Creneau(
-                    jour: c.jour,
-                    heureDebut: c.heureDebut,
-                    heureFin: c.heureFin,
-                    moduleId: c.moduleId,
-                    moduleName: c.moduleName,
-                    formateurId: c.formateurId,
-                    formateurName: 'Groupe ${emploi.groupeId}',
-                    salle: c.salle,
+                  .map((c) => c.copyWith(
+                    groupeName: groupName,
                   )).toList();
               myCreneaux.addAll(groupCreneaux);
             }

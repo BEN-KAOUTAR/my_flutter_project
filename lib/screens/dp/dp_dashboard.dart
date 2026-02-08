@@ -678,6 +678,23 @@ class _DPDashboardState extends State<DPDashboard> {
             ],
           ),
         ),
+        if (isLargeScreen)
+          Consumer<NotificationProvider>(
+            builder: (context, notifProvider, _) => IconButton(
+              icon: Badge(
+                label: Text(notifProvider.unreadNotificationCount.toString()),
+                isLabelVisible: notifProvider.unreadNotificationCount > 0,
+                child: const Icon(Icons.notifications_none_rounded, color: AppTheme.primaryBlue, size: 32),
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
+                    .then((_) {
+                  final user = Provider.of<AuthService>(context, listen: false).currentUser;
+                  notifProvider.refreshCounts(user);
+                });
+              },
+            ),
+          ),
       ],
     );
   }
@@ -689,7 +706,7 @@ class _DPDashboardState extends State<DPDashboard> {
         int crossAxisCount;
         double aspectRatio;
         
-        if (width > 1100) {
+        if (width > 800) {
           crossAxisCount = 4;
           aspectRatio = 2.4;
         } else {
