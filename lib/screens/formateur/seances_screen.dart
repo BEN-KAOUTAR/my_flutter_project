@@ -386,12 +386,33 @@ class _SeancesScreenState extends State<SeancesScreen> {
     final contenuController = TextEditingController(text: existingSeance?.contenu);
     double duree = existingSeance?.duree ?? 4;
     DateTime selectedDate = existingSeance?.date ?? DateTime.now();
-    TimeOfDay? selectedTime = existingSeance?.heureDebut != null 
-        ? TimeOfDay(
-            hour: int.parse(existingSeance!.heureDebut!.split(':').first),
-            minute: int.parse(existingSeance!.heureDebut!.split(':').last),
-          )
-        : TimeOfDay.now();
+    TimeOfDay? selectedTime;
+    if (existingSeance?.heureDebut != null) {
+      try {
+        final parts = existingSeance!.heureDebut!.split(':');
+        int hour = 0;
+        int minute = 0;
+        
+        if (parts.length >= 2) {
+          hour = int.parse(parts[0].replaceAll(RegExp(r'[^0-9]'), ''));
+          
+          final minutePart = parts[1].split(' ').first;
+          minute = int.parse(minutePart.replaceAll(RegExp(r'[^0-9]'), ''));
+          
+          if (existingSeance!.heureDebut!.toUpperCase().contains('PM') && hour < 12) {
+            hour += 12;
+          } else if (existingSeance!.heureDebut!.toUpperCase().contains('AM') && hour == 12) {
+            hour = 0;
+          }
+        }
+        selectedTime = TimeOfDay(hour: hour, minute: minute);
+      } catch (e) {
+        debugPrint('Error parsing time: $e');
+        selectedTime = TimeOfDay.now();
+      }
+    } else {
+      selectedTime = TimeOfDay.now();
+    }
     bool isEditing = existingSeance != null;
 
     await showDialog(
@@ -517,7 +538,9 @@ class _SeancesScreenState extends State<SeancesScreen> {
                         id: existingSeance?.id,
                         affectationId: selectedAffectationId!,
                         date: selectedDate,
-                        heureDebut: selectedTime?.format(context),
+                        heureDebut: selectedTime != null 
+                            ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
+                            : null,
                         duree: duree,
                         contenu: contenuController.text.trim(),
                         statut: existingSeance?.statut ?? SeanceStatus.enAttente,

@@ -42,7 +42,8 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
   double _averageNote = 0;
   File? _profileImage;
   Uint8List? _profileImageBytes;
-  Timer? _refreshTimer;
+  StreamSubscription? _dataSubscription;
+  Timer? _notificationRefreshTimer;
 
   @override
   void initState() {
@@ -50,7 +51,19 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
     _loadData();
     _loadProfileImage();
 
-    _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    _dataSubscription = DatabaseHelper.instance.onDataChange.listen((_) {
+      _loadData(showLoading: false);
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      if (mounted && user != null) {
+        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+      }
+    });
+
+    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      if (mounted && user != null) {
+        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+      }
       if (mounted && _currentIndex == 0 && !_isLoading) {
         _loadData(showLoading: false);
       }
@@ -59,7 +72,8 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
 
   @override
   void dispose() {
-    _refreshTimer?.cancel();
+    _dataSubscription?.cancel();
+    _notificationRefreshTimer?.cancel();
     super.dispose();
   }
 
@@ -151,6 +165,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
 
   PreferredSizeWidget? _buildAppBar() {
     final isLargeScreen = !ResponsiveLayout.isMobile(context);
+    final user = Provider.of<AuthService>(context).currentUser;
     final isHome = _currentIndex == 0;
     final isDesktop = ResponsiveLayout.isDesktop(context);
     
@@ -159,8 +174,8 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
     }
     
     return AppBar(
-      backgroundColor: AppTheme.primaryBlue,
-      elevation: 4,
+      backgroundColor: AppTheme.stagiaireColor,
+      elevation: 0,
       shadowColor: AppTheme.primaryBlue.withOpacity(0.2),
       centerTitle: isHome,
       leadingWidth: isHome ? null : 56,
@@ -189,9 +204,9 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
         Consumer<NotificationProvider>(
           builder: (context, notificationProvider, _) => IconButton(
             icon: Badge(
-              label: Text(notificationProvider.unreadNotificationCount.toString()),
-              isLabelVisible: notificationProvider.unreadNotificationCount > 0,
-              child: const Icon(Icons.notifications_none_rounded, color: Colors.white),
+              label: Text(notificationProvider.totalCount.toString()),
+              isLabelVisible: notificationProvider.totalCount > 0,
+              child: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28),
             ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
@@ -203,32 +218,27 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
           ),
         ),
         const SizedBox(width: 8),
-        Builder(
-          builder: (context) {
-            final user = Provider.of<AuthService>(context).currentUser;
-            return GestureDetector(
-              onTap: () => setState(() => _currentIndex = 8),
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: AppTheme.primaryBlue,
-                backgroundImage: kIsWeb 
-                   ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-                   : (_profileImage != null ? FileImage(_profileImage!) : null),
-                child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
-                    ? Text(
-                        (user?.nom ?? 'S')[0].toUpperCase(),
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      )
-                    : null,
-              ),
-            );
-          }
+        GestureDetector(
+          onTap: () => setState(() => _currentIndex = 8), // Mon Profil index in Stagiaire
+          child: CircleAvatar(
+            radius: 18,
+            backgroundColor: Colors.white.withOpacity(0.2),
+            backgroundImage: kIsWeb 
+               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
+               : (_profileImage != null ? FileImage(_profileImage!) : null),
+            child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
+                ? Text(
+                    (user?.nom ?? 'S')[0].toUpperCase(),
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  )
+                : null,
+          ),
         ),
-        const SizedBox(width: 24),
+        const SizedBox(width: 16),
       ],
     );
   }
@@ -238,7 +248,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
     final user = authService.currentUser;
 
     return Drawer(
-      backgroundColor: isPermanent ? const Color(0xFF0F172A) : Colors.white,
+      backgroundColor: isPermanent ? AppTheme.stagiaireColor : Colors.white,
       elevation: isPermanent ? 0 : 16,
       shape: const RoundedRectangleBorder(),
       child: Column(
@@ -465,9 +475,11 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
       isSelected: _currentIndex == index,
       isDark: isDark,
       badgeCount: badgeCount,
-      selectedColor: AppTheme.primaryBlue,
+      selectedColor: AppTheme.stagiaireColor,
       onTap: () {
-        setState(() => _currentIndex = index);
+        setState(() {
+          _currentIndex = index;
+        });
         if (!isDark) {
           Navigator.pop(context);
         }
@@ -558,8 +570,8 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                   Consumer<NotificationProvider>(
                     builder: (context, notifProvider, _) => IconButton(
                       icon: Badge(
-                        label: Text(notifProvider.unreadNotificationCount.toString()),
-                        isLabelVisible: notifProvider.unreadNotificationCount > 0,
+                        label: Text(notifProvider.totalCount.toString()),
+                        isLabelVisible: notifProvider.totalCount > 0,
                         child: const Icon(Icons.notifications_none_rounded, color: AppTheme.primaryBlue, size: 36),
                       ),
                       onPressed: () {
@@ -595,7 +607,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       value: _averageNote > 0 ? _averageNote.toStringAsFixed(1) : '-',
                       sublabel: 'sur 20',
                       icon: Icons.military_tech_outlined,
-                      color: AppTheme.primaryBlue,
+                      color: AppTheme.stagiaireColor,
                       width: cardWidth,
                     ),
                     DashboardSummaryCard(

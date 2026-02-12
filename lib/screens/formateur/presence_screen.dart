@@ -237,6 +237,16 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
         heure: selectedHeure
       );
     }
+
+    if (_selectedCreneau != null) {
+      await DatabaseHelper.instance.syncSeanceWithPresence(
+        formateurId,
+        _selectedGroupeId!,
+        _selectedCreneau!.moduleId,
+        dateStr,
+        '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}'
+      );
+    }
     
     setState(() => _isLoading = false);
     if (mounted) {

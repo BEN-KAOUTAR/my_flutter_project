@@ -1146,6 +1146,10 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     );
     
     _loadData();
+    if (mounted) {
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+    }
   }
 
   Future<void> _handleValiderSeance(Seance seance) async {
@@ -1171,6 +1175,10 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     }
     
     _loadData();
+    if (mounted) {
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+    }
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Séance rejetée'), backgroundColor: AppTheme.accentRed),

@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:printing/printing.dart';
+import 'package:open_filex/open_filex.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -512,7 +513,7 @@ class _ChatScreenState extends State<ChatScreen> {
               
               await Printing.layoutPdf(
                 onLayout: (_) => bytes,
-                name: parts.length > 1 ? parts[1] : 'Chat_Document',
+                name: parts.length > 1 ? parts[1] : 'Chat_Document.pdf',
               );
             } catch (e) {
               if (context.mounted) {
@@ -522,9 +523,26 @@ class _ChatScreenState extends State<ChatScreen> {
               }
             }
           } else {
-            final url = Uri.file(msg.attachmentUrl!);
-            if (await canLaunchUrl(url)) {
-              await launchUrl(url);
+            try {
+              if (kIsWeb) {
+                final url = Uri.parse(msg.attachmentUrl!);
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
+              } else {
+                final OpenResult result = await OpenFilex.open(msg.attachmentUrl!);
+                if (result.type != ResultType.done && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Impossible d\'ouvrir le PDF: ${result.message}')),
+                  );
+                }
+              }
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Erreur lors de l\'ouverture du PDF : $e')),
+                );
+              }
             }
           }
         },

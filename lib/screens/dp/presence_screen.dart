@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
+import '../../services/pdf_service.dart';
 import '../../data/database_helper.dart';
 import '../../models/groupe.dart';
 import '../../theme/app_theme.dart';
@@ -62,62 +63,11 @@ class _PresenceScreenState extends State<PresenceScreen> {
     });
   }
   Future<void> _exportData() async {
-    final doc = pw.Document();
     final groupName = _selectedGroupeId != null 
         ? _groupes.firstWhere((g) => g.id == _selectedGroupeId).nom 
         : 'Tous les groupes';
 
-    doc.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Header(
-                level: 0,
-                child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Rapport de présence', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-                    pw.Text(groupName, style: pw.TextStyle(fontSize: 16, color: PdfColors.grey700)),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.Text('Généré le: ${DateTime.now().toString().split('.')[0]}'),
-              pw.Text('Groupe: $groupName', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              pw.SizedBox(height: 20),
-              pw.Table.fromTextArray(
-                context: context,
-                data: <List<String>>[
-                  <String>['Stagiaire', 'Groupe', 'Présences', 'Absences', 'Taux'],
-                  ..._filteredStats.map((item) {
-                     final p = item['presences'] as int;
-                     final a = item['absences'] as int;
-                     final total = p + a;
-                     final rate = total > 0 ? (p / total * 100).toStringAsFixed(1) : '0.0';
-                     return [item['nom'], item['groupe_nom'] ?? '', p.toString(), a.toString(), '$rate%'];
-                  }),
-                ],
-                headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
-                headerDecoration: const pw.BoxDecoration(color: PdfColors.blueGrey700),
-                cellHeight: 30,
-                cellAlignments: {
-                  0: pw.Alignment.centerLeft,
-                  1: pw.Alignment.center,
-                  2: pw.Alignment.center,
-                  3: pw.Alignment.center,
-                  4: pw.Alignment.center,
-                },
-              ),
-            ],
-          );
-        },
-      ),
-    );
-
-    await Printing.sharePdf(bytes: await doc.save(), filename: 'rapport_presence_${groupName.replaceAll(' ', '_')}.pdf');
+    await PdfService.generatePresenceReportPdf(_filteredStats, groupName);
   }
 
   @override
@@ -252,10 +202,12 @@ class _PresenceScreenState extends State<PresenceScreen> {
   Widget _buildStatsRow() {
     int totalPresences = 0;
     int totalAbsences = 0;
+    int totalRetards = 0;
     
     for (var s in _filteredStats) {
       totalPresences += (s['presences'] as int);
       totalAbsences += (s['absences'] as int);
+      totalRetards += (s['retards'] as int);
     }
     
     double totalRate = 0;
@@ -263,8 +215,10 @@ class _PresenceScreenState extends State<PresenceScreen> {
     for (var s in _filteredStats) {
       final p = s['presences'] as int;
       final a = s['absences'] as int;
-      if (p + a > 0) {
-        totalRate += p / (p + a);
+      final r = s['retards'] as int;
+      final total = p + a + r;
+      if (total > 0) {
+        totalRate += (p + r) / total;
         ratedCount++;
       }
     }
@@ -310,10 +264,10 @@ class _PresenceScreenState extends State<PresenceScreen> {
               width: double.infinity,
             ),
             DashboardSummaryCard(
-              label: 'Total Appels',
-              value: (totalPresences + totalAbsences).toString(),
-              icon: Icons.history_rounded,
-              color: AppTheme.primaryBlue,
+              label: 'Retards',
+              value: totalRetards.toString(),
+              icon: Icons.schedule_outlined,
+              color: AppTheme.accentOrange,
               width: double.infinity,
             ),
             DashboardSummaryCard(
@@ -383,6 +337,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
           Expanded(flex: 2, child: Text('Groupe', style: _headerStyle)),
           Expanded(flex: 2, child: Text('Présences', style: _headerStyle, textAlign: TextAlign.center)),
           Expanded(flex: 2, child: Text('Absences', style: _headerStyle, textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text('Retards', style: _headerStyle, textAlign: TextAlign.center)),
           Expanded(flex: 3, child: Text('Taux de présence', style: _headerStyle)),
         ],
       ),
@@ -392,8 +347,9 @@ class _PresenceScreenState extends State<PresenceScreen> {
   Widget _buildTableRow(Map<String, dynamic> stat) {
     final presences = stat['presences'] as int;
     final absences = stat['absences'] as int;
-    final total = presences + absences;
-    final rate = total > 0 ? (presences / total) : 0.0;
+    final retards = stat['retards'] as int;
+    final total = presences + absences + retards;
+    final rate = total > 0 ? ((presences + retards) / total) : 0.0;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -441,6 +397,16 @@ class _PresenceScreenState extends State<PresenceScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                 decoration: BoxDecoration(color: const Color(0xFFFEF2F2), borderRadius: BorderRadius.circular(4)),
                 child: Text(absences.toString(), style: GoogleFonts.poppins(color: const Color(0xFFEF4444), fontWeight: FontWeight.bold, fontSize: 13)),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                decoration: BoxDecoration(color: const Color(0xFFFFF4E5), borderRadius: BorderRadius.circular(4)),
+                child: Text(retards.toString(), style: GoogleFonts.poppins(color: const Color(0xFFF97316), fontWeight: FontWeight.bold, fontSize: 13)),
               ),
             ),
           ),

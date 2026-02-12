@@ -41,7 +41,8 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
   File? _profileImage;
   Uint8List? _profileImageBytes;
   String? _profileName;
-  Timer? _refreshTimer;
+  StreamSubscription? _dataSubscription;
+  Timer? _notificationRefreshTimer;
 
   @override
   void initState() {
@@ -53,7 +54,19 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
       Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
     });
 
-    _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    _dataSubscription = DatabaseHelper.instance.onDataChange.listen((_) {
+      _loadData(showLoading: false);
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      if (mounted && user != null) {
+        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+      }
+    });
+
+    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      if (mounted && user != null) {
+        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+      }
       if (mounted && _currentIndex == 0 && !_isLoading) {
         _loadData(showLoading: false);
       }
@@ -62,7 +75,8 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
 
   @override
   void dispose() {
-    _refreshTimer?.cancel();
+    _dataSubscription?.cancel();
+    _notificationRefreshTimer?.cancel();
     super.dispose();
   }
 
@@ -162,7 +176,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
 
   PreferredSizeWidget? _buildAppBar() {
     final isLargeScreen = !ResponsiveLayout.isMobile(context);
-    final authService = Provider.of<AuthService>(context);
+    final user = Provider.of<AuthService>(context).currentUser;
     final isHome = _currentIndex == 0;
     final isDesktop = ResponsiveLayout.isDesktop(context);
 
@@ -171,8 +185,8 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     }
     
     return AppBar(
-      backgroundColor: AppTheme.primaryBlue,
-      elevation: 4,
+      backgroundColor: AppTheme.formateurColor,
+      elevation: 0,
       shadowColor: AppTheme.primaryBlue.withOpacity(0.2),
       centerTitle: isHome,
       leadingWidth: isHome ? null : 56,
@@ -201,9 +215,9 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
         Consumer<NotificationProvider>(
           builder: (context, notificationProvider, _) => IconButton(
             icon: Badge(
-              label: Text(notificationProvider.unreadNotificationCount.toString()),
-              isLabelVisible: notificationProvider.unreadNotificationCount > 0,
-              child: const Icon(Icons.notifications_none_rounded, color: Colors.white),
+              label: Text(notificationProvider.totalCount.toString()),
+              isLabelVisible: notificationProvider.totalCount > 0,
+              child: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28),
             ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
@@ -214,25 +228,26 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
             },
           ),
         ),
-        if (!isDesktop)
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: (kIsWeb ? _profileImageBytes != null : _profileImage != null) ? Colors.transparent : AppTheme.formateurColor.withOpacity(0.1),
-              backgroundImage: kIsWeb 
-                 ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-                 : (_profileImage != null ? FileImage(_profileImage!) : null),
-              child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
-                (_profileName ?? (Provider.of<AuthService>(context, listen: false).currentUser?.nom ?? 'A'))[0],
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.formateurColor,
-                  fontSize: 14,
-                ),
-              ) : null,
-            ),
+        const SizedBox(width: 8),
+        GestureDetector(
+          onTap: () => setState(() => _currentIndex = 5), // Mon Profil index in Formateur
+          child: CircleAvatar(
+            radius: 18,
+            backgroundColor: Colors.white.withOpacity(0.2),
+            backgroundImage: kIsWeb 
+               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
+               : (_profileImage != null ? FileImage(_profileImage!) : null),
+            child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
+              (user?.nom ?? 'F')[0].toUpperCase(),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ) : null,
           ),
+        ),
+        const SizedBox(width: 16),
       ],
     );
   }
@@ -549,8 +564,8 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                   Consumer<NotificationProvider>(
                     builder: (context, notifProvider, _) => IconButton(
                       icon: Badge(
-                        label: Text(notifProvider.unreadNotificationCount.toString()),
-                        isLabelVisible: notifProvider.unreadNotificationCount > 0,
+                        label: Text(notifProvider.totalCount.toString()),
+                        isLabelVisible: notifProvider.totalCount > 0,
                         child: const Icon(Icons.notifications_none_rounded, color: AppTheme.formateurColor, size: 36),
                       ),
                       onPressed: () {

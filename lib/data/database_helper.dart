@@ -851,22 +851,28 @@ class DatabaseHelper {
     if (existing.isNotEmpty) {
       throw Exception('Une filière avec ce nom existe déjà.');
     }
-    return await db.insert('filieres', filiere.toMap()..remove('id'));
+    final id = await db.insert('filieres', filiere.toMap()..remove('id'));
+    notifyDataChanged();
+    return id;
   }
 
   Future<int> updateFiliere(Filiere filiere) async {
     final db = await database;
-    return await db.update(
+    final result = await db.update(
       'filieres',
       filiere.toMap(),
       where: 'id = ?',
       whereArgs: [filiere.id],
     );
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> deleteFiliere(int id) async {
     final db = await database;
-    return await db.delete('filieres', where: 'id = ?', whereArgs: [id]);
+    final result = await db.delete('filieres', where: 'id = ?', whereArgs: [id]);
+    notifyDataChanged();
+    return result;
   }
 
 
@@ -1112,12 +1118,81 @@ class DatabaseHelper {
 
   Future<int> updateAffectation(Affectation affectation) async {
     final db = await database;
-    return await db.update(
+    
+    // Get the old affectation data to compare
+    final oldResult = await db.query(
+      'affectations',
+      where: 'id = ?',
+      whereArgs: [affectation.id],
+    );
+    
+    if (oldResult.isNotEmpty) {
+      final oldAffectation = Affectation.fromMap(oldResult.first);
+      final oldModule = await getModuleById(oldAffectation.moduleId);
+      final newModule = await getModuleById(affectation.moduleId);
+      
+      // If formateur changed, update hours for both
+      if (oldAffectation.formateurId != affectation.formateurId) {
+        // Check if new formateur would exceed 910h limit
+        final newFormateur = await getUserById(affectation.formateurId);
+        if (newFormateur != null && newModule != null) {
+          if ((newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale) > 910) {
+            throw Exception(
+              'Le formateur ${newFormateur.nom} dépasserait la limite annuelle de 910h '
+              '(${newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale}h prévues).'
+            );
+          }
+        }
+        
+        // Remove hours from old formateur
+        if (oldModule != null) {
+          await db.rawUpdate(
+            'UPDATE users SET total_heures_affectees = MAX(0, total_heures_affectees - ?) WHERE id = ?',
+            [oldModule.masseHoraireTotale, oldAffectation.formateurId]
+          );
+        }
+        
+        // Add hours to new formateur
+        if (newModule != null) {
+          await db.rawUpdate(
+            'UPDATE users SET total_heures_affectees = total_heures_affectees + ? WHERE id = ?',
+            [newModule.masseHoraireTotale, affectation.formateurId]
+          );
+        }
+      }
+      // If same formateur but different module, adjust hours
+      else if (oldAffectation.moduleId != affectation.moduleId) {
+        if (oldModule != null && newModule != null) {
+          final hoursDifference = newModule.masseHoraireTotale - oldModule.masseHoraireTotale;
+          
+          // Check if formateur would exceed limit
+          final formateur = await getUserById(affectation.formateurId);
+          if (formateur != null) {
+            if ((formateur.totalHeuresAffectees + hoursDifference) > 910) {
+              throw Exception(
+                'Le formateur ${formateur.nom} dépasserait la limite annuelle de 910h '
+                '(${formateur.totalHeuresAffectees + hoursDifference}h prévues).'
+              );
+            }
+          }
+          
+          await db.rawUpdate(
+            'UPDATE users SET total_heures_affectees = total_heures_affectees + ? WHERE id = ?',
+            [hoursDifference, affectation.formateurId]
+          );
+        }
+      }
+    }
+    
+    final result = await db.update(
       'affectations',
       affectation.toMap(),
       where: 'id = ?',
       whereArgs: [affectation.id],
     );
+    
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> deleteAffectation(int id) async {
@@ -1129,7 +1204,7 @@ class DatabaseHelper {
       final module = await getModuleById(affectation.moduleId);
       if (module != null) {
         await db.rawUpdate(
-          'UPDATE users SET total_heures_affectees = total_heures_affectees - ? WHERE id = ?',
+          'UPDATE users SET total_heures_affectees = MAX(0, total_heures_affectees - ?) WHERE id = ?',
           [module.masseHoraireTotale, affectation.formateurId]
         );
       }
@@ -1138,6 +1213,14 @@ class DatabaseHelper {
     final deleted = await db.delete('affectations', where: 'id = ?', whereArgs: [id]);
     notifyDataChanged();
     return deleted;
+  }
+
+  Future<void> fixNegativeHours() async {
+    final db = await database;
+    await db.rawUpdate(
+      'UPDATE users SET total_heures_affectees = 0 WHERE total_heures_affectees < 0'
+    );
+    notifyDataChanged();
   }
 
 
@@ -1239,42 +1322,52 @@ class DatabaseHelper {
 
   Future<int> insertSeance(Seance seance) async {
     final db = await database;
-    return await db.insert('seances', seance.toMap()..remove('id'));
+    final id = await db.insert('seances', seance.toMap()..remove('id'));
+    notifyDataChanged();
+    return id;
   }
 
   Future<int> updateSeance(Seance seance) async {
     final db = await database;
-    return await db.update(
+    final result = await db.update(
       'seances',
       seance.toMap(),
       where: 'id = ?',
       whereArgs: [seance.id],
     );
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> deleteSeance(int id) async {
     final db = await database;
-    return await db.delete('seances', where: 'id = ?', whereArgs: [id]);
+    final result = await db.delete('seances', where: 'id = ?', whereArgs: [id]);
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> validerSeance(int id) async {
     final db = await database;
-    return await db.update(
+    final result = await db.update(
       'seances',
       {'statut': 'VALIDE'},
       where: 'id = ?',
       whereArgs: [id],
     );
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> rejeterSeance(int id) async {
     final db = await database;
-    return await db.update(
+    final result = await db.update(
       'seances',
       {'statut': 'REJETEE'},
       where: 'id = ?',
       whereArgs: [id],
     );
+    notifyDataChanged();
+    return result;
   }
 
 
@@ -1319,14 +1412,18 @@ class DatabaseHelper {
     final db = await database;
     final id = await db.insert('notes', note.toMap());
     
+    final stagiaire = await getUserById(note.stagiaireId);
     final module = await getModuleById(note.moduleId);
-    await createNotification(NotificationModel(
-      userId: note.stagiaireId,
-      title: 'Nouvelle note',
-      message: 'Une nouvelle note a été ajoutée pour le module ${module?.nom ?? "Inconnu"}: ${note.valeur}/20',
-      type: 'INFO',
-      timestamp: DateTime.now(),
-    ));
+    
+    if (stagiaire?.directorId != null) {
+      await createNotification(NotificationModel(
+        userId: stagiaire!.directorId!,
+        title: 'Note à valider',
+        message: 'Le formateur a soumis une note pour ${stagiaire.nom} (Module: ${module?.nom ?? "N/A"})',
+        type: 'VALIDATION',
+        timestamp: DateTime.now(),
+      ));
+    }
     
     notifyDataChanged();
     return id;
@@ -1334,32 +1431,38 @@ class DatabaseHelper {
 
   Future<int> updateNote(Note note) async {
     final db = await database;
-    return await db.update(
+    final result = await db.update(
       'notes',
       note.toMap(),
       where: 'id = ?',
       whereArgs: [note.id],
     );
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> validerNote(int id) async {
     final db = await database;
-    return await db.update(
+    final result = await db.update(
       'notes',
       {'validee': 1, 'statut': 'VALIDEE'},
       where: 'id = ?',
       whereArgs: [id],
     );
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> rejeterNote(int id) async {
     final db = await database;
-    return await db.update(
+    final result = await db.update(
       'notes',
       {'statut': 'REJETEE', 'validee': 0},
       where: 'id = ?',
       whereArgs: [id],
     );
+    notifyDataChanged();
+    return result;
   }
 
   Future<List<Note>> getNotesAPublier({int? directorId}) async {
@@ -1503,7 +1606,9 @@ class DatabaseHelper {
 
   Future<int> deleteEmploi(int id) async {
     final db = await database;
-    return await db.delete('emplois', where: 'id = ?', whereArgs: [id]);
+    final result = await db.delete('emplois', where: 'id = ?', whereArgs: [id]);
+    notifyDataChanged();
+    return result;
   }
 
 
@@ -2006,6 +2111,7 @@ class DatabaseHelper {
       where: 'sender_id = ? AND receiver_id = ?',
       whereArgs: [senderId, receiverId],
     );
+    notifyDataChanged();
   }
 
   Future<void> markGroupMessagesAsRead(int groupId, int userId) async {
@@ -2026,6 +2132,7 @@ class DatabaseHelper {
         }, conflictAlgorithm: ConflictAlgorithm.ignore);
       }
       await batch.commit(noResult: true);
+      notifyDataChanged();
     }
   }
 
@@ -2159,6 +2266,7 @@ class DatabaseHelper {
         where: 'vu_par_dp = 0',
       );
     }
+    notifyDataChanged();
   }
 
   Future<int> getUnvalidatedNotesCount({int? directorId}) async {
@@ -2199,12 +2307,15 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [notificationId],
     );
+    notifyDataChanged();
   }
 
 
   Future<int> insertExam(Map<String, dynamic> exam) async {
     final db = await database;
-    return await db.insert('exams', exam);
+    final id = await db.insert('exams', exam);
+    notifyDataChanged();
+    return id;
   }
 
   Future<List<Map<String, dynamic>>> getUpcomingExams(int formateurId) async {
@@ -2257,12 +2368,16 @@ class DatabaseHelper {
 
   Future<int> deleteExam(int id) async {
     final db = await database;
-    return await db.delete('exams', where: 'id = ?', whereArgs: [id]);
+    final result = await db.delete('exams', where: 'id = ?', whereArgs: [id]);
+    notifyDataChanged();
+    return result;
   }
 
   Future<int> updateExam(int id, Map<String, dynamic> data) async {
     final db = await database;
-    return await db.update('exams', data, where: 'id = ?', whereArgs: [id]);
+    final result = await db.update('exams', data, where: 'id = ?', whereArgs: [id]);
+    notifyDataChanged();
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getAffectationsWithProgress(int formateurId) async {
@@ -2281,11 +2396,13 @@ class DatabaseHelper {
 
   Future<int> deleteNote(int id) async {
     final db = await database;
-    return await db.delete(
+    final result = await db.delete(
       'notes',
       where: 'id = ?',
       whereArgs: [id],
     );
+    notifyDataChanged();
+    return result;
   }
 
 
@@ -2326,6 +2443,7 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+    notifyDataChanged();
   }
 
   Future<List<Map<String, dynamic>>> getUpcomingExamsForGroup(int groupId) async {
@@ -2554,8 +2672,71 @@ class DatabaseHelper {
         'formateur_id': formateurId,
         'timestamp': DateTime.now().toIso8601String(),
       });
-      notifyDataChanged();
     }
+    notifyDataChanged();
+  }
+
+  double _calculateDuration(String? heureRange) {
+    if (heureRange == null || !heureRange.contains(' - ')) return 0.0;
+    try {
+      final parts = heureRange.split(' - ');
+      final start = parts[0].trim().split(':');
+      final end = parts[1].trim().split(':');
+      
+      final startMinutes = int.parse(start[0]) * 60 + int.parse(start[1]);
+      final endMinutes = int.parse(end[0]) * 60 + int.parse(end[1]);
+      
+      return (endMinutes - startMinutes) / 60.0;
+    } catch (e) {
+      return 0.0;
+    }
+  }
+
+  Future<void> syncSeanceWithPresence(int formateurId, int groupeId, int moduleId, String date, String? heureRange) async {
+    if (heureRange == null) return;
+    final db = await database;
+    
+    final affectationResult = await db.query(
+      'affectations',
+      where: 'formateur_id = ? AND groupe_id = ? AND module_id = ?',
+      whereArgs: [formateurId, groupeId, moduleId],
+      limit: 1
+    );
+    
+    if (affectationResult.isEmpty) return;
+    final affectationId = affectationResult.first['id'] as int;
+    
+    final parts = heureRange.split(' - ');
+    final heureDebut = parts[0].trim();
+    final duration = _calculateDuration(heureRange);
+    
+    final existingSeance = await db.query(
+      'seances',
+      where: 'affectation_id = ? AND date = ? AND heure_debut = ?',
+      whereArgs: [affectationId, date, heureDebut],
+      limit: 1
+    );
+    
+    if (existingSeance.isEmpty) {
+      await db.insert('seances', {
+        'affectation_id': affectationId,
+        'date': date,
+        'heure_debut': heureDebut,
+        'duree': duration,
+        'contenu': 'Séance validée via présence',
+        'statut': 'VALIDE'
+      });
+    } else {
+      if (existingSeance.first['statut'] != 'VALIDE') {
+        await db.update(
+          'seances',
+          {'statut': 'VALIDE'},
+          where: 'id = ?',
+          whereArgs: [existingSeance.first['id']]
+        );
+      }
+    }
+    notifyDataChanged();
   }
 
   Future<void> validerPresenceDP(int groupeId, String date, {String? heure}) async {
@@ -2653,6 +2834,7 @@ class DatabaseHelper {
       where: 'user_id = ?',
       whereArgs: [userId],
     );
+    notifyDataChanged();
   }
   
   
@@ -2761,6 +2943,7 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+    notifyDataChanged();
   }
 }
 

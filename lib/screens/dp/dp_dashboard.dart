@@ -52,6 +52,7 @@ class _DPDashboardState extends State<DPDashboard> {
   final ScrollController _drawerScrollController = ScrollController();
   StreamSubscription? _dataSubscription;
   Timer? _refreshTimer;
+  Timer? _notificationRefreshTimer;
 
   @override
   void initState() {
@@ -64,14 +65,33 @@ class _DPDashboardState extends State<DPDashboard> {
     });
     
     _dataSubscription = DatabaseHelper.instance.onDataChange.listen((_) {
-      if (mounted && _currentIndex == 0) {
-        _loadStats();
+      _loadStats(showLoading: false);
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      if (mounted && user != null) {
+        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
       }
     });
 
+    /* Removing aggressive 1s timer as it impacts performance and DB locks
     _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && _currentIndex == 0 && !_isLoading) {
         _loadStats(showLoading: false);
+      }
+    });
+    */
+    
+    // Restore 1s timer as requested by user for "live" feeling
+    _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted && _currentIndex == 0 && !_isLoading) {
+        _loadStats(showLoading: false);
+      }
+    });
+
+    // Sync notifications frequently as well
+    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      if (mounted && user != null) {
+        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
       }
     });
   }
@@ -105,6 +125,7 @@ class _DPDashboardState extends State<DPDashboard> {
   void dispose() {
     _dataSubscription?.cancel();
     _refreshTimer?.cancel();
+    _notificationRefreshTimer?.cancel();
     _scrollController.dispose();
     _drawerScrollController.dispose();
     super.dispose();
@@ -184,8 +205,8 @@ class _DPDashboardState extends State<DPDashboard> {
     }
     
     return AppBar(
-      backgroundColor: AppTheme.primaryBlue,
-      elevation: 4,
+      backgroundColor: AppTheme.dpColor,
+      elevation: 0,
       shadowColor: AppTheme.primaryBlue.withOpacity(0.2),
       centerTitle: isHome,
       titleSpacing: isHome ? null : 0,
@@ -211,29 +232,28 @@ class _DPDashboardState extends State<DPDashboard> {
                 ),
               ),
       actions: [
-        if (isHome)
-          Consumer<NotificationProvider>(
-            builder: (context, notifProvider, _) => IconButton(
-              icon: Badge(
-                label: Text(notifProvider.unreadNotificationCount.toString()),
-                isLabelVisible: notifProvider.unreadNotificationCount > 0,
-                child: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 30),
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
-                    .then((_) {
-                  final user = Provider.of<AuthService>(context, listen: false).currentUser;
-                  notifProvider.refreshCounts(user);
-                });
-              },
+        Consumer<NotificationProvider>(
+          builder: (context, notifProvider, _) => IconButton(
+            icon: Badge(
+              label: Text(notifProvider.totalCount.toString()),
+              isLabelVisible: notifProvider.totalCount > 0,
+              child: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28),
             ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
+                  .then((_) {
+                final user = Provider.of<AuthService>(context, listen: false).currentUser;
+                notifProvider.refreshCounts(user);
+              });
+            },
           ),
-        const SizedBox(width: 4),
-        Padding(
-          padding: const EdgeInsets.only(right: 16),
+        ),
+        const SizedBox(width: 8),
+        GestureDetector(
+          onTap: () => setState(() => _currentIndex = 16),
           child: CircleAvatar(
             radius: 18,
-            backgroundColor: const Color(0xFFF1F5F9),
+            backgroundColor: Colors.white.withOpacity(0.2),
             backgroundImage: kIsWeb 
               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
               : (_profileImage != null ? FileImage(_profileImage!) : null),
@@ -243,12 +263,13 @@ class _DPDashboardState extends State<DPDashboard> {
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF0F172A),
+                      color: Colors.white,
                     ),
                   )
                 : null,
           ),
         ),
+        const SizedBox(width: 16),
       ],
     );
   }
@@ -407,8 +428,11 @@ class _DPDashboardState extends State<DPDashboard> {
     );
   }
 
-  Widget _buildBody() {
-    final onBack = () => setState(() => _currentIndex = 0);
+   Widget _buildBody() {
+    final onBack = () {
+      setState(() => _currentIndex = 0);
+      _loadStats(showLoading: false);
+    };
     
     switch (_currentIndex) {
       case 0: return _buildDashboardHome();
@@ -682,8 +706,8 @@ class _DPDashboardState extends State<DPDashboard> {
           Consumer<NotificationProvider>(
             builder: (context, notifProvider, _) => IconButton(
               icon: Badge(
-                label: Text(notifProvider.unreadNotificationCount.toString()),
-                isLabelVisible: notifProvider.unreadNotificationCount > 0,
+                label: Text(notifProvider.totalCount.toString()),
+                isLabelVisible: notifProvider.totalCount > 0,
                 child: const Icon(Icons.notifications_none_rounded, color: AppTheme.primaryBlue, size: 32),
               ),
               onPressed: () {
@@ -783,36 +807,38 @@ class _DPDashboardState extends State<DPDashboard> {
           ],
         ),
         const SizedBox(height: 12),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFEE2E2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppTheme.accentRed.withValues(alpha: 0.2)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
+        Consumer<NotificationProvider>(
+          builder: (context, notifProvider, _) => Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFEE2E2),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppTheme.accentRed.withValues(alpha: 0.2)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.warning_amber_rounded, color: AppTheme.accentRed, size: 20),
                 ),
-                child: const Icon(Icons.warning_amber_rounded, color: AppTheme.accentRed, size: 20),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  'Vous avez ${_stats['seancesEnAttente'] ?? 0} séances en attente de validation pour cette semaine.',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF991B1B),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    'Vous avez ${notifProvider.pendingSeanceValidationsCount} séances en attente de validation pour cette semaine.',
+                    style: GoogleFonts.poppins(
+                      color: const Color(0xFF991B1B),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

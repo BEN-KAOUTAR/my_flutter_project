@@ -9,6 +9,7 @@ class NotificationProvider with ChangeNotifier {
   int _pendingPresenceValidationsCount = 0;
   int _unreadInscriptionRequestsCount = 0;
   int _unreadNotesCount = 0;
+  int _pendingSeanceValidationsCount = 0;
   
   int get unreadMessageCount => _unreadMessageCount;
   int get unreadNotificationCount => _unreadNotificationCount;
@@ -16,10 +17,12 @@ class NotificationProvider with ChangeNotifier {
   int get pendingPresenceValidationsCount => _pendingPresenceValidationsCount;
   int get unreadInscriptionRequestsCount => _unreadInscriptionRequestsCount;
   int get unreadNotesCount => _unreadNotesCount;
+  int get pendingSeanceValidationsCount => _pendingSeanceValidationsCount;
   
   int get totalCount => _unreadMessageCount + _unreadNotificationCount + 
                         _unreadReclamationsCount + _pendingPresenceValidationsCount +
-                        _unreadInscriptionRequestsCount + _unreadNotesCount;
+                        _unreadInscriptionRequestsCount + _unreadNotesCount +
+                        _pendingSeanceValidationsCount;
 
   Future<void> refreshCounts(User? user) async {
     if (user == null) {
@@ -38,6 +41,9 @@ class NotificationProvider with ChangeNotifier {
         _pendingPresenceValidationsCount = await db.getPendingPresenceValidationsCount(directorId: user.id);
         _unreadInscriptionRequestsCount = await db.getPendingUserRequestsCount(user.id!);
         _unreadNotesCount = await db.getUnvalidatedNotesCount(directorId: user.id);
+        
+        final dynamicStats = await db.getGlobalStats(directorId: user.id);
+        _pendingSeanceValidationsCount = dynamicStats['seancesEnAttente'] ?? 0;
       } else if (user.role == UserRole.stagiaire) {
         _unreadReclamationsCount = await db.getUnreadNotificationsCountByType(user.id!, 'RECLAMATION');
         _unreadNotesCount = await db.getUnreadNotificationsCountByType(user.id!, 'NOTE');
@@ -77,6 +83,7 @@ class NotificationProvider with ChangeNotifier {
     _pendingPresenceValidationsCount = 0;
     _unreadInscriptionRequestsCount = 0;
     _unreadNotesCount = 0;
+    _pendingSeanceValidationsCount = 0;
     notifyListeners();
   }
 }

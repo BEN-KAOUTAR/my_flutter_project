@@ -12,6 +12,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'models/user.dart';
+import 'data/database_helper.dart';
 
 import 'providers/notification_provider.dart';
 
@@ -32,10 +33,18 @@ void main() async {
 
   final authService = AuthService();
   
+  
   try {
     await authService.checkSession();
   } catch (e) {
     debugPrint('Session check error during startup: $e');
+  }
+
+  // Fix any existing negative hours in the database
+  try {
+    await DatabaseHelper.instance.fixNegativeHours();
+  } catch (e) {
+    debugPrint('Error fixing negative hours: $e');
   }
   
   runApp(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -619,6 +620,9 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
                 TextField(
                   controller: noteController,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                  ],
                   decoration: const InputDecoration(labelText: 'Note (/20)', prefixIcon: Icon(Icons.edit_note_rounded)),
                 ),
                 const SizedBox(height: 16),
@@ -738,6 +742,9 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
                 TextField(
                   controller: noteController,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                  ],
                   decoration: const InputDecoration(
                     labelText: 'Note (/20)',
                     hintText: 'Ex: 15.5',

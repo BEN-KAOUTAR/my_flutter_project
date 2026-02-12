@@ -14,6 +14,7 @@ import '../../services/planning_service.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import '../../services/pdf_service.dart';
 
 class PlanningScreen extends StatefulWidget {
   final VoidCallback? onBack;
@@ -152,7 +153,53 @@ class _PlanningScreenState extends State<PlanningScreen> {
       ),
     );
 
-    await Printing.sharePdf(bytes: await doc.save(), filename: 'emploi_${groupeName}_S${emploi.semaineNum}.pdf');
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => doc.save(),
+      name: 'Emploi_${groupeName}_Semaine${emploi.semaineNum}.pdf',
+    );
+  }
+
+  Future<void> _generateBatchPdf() async {
+    setState(() => _isLoading = true);
+    try {
+      final user = Provider.of<AuthService>(context, listen: false).currentUser;
+      final directorId = user?.id;
+      
+      // Get all groups
+      final groupes = await DatabaseHelper.instance.getAllGroupes(directorId: directorId);
+      final Map<int, String> groupeNames = {for (var g in groupes) g.id!: g.nom};
+      
+      // We need to decide which week. Using the currently visible one or the current week.
+      // If we have an emploi selected, use its week. Otherwise current week.
+      int weekNum = _emplois.isNotEmpty ? _emplois.first.semaineNum : _calculateWeekNumber(DateTime.now());
+      
+      List<Emploi> batchEmplois = [];
+      for (var g in groupes) {
+        final emp = await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(weekNum, g.id!);
+        if (emp != null) {
+          batchEmplois.add(emp);
+        }
+      }
+
+      if (batchEmplois.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Aucun emploi du temps trouvé pour la semaine $weekNum'), backgroundColor: AppTheme.accentOrange),
+          );
+        }
+      } else {
+        await PdfService.generateBatchEmploiPdf(batchEmplois, groupeNames, weekNum);
+      }
+    } catch (e) {
+      debugPrint('Error generating batch PDF: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur: $e'), backgroundColor: AppTheme.accentRed),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   pw.Widget _buildPdfTable(Emploi emploi) {
@@ -257,6 +304,21 @@ class _PlanningScreenState extends State<PlanningScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
               ),
+              const SizedBox(width: 8),
+              if (!isMobile)
+                ElevatedButton.icon(
+                  onPressed: _generateBatchPdf,
+                  icon: const Icon(Icons.picture_as_pdf_rounded, size: 20, color: Colors.white),
+                  label: Text(
+                    'Exporter Tout',
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accentGreen,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 24),
@@ -740,10 +802,14 @@ class _PlanningScreenState extends State<PlanningScreen> {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.access_time, size: 18, color: AppTheme.textSecondary),
                             const SizedBox(width: 8),

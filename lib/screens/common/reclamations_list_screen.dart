@@ -19,6 +19,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:printing/printing.dart';
+import '../../services/pdf_service.dart';
 
 class ReclamationsListScreen extends StatefulWidget {
   final VoidCallback? onBack;
@@ -106,6 +107,33 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
     }
 
     _loadData();
+  }
+
+  Future<void> _downloadFormalPdf(Reclamation reclamation) async {
+    setState(() => _isLoading = true);
+    try {
+      final sender = await DatabaseHelper.instance.getUserById(reclamation.userId);
+      if (sender == null) throw Exception('Utilisateur introuvable');
+      
+      final dateStr = '${reclamation.timestamp.day}/${reclamation.timestamp.month}/${reclamation.timestamp.year} ${reclamation.timestamp.hour}:${reclamation.timestamp.minute.toString().padLeft(2, '0')}';
+      
+      await PdfService.generateFormalReclamationPdf(
+        fromName: sender.nom,
+        fromEmail: sender.email,
+        toName: 'Directeur Pédagogique',
+        subject: reclamation.subject,
+        date: dateStr,
+        content: reclamation.message,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur lors du téléchargement: $e'), backgroundColor: AppTheme.accentRed),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -209,12 +237,12 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                     ],
                   ),
                 ),
-                Text(
-                  '${rec.timestamp.day}/${rec.timestamp.month}/${rec.timestamp.year}',
-                  style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary),
+                    Text(
+                      '${rec.timestamp.day}/${rec.timestamp.month}/${rec.timestamp.year}',
+                      style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary),
+                    ),
+                  ],
                 ),
-              ],
-            ),
             const SizedBox(height: 12),
             Text(
               '[${rec.type}] ${rec.subject}',
@@ -366,11 +394,11 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                 ],
               ),
             ],
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
   void _showImagePreview(BuildContext context, Reclamation rec, Uint8List? bytes) {
     showDialog(

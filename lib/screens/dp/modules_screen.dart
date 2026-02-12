@@ -664,6 +664,19 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             return;
                           }
 
+                          final heures = int.tryParse(heuresController.text) ?? 0;
+                          if (heures == 0) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('La masse horaire doit être supérieure à 0', style: GoogleFonts.poppins()),
+                                  backgroundColor: AppTheme.accentRed,
+                                ),
+                              );
+                            }
+                            return;
+                          }
+
                           final coeff = int.tryParse(coeffController.text) ?? 1;
                           if (coeff < 1 || coeff > 5) {
                             if (context.mounted) {

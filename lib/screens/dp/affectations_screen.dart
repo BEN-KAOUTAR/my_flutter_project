@@ -457,54 +457,22 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       onChanged: (value) => setModalState(() => selectedGroupeId = value),
                     ),
                     
+                    
                     const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Heures prévues', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
-                              const SizedBox(height: 8),
-                               TextFormField(
-                                  initialValue: '0',
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Année scolaire', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
-                              const SizedBox(height: 8),
-                               FormField(
-                                  builder: (state) {
-                                    return TextFormField(
-                                      initialValue: anneeScolaire,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\-]')),
-                                      ],
-                                      decoration: InputDecoration(
-                                        hintText: 'Ex: 2023-2024',
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                                      ),
-                                      onChanged: (val) => anneeScolaire = val,
-                                    );
-                                  },
-                                ),
-                            ],
-                          ),
-                        ),
+                    Text('Année scolaire', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: anneeScolaire,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\-]')),
                       ],
+                      decoration: InputDecoration(
+                        hintText: 'Ex: 2025-2026',
+                        hintStyle: GoogleFonts.poppins(fontSize: 14),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                      onChanged: (val) => anneeScolaire = val,
                     ),
                     
                     const SizedBox(height: 48),
