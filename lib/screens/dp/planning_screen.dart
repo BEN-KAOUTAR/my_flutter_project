@@ -385,7 +385,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                     onPressed: () => _showCreateDialog(),
                     icon: const Icon(
                       Icons.add_rounded,
-                      size: 20,
+                      size: 30,
                       color: Colors.white,
                     ),
                     label: Text(
@@ -393,26 +393,26 @@ class _PlanningScreenState extends State<PlanningScreen> {
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
-                        fontSize: isMobile ? 12 : 14,
+                        fontSize: isMobile ? 14 : 15,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryBlue,
                       padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 12 : 20,
-                        vertical: 12,
+                        horizontal: isMobile ? 18 : 24,
+                        vertical: 14,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 10),
                   ElevatedButton.icon(
                     onPressed: _generateBatchPdf,
                     icon: const Icon(
                       Icons.picture_as_pdf_rounded,
-                      size: 20,
+                      size: 22,
                       color: Colors.white,
                     ),
                     label: Text(
@@ -420,17 +420,17 @@ class _PlanningScreenState extends State<PlanningScreen> {
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
-                        fontSize: isMobile ? 12 : 14,
+                        fontSize: isMobile ? 14 : 15,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.accentGreen,
                       padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 12 : 20,
-                        vertical: 12,
+                        horizontal: isMobile ? 18 : 24,
+                        vertical: 14,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
