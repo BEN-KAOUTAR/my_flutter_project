@@ -15,7 +15,8 @@ class PresenceFormateurScreen extends StatefulWidget {
   const PresenceFormateurScreen({super.key, this.onBack});
 
   @override
-  State<PresenceFormateurScreen> createState() => _PresenceFormateurScreenState();
+  State<PresenceFormateurScreen> createState() =>
+      _PresenceFormateurScreenState();
 }
 
 class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
@@ -29,7 +30,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
   Creneau? _selectedCreneau;
   List<Map<String, dynamic>> _todaySessions = [];
 
-bool _isValidated = false;
+  bool _isValidated = false;
 
   @override
   void initState() {
@@ -44,7 +45,9 @@ bool _isValidated = false;
 
     if (user != null) {
       try {
-        final groupes = await DatabaseHelper.instance.getGroupsForFormateur(user.id!);
+        final groupes = await DatabaseHelper.instance.getGroupsForFormateur(
+          user.id!,
+        );
 
         final weekNum = _getWeekNumber(_selectedDate);
         final dayName = _getFrenchDayName(_selectedDate.weekday);
@@ -52,11 +55,12 @@ bool _isValidated = false;
         List<Map<String, dynamic>> dailySessions = [];
 
         for (var g in groupes) {
-          final emploi = await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(weekNum, g.id!);
+          final emploi = await DatabaseHelper.instance
+              .getEmploiBySemaineAndGroupe(weekNum, g.id!);
           if (emploi != null) {
-            final sessionCreneaux = emploi.creneaux.where((c) =>
-              c.jour == dayName && c.formateurId == user.id
-            ).toList();
+            final sessionCreneaux = emploi.creneaux
+                .where((c) => c.jour == dayName && c.formateurId == user.id)
+                .toList();
 
             for (var c in sessionCreneaux) {
               dailySessions.add({
@@ -68,7 +72,11 @@ bool _isValidated = false;
           }
         }
 
-        dailySessions.sort((a, b) => (a['creneau'] as Creneau).heureDebut.compareTo((b['creneau'] as Creneau).heureDebut));
+        dailySessions.sort(
+          (a, b) => (a['creneau'] as Creneau).heureDebut.compareTo(
+            (b['creneau'] as Creneau).heureDebut,
+          ),
+        );
 
         if (mounted) {
           setState(() {
@@ -98,7 +106,9 @@ bool _isValidated = false;
 
       await _loadAvailableCreneaux(groupeId);
 
-      final stagiaires = await DatabaseHelper.instance.getStagiairesByGroupe(groupeId);
+      final stagiaires = await DatabaseHelper.instance.getStagiairesByGroupe(
+        groupeId,
+      );
 
       final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
       String? selectedHeure = _selectedCreneau != null
@@ -108,7 +118,7 @@ bool _isValidated = false;
       final presenceData = await DatabaseHelper.instance.getPresenceByDateGroup(
         dateStr,
         groupeId,
-        heure: selectedHeure
+        heure: selectedHeure,
       );
 
       Map<int, String> statusMap = {};
@@ -142,7 +152,11 @@ bool _isValidated = false;
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erreur lors du chargement des données. Veuillez réessayer.')),
+          const SnackBar(
+            content: Text(
+              'Erreur lors du chargement des données. Veuillez réessayer.',
+            ),
+          ),
         );
       }
     }
@@ -153,20 +167,26 @@ bool _isValidated = false;
     if (user == null) return;
 
     final weekNum = _getWeekNumber(_selectedDate);
-    final emploi = await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(weekNum, groupeId);
+    final emploi = await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(
+      weekNum,
+      groupeId,
+    );
 
     if (emploi != null) {
       final dayName = _getFrenchDayName(_selectedDate.weekday);
-      final valid = emploi.creneaux.where((c) =>
-        c.jour == dayName && c.formateurId == user.id
-      ).toList();
+      final valid = emploi.creneaux
+          .where((c) => c.jour == dayName && c.formateurId == user.id)
+          .toList();
 
       if (mounted) {
         setState(() {
           _availableCreneaux = valid;
           if (valid.isNotEmpty) {
-            if (_selectedCreneau == null || !valid.any((c) => c.heureDebut == _selectedCreneau!.heureDebut)) {
-               _selectedCreneau = valid.first;
+            if (_selectedCreneau == null ||
+                !valid.any(
+                  (c) => c.heureDebut == _selectedCreneau!.heureDebut,
+                )) {
+              _selectedCreneau = valid.first;
             }
           } else {
             _selectedCreneau = null;
@@ -210,15 +230,21 @@ bool _isValidated = false;
   Future<void> _savePresence() async {
     if (_selectedGroupeId == null) return;
     if (_isValidated) {
-       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cette fiche de présence a été validée par le DP et ne peut plus être modifiée.')),
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Cette fiche de présence a été validée par le DP et ne peut plus être modifiée.',
+          ),
+        ),
       );
       return;
     }
 
     setState(() => _isLoading = true);
-    final dateStr = '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
-    final formateurId = Provider.of<AuthService>(context, listen: false).currentUser?.id ?? 0;
+    final dateStr =
+        '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
+    final formateurId =
+        Provider.of<AuthService>(context, listen: false).currentUser?.id ?? 0;
 
     for (var student in _stagiaires) {
       final status = _presenceStatus[student.id!] ?? 'PRESENT';
@@ -232,7 +258,7 @@ bool _isValidated = false;
         dateStr,
         status,
         formateurId,
-        heure: selectedHeure
+        heure: selectedHeure,
       );
     }
 
@@ -242,7 +268,7 @@ bool _isValidated = false;
         _selectedGroupeId!,
         _selectedCreneau!.moduleId,
         dateStr,
-        '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}'
+        '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}',
       );
     }
 
@@ -280,26 +306,35 @@ bool _isValidated = false;
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _groupes.isEmpty
-                  ? Center(child: Text('Aucun groupe assigné', style: GoogleFonts.poppins(color: AppTheme.textSecondary)))
-                  : _selectedDate.weekday == DateTime.sunday
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.event_busy_rounded, size: 60, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Aucune séance le dimanche',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: AppTheme.textSecondary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : _buildContent(),
+              ? Center(
+                  child: Text(
+                    'Aucun groupe assigné',
+                    style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+                  ),
+                )
+              : _selectedDate.weekday == DateTime.sunday
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.event_busy_rounded,
+                        size: 60,
+                        color: AppTheme.textSecondary.withValues(alpha: 0.3),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Aucune séance le dimanche',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: AppTheme.textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : _buildContent(),
         ),
       ],
     );
@@ -315,7 +350,7 @@ bool _isValidated = false;
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-            Tooltip(
+          Tooltip(
             message: 'Changer la date',
             child: GestureDetector(
               onTap: () async {
@@ -329,7 +364,8 @@ bool _isValidated = false;
                   initialDate: initial,
                   firstDate: DateTime(2024),
                   lastDate: DateTime.now(),
-                  selectableDayPredicate: (day) => day.weekday != DateTime.sunday,
+                  selectableDayPredicate: (day) =>
+                      day.weekday != DateTime.sunday,
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
@@ -353,7 +389,10 @@ bool _isValidated = false;
                 }
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppTheme.border),
                   borderRadius: BorderRadius.circular(8),
@@ -362,7 +401,11 @@ bool _isValidated = false;
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.calendar_month_rounded, size: 20, color: AppTheme.primaryBlue),
+                    const Icon(
+                      Icons.calendar_month_rounded,
+                      size: 20,
+                      color: AppTheme.primaryBlue,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       '${_selectedDate.day.toString().padLeft(2, '0')}/${_selectedDate.month.toString().padLeft(2, '0')}/${_selectedDate.year}',
@@ -373,7 +416,10 @@ bool _isValidated = false;
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(Icons.arrow_drop_down, color: AppTheme.textSecondary),
+                    const Icon(
+                      Icons.arrow_drop_down,
+                      color: AppTheme.textSecondary,
+                    ),
                   ],
                 ),
               ),
@@ -385,7 +431,9 @@ bool _isValidated = false;
   }
 
   Widget _buildContent() {
-    if (_selectedGroupeId != null && _selectedCreneau != null && _stagiaires.isNotEmpty) {
+    if (_selectedGroupeId != null &&
+        _selectedCreneau != null &&
+        _stagiaires.isNotEmpty) {
       return _buildPresenceMarkingList();
     }
 
@@ -410,7 +458,7 @@ bool _isValidated = false;
           ),
           const SizedBox(height: 24),
           if (_todaySessions.isEmpty)
-             _buildNoSessionsPlaceholder()
+            _buildNoSessionsPlaceholder()
           else
             ListView.separated(
               shrinkWrap: true,
@@ -442,15 +490,25 @@ bool _isValidated = false;
       ),
       child: Column(
         children: [
-          Icon(Icons.calendar_today_rounded, size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+          Icon(
+            Icons.calendar_today_rounded,
+            size: 48,
+            color: AppTheme.textSecondary.withValues(alpha: 0.3),
+          ),
           const SizedBox(height: 16),
           Text(
             'Aucune séance programmée',
-            style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textSecondary,
+            ),
           ),
           Text(
             'Vérifiez l\'emploi du temps pour cette date.',
-            style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary),
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: AppTheme.textSecondary,
+            ),
           ),
         ],
       ),
@@ -482,7 +540,10 @@ bool _isValidated = false;
                 color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.schedule_rounded, color: AppTheme.primaryBlue),
+              child: const Icon(
+                Icons.schedule_rounded,
+                color: AppTheme.primaryBlue,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -515,7 +576,11 @@ bool _isValidated = false;
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppTheme.textSecondary),
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16,
+              color: AppTheme.textSecondary,
+            ),
           ],
         ),
       ),
@@ -549,11 +614,17 @@ bool _isValidated = false;
                       _selectedCreneau != null
                           ? '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}'
                           : '',
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryBlue,
+                      ),
                     ),
                     Text(
                       _groupes.firstWhere((g) => g.id == _selectedGroupeId).nom,
-                      style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -577,8 +648,26 @@ bool _isValidated = false;
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        Expanded(flex: 3, child: Text('Stagiaire', style: GoogleFonts.poppins(fontWeight: FontWeight.bold))),
-                        Expanded(flex: 2, child: Center(child: Text('Statut', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)))),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            'Stagiaire',
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Center(
+                            child: Text(
+                              'Statut',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -589,8 +678,12 @@ bool _isValidated = false;
                       color: AppTheme.accentGreen.withValues(alpha: 0.1),
                       child: Center(
                         child: Text(
-                          'ðŸ”’ Validé par le Directeur Pédagogique',
-                          style: GoogleFonts.poppins(color: AppTheme.accentGreen, fontWeight: FontWeight.bold, fontSize: 12),
+                          '🔒 Validé par le Directeur Pédagogique',
+                          style: GoogleFonts.poppins(
+                            color: AppTheme.accentGreen,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -602,7 +695,10 @@ bool _isValidated = false;
                       itemBuilder: (context, index) {
                         final student = _stagiaires[index];
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           child: Row(
                             children: [
                               Expanded(
@@ -611,11 +707,23 @@ bool _isValidated = false;
                                   children: [
                                     CircleAvatar(
                                       radius: 16,
-                                      backgroundColor: AppTheme.primaryBlue.withValues(alpha: 0.1),
-                                      child: Text(student.nom[0], style: GoogleFonts.poppins(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+                                      backgroundColor: AppTheme.primaryBlue
+                                          .withValues(alpha: 0.1),
+                                      child: Text(
+                                        student.nom[0],
+                                        style: GoogleFonts.poppins(
+                                          color: AppTheme.primaryBlue,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                     const SizedBox(width: 12),
-                                    Text(student.nom, style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+                                    Text(
+                                      student.nom,
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -624,11 +732,26 @@ bool _isValidated = false;
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    _buildStatusButton(student.id!, 'PRESENT', Icons.check_circle, AppTheme.accentGreen),
+                                    _buildStatusButton(
+                                      student.id!,
+                                      'PRESENT',
+                                      Icons.check_circle,
+                                      AppTheme.accentGreen,
+                                    ),
                                     const SizedBox(width: 8),
-                                    _buildStatusButton(student.id!, 'ABSENT', Icons.cancel, AppTheme.accentRed),
+                                    _buildStatusButton(
+                                      student.id!,
+                                      'ABSENT',
+                                      Icons.cancel,
+                                      AppTheme.accentRed,
+                                    ),
                                     const SizedBox(width: 8),
-                                    _buildStatusButton(student.id!, 'RETARD', Icons.schedule, AppTheme.accentOrange),
+                                    _buildStatusButton(
+                                      student.id!,
+                                      'RETARD',
+                                      Icons.schedule,
+                                      AppTheme.accentOrange,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -645,13 +768,20 @@ bool _isValidated = false;
                       child: ElevatedButton(
                         onPressed: _isValidated ? null : _savePresence,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _isValidated ? Colors.grey : AppTheme.primaryBlue,
+                          backgroundColor: _isValidated
+                              ? Colors.grey
+                              : AppTheme.primaryBlue,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: Text(
                           _isValidated ? 'Verrouillé' : 'Enregistrer',
-                          style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold)
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -665,18 +795,29 @@ bool _isValidated = false;
     );
   }
 
-  Widget _buildStatusButton(int studentId, String status, IconData icon, Color color) {
+  Widget _buildStatusButton(
+    int studentId,
+    String status,
+    IconData icon,
+    Color color,
+  ) {
     final isSelected = _presenceStatus[studentId] == status;
     return InkWell(
-      onTap: _isValidated ? null : () => setState(() => _presenceStatus[studentId] = status),
+      onTap: _isValidated
+          ? null
+          : () => setState(() => _presenceStatus[studentId] = status),
       child: Opacity(
         opacity: _isValidated && !isSelected ? 0.3 : 1.0,
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
+            color: isSelected
+                ? color.withValues(alpha: 0.1)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: isSelected ? color : Colors.grey.shade300),
+            border: Border.all(
+              color: isSelected ? color : Colors.grey.shade300,
+            ),
           ),
           child: Icon(icon, color: isSelected ? color : Colors.grey, size: 20),
         ),
@@ -684,4 +825,3 @@ bool _isValidated = false;
     );
   }
 }
-

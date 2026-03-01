@@ -51,21 +51,32 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     _loadProfileImage();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
-      Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+      Provider.of<NotificationProvider>(
+        context,
+        listen: false,
+      ).refreshCounts(user);
     });
 
     _dataSubscription = DatabaseHelper.instance.onDataChange.listen((_) {
       _loadData(showLoading: false);
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       if (mounted && user != null) {
-        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+        Provider.of<NotificationProvider>(
+          context,
+          listen: false,
+        ).refreshCounts(user);
       }
     });
 
-    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (
+      timer,
+    ) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       if (mounted && user != null) {
-        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+        Provider.of<NotificationProvider>(
+          context,
+          listen: false,
+        ).refreshCounts(user);
       }
       if (mounted && _currentIndex == 0 && !_isLoading) {
         _loadData(showLoading: false);
@@ -91,8 +102,11 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     final userId = authService.currentUser?.id;
 
     if (userId != null) {
-      final affectationsWithProgress = await DatabaseHelper.instance.getAffectationsWithProgress(userId);
-      final totalHeures = await DatabaseHelper.instance.getFormateurTotalHours(userId);
+      final affectationsWithProgress = await DatabaseHelper.instance
+          .getAffectationsWithProgress(userId);
+      final totalHeures = await DatabaseHelper.instance.getFormateurTotalHours(
+        userId,
+      );
       final exams = await DatabaseHelper.instance.getUpcomingExams(userId);
 
       if (mounted) {
@@ -144,18 +158,28 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     }
   }
 
-String _getScreenTitle(int index) {
+  String _getScreenTitle(int index) {
     switch (index) {
-      case 0: return 'Academic Pro';
-      case 1: return 'Mes séances';
-      case 2: return 'Emploi du temps';
-      case 3: return 'Gestion des notes';
-      case 4: return 'Messages';
-      case 5: return 'Mon Profil';
-      case 6: return 'Réclamations';
-      case 7: return 'Planification Examens';
-      case 8: return 'Suivi de présence';
-      default: return 'Academic Pro';
+      case 0:
+        return 'Academic Pro';
+      case 1:
+        return 'Mes séances';
+      case 2:
+        return 'Emploi du temps';
+      case 3:
+        return 'Gestion des notes';
+      case 4:
+        return 'Messages';
+      case 5:
+        return 'Mon Profil';
+      case 6:
+        return 'Réclamations';
+      case 7:
+        return 'Planification Examens';
+      case 8:
+        return 'Suivi de présence';
+      default:
+        return 'Academic Pro';
     }
   }
 
@@ -172,7 +196,7 @@ String _getScreenTitle(int index) {
     );
   }
 
-PreferredSizeWidget? _buildAppBar() {
+  PreferredSizeWidget? _buildAppBar() {
     final isLargeScreen = !ResponsiveLayout.isMobile(context);
     final user = Provider.of<AuthService>(context).currentUser;
     final isHome = _currentIndex == 0;
@@ -191,16 +215,20 @@ PreferredSizeWidget? _buildAppBar() {
       leading: isDesktop && isHome
           ? null
           : !isHome
-              ? IconButton(
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 28),
-                  onPressed: () => setState(() => _currentIndex = 0),
-                )
-              : Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(Icons.menu_rounded, color: Colors.white),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                  ),
-                ),
+          ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+              onPressed: () => setState(() => _currentIndex = 0),
+            )
+          : Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+            ),
       title: Text(
         isHome ? 'Academic Pro' : _getScreenTitle(_currentIndex),
         style: GoogleFonts.poppins(
@@ -215,12 +243,21 @@ PreferredSizeWidget? _buildAppBar() {
             icon: Badge(
               label: Text(notificationProvider.totalCount.toString()),
               isLabelVisible: notificationProvider.totalCount > 0,
-              child: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28),
+              child: const Icon(
+                Icons.notifications_none_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
-                  .then((_) {
-                final user = Provider.of<AuthService>(context, listen: false).currentUser;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+              ).then((_) {
+                final user = Provider.of<AuthService>(
+                  context,
+                  listen: false,
+                ).currentUser;
                 notificationProvider.refreshCounts(user);
               });
             },
@@ -233,16 +270,20 @@ PreferredSizeWidget? _buildAppBar() {
             radius: 18,
             backgroundColor: Colors.white.withOpacity(0.2),
             backgroundImage: kIsWeb
-               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-               : (_profileImage != null ? FileImage(_profileImage!) : null),
-            child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
-              (user?.nom ?? 'F')[0].toUpperCase(),
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 14,
-              ),
-            ) : null,
+                ? (_profileImageBytes != null
+                      ? MemoryImage(_profileImageBytes!)
+                      : null)
+                : (_profileImage != null ? FileImage(_profileImage!) : null),
+            child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
+                ? Text(
+                    (user?.nom ?? 'F')[0].toUpperCase(),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  )
+                : null,
           ),
         ),
         const SizedBox(width: 16),
@@ -265,16 +306,28 @@ PreferredSizeWidget? _buildAppBar() {
               padding: const EdgeInsets.all(24),
               child: Row(
                 children: [
-                   CircleAvatar(
+                  CircleAvatar(
                     radius: 20,
                     backgroundColor: AppTheme.formateurColor,
                     backgroundImage: kIsWeb
-                       ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-                       : (_profileImage != null ? FileImage(_profileImage!) : null),
-                    child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
-                      (user?.nom ?? 'F')[0],
-                      style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold),
-                    ) : null,
+                        ? (_profileImageBytes != null
+                              ? MemoryImage(_profileImageBytes!)
+                              : null)
+                        : (_profileImage != null
+                              ? FileImage(_profileImage!)
+                              : null),
+                    child:
+                        (kIsWeb
+                            ? _profileImageBytes == null
+                            : _profileImage == null)
+                        ? Text(
+                            (user?.nom ?? 'F')[0],
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -383,7 +436,11 @@ PreferredSizeWidget? _buildAppBar() {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ListTile(
-              leading: const Icon(Icons.logout_rounded, color: AppTheme.accentRed, size: 24),
+              leading: const Icon(
+                Icons.logout_rounded,
+                color: AppTheme.accentRed,
+                size: 24,
+              ),
               title: Text(
                 'Déconnexion',
                 style: GoogleFonts.poppins(
@@ -422,12 +479,20 @@ PreferredSizeWidget? _buildAppBar() {
             radius: 28,
             backgroundColor: Colors.white,
             backgroundImage: kIsWeb
-               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-               : (_profileImage != null ? FileImage(_profileImage!) : null),
-            child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
-              (user?.nom ?? 'F')[0],
-              style: GoogleFonts.poppins(color: AppTheme.formateurColor, fontWeight: FontWeight.bold, fontSize: 20),
-            ) : null,
+                ? (_profileImageBytes != null
+                      ? MemoryImage(_profileImageBytes!)
+                      : null)
+                : (_profileImage != null ? FileImage(_profileImage!) : null),
+            child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
+                ? Text(
+                    (user?.nom ?? 'F')[0],
+                    style: GoogleFonts.poppins(
+                      color: AppTheme.formateurColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -513,9 +578,13 @@ PreferredSizeWidget? _buildAppBar() {
       case 6:
         return ReclamationsListScreen(onBack: onBack);
       case 7:
-        return ExamPlanningScreen(onBack: () => setState(() => _currentIndex = 0));
+        return ExamPlanningScreen(
+          onBack: () => setState(() => _currentIndex = 0),
+        );
       case 8:
-        return PresenceFormateurScreen(onBack: () => setState(() => _currentIndex = 0));
+        return PresenceFormateurScreen(
+          onBack: () => setState(() => _currentIndex = 0),
+        );
       default:
         return _buildDashboardHome();
     }
@@ -541,9 +610,14 @@ PreferredSizeWidget? _buildAppBar() {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Bonjour, ${user?.nom.split(' ').first ?? 'Formateur'} ðŸ‘‹',
+                        'Bonjour, ${user?.nom.split(' ').first ?? 'Formateur'} 👋',
                         style: GoogleFonts.poppins(
-                          fontSize: ResponsiveLayout.respSize(context, 28, 34, 40),
+                          fontSize: ResponsiveLayout.respSize(
+                            context,
+                            28,
+                            34,
+                            40,
+                          ),
                           fontWeight: FontWeight.bold,
                           color: AppTheme.textPrimary,
                         ),
@@ -551,7 +625,12 @@ PreferredSizeWidget? _buildAppBar() {
                       Text(
                         'Bienvenue dans votre espace formateur',
                         style: GoogleFonts.poppins(
-                          fontSize: ResponsiveLayout.respSize(context, 16, 17, 18),
+                          fontSize: ResponsiveLayout.respSize(
+                            context,
+                            16,
+                            17,
+                            18,
+                          ),
                           color: AppTheme.textSecondary,
                         ),
                       ),
@@ -564,12 +643,23 @@ PreferredSizeWidget? _buildAppBar() {
                       icon: Badge(
                         label: Text(notifProvider.totalCount.toString()),
                         isLabelVisible: notifProvider.totalCount > 0,
-                        child: const Icon(Icons.notifications_none_rounded, color: AppTheme.formateurColor, size: 36),
+                        child: const Icon(
+                          Icons.notifications_none_rounded,
+                          color: AppTheme.formateurColor,
+                          size: 36,
+                        ),
                       ),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
-                            .then((_) {
-                          final user = Provider.of<AuthService>(context, listen: false).currentUser;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const NotificationsScreen(),
+                          ),
+                        ).then((_) {
+                          final user = Provider.of<AuthService>(
+                            context,
+                            listen: false,
+                          ).currentUser;
                           notifProvider.refreshCounts(user);
                         });
                       },
@@ -609,18 +699,19 @@ PreferredSizeWidget? _buildAppBar() {
                       sublabel: 'sur 910h',
                       icon: Icons.timer_outlined,
                       color: AppTheme.formateurColor,
-                       width: cardWidth,
+                      width: cardWidth,
                     ),
                     DashboardSummaryCard(
                       label: 'Groupes suivis',
-                      value: '${_affectationsWithProgress.map((a) => a['groupe_id']).toSet().length}',
+                      value:
+                          '${_affectationsWithProgress.map((a) => a['groupe_id']).toSet().length}',
                       icon: Icons.groups_outlined,
                       color: AppTheme.accentOrange,
-                       width: cardWidth,
+                      width: cardWidth,
                     ),
                   ],
                 );
-              }
+              },
             ),
             const SizedBox(height: 32),
 
@@ -645,18 +736,26 @@ PreferredSizeWidget? _buildAppBar() {
                 child: Center(
                   child: Column(
                     children: [
-                      Icon(Icons.inbox, size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
+                      Icon(
+                        Icons.inbox,
+                        size: 48,
+                        color: AppTheme.textSecondary.withValues(alpha: 0.5),
+                      ),
                       const SizedBox(height: 12),
                       Text(
                         'Aucun module affecté',
-                        style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+                        style: GoogleFonts.poppins(
+                          color: AppTheme.textSecondary,
+                        ),
                       ),
                     ],
                   ),
                 ),
               )
             else
-              ..._affectationsWithProgress.map((data) => _buildModuleCard(data)),
+              ..._affectationsWithProgress.map(
+                (data) => _buildModuleCard(data),
+              ),
 
             const SizedBox(height: 32),
             _buildUpcomingExams(),
@@ -683,7 +782,10 @@ PreferredSizeWidget? _buildAppBar() {
             ),
             TextButton(
               onPressed: () => setState(() => _currentIndex = 7),
-              child: Text('Voir tout', style: GoogleFonts.poppins(color: AppTheme.formateurColor)),
+              child: Text(
+                'Voir tout',
+                style: GoogleFonts.poppins(color: AppTheme.formateurColor),
+              ),
             ),
           ],
         ),
@@ -694,11 +796,18 @@ PreferredSizeWidget? _buildAppBar() {
             child: Center(
               child: Column(
                 children: [
-                  Icon(Icons.event_note_rounded, color: AppTheme.textSecondary.withValues(alpha: 0.3), size: 48),
+                  Icon(
+                    Icons.event_note_rounded,
+                    color: AppTheme.textSecondary.withValues(alpha: 0.3),
+                    size: 48,
+                  ),
                   const SizedBox(height: 12),
                   Text(
                     'Aucun examen programmé',
-                    style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                    style: GoogleFonts.poppins(
+                      color: AppTheme.textSecondary,
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -706,83 +815,124 @@ PreferredSizeWidget? _buildAppBar() {
           )
         else
           ..._upcomingExams.map((exam) {
-             final date = DateTime.parse(exam['date'] as String);
-             return PremiumCard(
-               margin: const EdgeInsets.only(bottom: 12),
-               padding: const EdgeInsets.all(16),
-               child: Row(
-                 children: [
-                   Container(
-                     padding: const EdgeInsets.all(12),
-                     decoration: BoxDecoration(
-                       color: AppTheme.primaryBlue.withValues(alpha: 0.1),
-                       borderRadius: BorderRadius.circular(10),
-                     ),
-                     child: Column(
-                       children: [
-                         Text(
-                           '${date.day}',
-                           style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
-                         ),
-                         Text(
-                           _getMonthName(date.month),
-                           style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue),
-                         ),
-                       ],
-                     ),
-                   ),
-                   const SizedBox(width: 16),
-                   Expanded(
-                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         Text(
-                           exam['module_name'] as String,
-                           style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14),
-                         ),
-                         const SizedBox(height: 4),
-                         Row(
-                           children: [
-                             Container(
-                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                               decoration: BoxDecoration(
-                                 color: AppTheme.stagiaireColor.withValues(alpha: 0.1),
-                                 borderRadius: BorderRadius.circular(4),
-                               ),
-                               child: Text(
-                                 exam['groupe_name'] as String,
-                                 style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: AppTheme.stagiaireColor),
-                               ),
-                             ),
-                             const SizedBox(width: 8),
-                             Icon(Icons.access_time_rounded, size: 12, color: AppTheme.textSecondary),
-                             const SizedBox(width: 4),
-                             Text(
-                               '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}',
-                               style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary),
-                             ),
-                           ],
-                         ),
-                       ],
-                     ),
-                   ),
-                 ],
-               ),
-             );
+            final date = DateTime.parse(exam['date'] as String);
+            return PremiumCard(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryBlue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          '${date.day}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.primaryBlue,
+                          ),
+                        ),
+                        Text(
+                          _getMonthName(date.month),
+                          style: GoogleFonts.poppins(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.primaryBlue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          exam['module_name'] as String,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppTheme.stagiaireColor.withValues(
+                                  alpha: 0.1,
+                                ),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                exam['groupe_name'] as String,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.stagiaireColor,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.access_time_rounded,
+                              size: 12,
+                              color: AppTheme.textSecondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: AppTheme.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
           }),
       ],
     );
   }
 
   String _getMonthName(int month) {
-    const months = ['JAN', 'FEV', 'MAR', 'AVR', 'MAI', 'JUIN', 'JUIL', 'AOUT', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const months = [
+      'JAN',
+      'FEV',
+      'MAR',
+      'AVR',
+      'MAI',
+      'JUIN',
+      'JUIL',
+      'AOUT',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC',
+    ];
     return months[month - 1];
   }
 
   Widget _buildModuleCard(Map<String, dynamic> data) {
     final moduleName = data['module_name'] ?? 'N/A';
     final groupeName = data['groupe_name'] ?? 'N/A';
-    final double totalHours = (data['masse_horaire_totale'] as num?)?.toDouble() ?? 0;
+    final double totalHours =
+        (data['masse_horaire_totale'] as num?)?.toDouble() ?? 0;
     final double hoursDone = (data['hours_done'] as num?)?.toDouble() ?? 0;
     final double progress = totalHours > 0 ? hoursDone / totalHours : 0;
 
@@ -801,7 +951,11 @@ PreferredSizeWidget? _buildAppBar() {
                     color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.book_rounded, color: AppTheme.primaryBlue, size: 24),
+                  child: const Icon(
+                    Icons.book_rounded,
+                    color: AppTheme.primaryBlue,
+                    size: 24,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -820,9 +974,14 @@ PreferredSizeWidget? _buildAppBar() {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color: AppTheme.stagiaireColor.withValues(alpha: 0.1),
+                              color: AppTheme.stagiaireColor.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -835,7 +994,11 @@ PreferredSizeWidget? _buildAppBar() {
                             ),
                           ),
                           const SizedBox(width: 12),
-                          Icon(Icons.timer_outlined, size: 14, color: AppTheme.textSecondary),
+                          Icon(
+                            Icons.timer_outlined,
+                            size: 14,
+                            color: AppTheme.textSecondary,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             '${hoursDone.toInt()}h / ${totalHours.toInt()}h',
@@ -883,4 +1046,3 @@ PreferredSizeWidget? _buildAppBar() {
     );
   }
 }
-

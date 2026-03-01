@@ -24,12 +24,8 @@ class ChatScreen extends StatefulWidget {
   final int? groupId;
   final String? groupName;
 
-  const ChatScreen({
-    super.key,
-    this.otherUser,
-    this.groupId,
-    this.groupName,
-  }) : assert(otherUser != null || groupId != null);
+  const ChatScreen({super.key, this.otherUser, this.groupId, this.groupName})
+    : assert(otherUser != null || groupId != null);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -50,14 +46,17 @@ class _ChatScreenState extends State<ChatScreen> {
   String? _selectedFileName;
   final Map<int, String> _senderNames = {};
 
-@override
+  @override
   void initState() {
     super.initState();
     final user = Provider.of<AuthService>(context, listen: false).currentUser;
     _currentUserId = user!.id!;
     _loadMessages();
     _markAsRead();
-    _timer = Timer.periodic(const Duration(seconds: 3), (_) => _loadMessages(silent: true));
+    _timer = Timer.periodic(
+      const Duration(seconds: 3),
+      (_) => _loadMessages(silent: true),
+    );
   }
 
   @override
@@ -80,7 +79,9 @@ class _ChatScreenState extends State<ChatScreen> {
         if (widget.groupId != null) {
           for (var msg in msgs) {
             if (!_senderNames.containsKey(msg.senderId)) {
-              final sender = await DatabaseHelper.instance.getUserById(msg.senderId);
+              final sender = await DatabaseHelper.instance.getUserById(
+                msg.senderId,
+              );
               if (sender != null) {
                 _senderNames[msg.senderId] = sender.nom;
               }
@@ -93,9 +94,11 @@ class _ChatScreenState extends State<ChatScreen> {
           _isLoading = false;
         });
         if (!silent || (msgs.length > _messages.length)) {
-             WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             if (_scrollController.hasClients) {
-              _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+              _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent,
+              );
             }
           });
         }
@@ -107,15 +110,24 @@ class _ChatScreenState extends State<ChatScreen> {
     final db = DatabaseHelper.instance;
     if (widget.groupId != null) {
       await db.markGroupMessagesAsRead(widget.groupId!, _currentUserId);
-      await db.markMessageNotificationsAsRead(_currentUserId, groupId: widget.groupId);
+      await db.markMessageNotificationsAsRead(
+        _currentUserId,
+        groupId: widget.groupId,
+      );
     } else {
       await db.markMessagesAsRead(widget.otherUser!.id!, _currentUserId);
-      await db.markMessageNotificationsAsRead(_currentUserId, otherUserId: widget.otherUser!.id);
+      await db.markMessageNotificationsAsRead(
+        _currentUserId,
+        otherUserId: widget.otherUser!.id,
+      );
     }
 
     if (mounted) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
-      Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+      Provider.of<NotificationProvider>(
+        context,
+        listen: false,
+      ).refreshCounts(user);
     }
   }
 
@@ -146,6 +158,7 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }
   }
+
   Future<void> _pickPDF() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -178,7 +191,10 @@ class _ChatScreenState extends State<ChatScreen> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Ajouter un lien', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(
+          'Ajouter un lien',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
         content: TextField(
           controller: controller,
           decoration: InputDecoration(
@@ -190,7 +206,10 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Annuler', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
+            child: Text(
+              'Annuler',
+              style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -204,7 +223,9 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               Navigator.pop(context);
             },
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryBlue),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryBlue,
+            ),
             child: Text('OK', style: GoogleFonts.poppins(color: Colors.white)),
           ),
         ],
@@ -225,7 +246,12 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _sendMessage() async {
     final text = _messageController.text.trim();
 
-    if (text.isEmpty && _selectedImage == null && _selectedPDF == null && _selectedLink == null && _selectedFileBytes == null) return;
+    if (text.isEmpty &&
+        _selectedImage == null &&
+        _selectedPDF == null &&
+        _selectedLink == null &&
+        _selectedFileBytes == null)
+      return;
 
     String? attachmentType;
     String? attachmentUrl;
@@ -236,7 +262,8 @@ class _ChatScreenState extends State<ChatScreen> {
       } else {
         attachmentType = 'image';
       }
-      attachmentUrl = 'data:base64,${base64Encode(_selectedFileBytes!)}|$_selectedFileName';
+      attachmentUrl =
+          'data:base64,${base64Encode(_selectedFileBytes!)}|$_selectedFileName';
     } else if (_selectedImage != null) {
       attachmentType = 'image';
       attachmentUrl = _selectedImage!.path;
@@ -292,26 +319,46 @@ class _ChatScreenState extends State<ChatScreen> {
             CircleAvatar(
               radius: 18,
               backgroundColor: widget.groupId != null
-                ? AppTheme.accentOrange.withValues(alpha: 0.1)
-                : AppTheme.primaryBlue.withValues(alpha: 0.1),
+                  ? AppTheme.accentOrange.withValues(alpha: 0.1)
+                  : AppTheme.primaryBlue.withValues(alpha: 0.1),
               child: widget.groupId != null
-                ? Icon(Icons.groups_rounded, color: AppTheme.accentOrange, size: 18)
-                : Text(
-                    (widget.otherUser?.nom ?? 'U').substring(0, 1).toUpperCase(),
-                    style: GoogleFonts.poppins(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
+                  ? Icon(
+                      Icons.groups_rounded,
+                      color: AppTheme.accentOrange,
+                      size: 18,
+                    )
+                  : Text(
+                      (widget.otherUser?.nom ?? 'U')
+                          .substring(0, 1)
+                          .toUpperCase(),
+                      style: GoogleFonts.poppins(
+                        color: AppTheme.primaryBlue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
             ),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.groupId != null ? widget.groupName! : widget.otherUser!.nom,
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)
+                  widget.groupId != null
+                      ? widget.groupName!
+                      : widget.otherUser!.nom,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 Text(
-                  widget.groupId != null ? 'Groupe de discussion' : widget.otherUser!.role.displayName,
-                  style: GoogleFonts.poppins(fontSize: 10, color: AppTheme.textSecondary)
+                  widget.groupId != null
+                      ? 'Groupe de discussion'
+                      : widget.otherUser!.role.displayName,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    color: AppTheme.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -327,38 +374,38 @@ class _ChatScreenState extends State<ChatScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _messages.isEmpty
-                    ? Center(
-                        child: Text(
-                          'Dites bonjour ! ðŸ‘‹',
-                          style: GoogleFonts.poppins(color: AppTheme.textSecondary),
-                        ),
-                      )
-                    : ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _messages.length,
-                        itemBuilder: (context, index) {
-                          final msg = _messages[index];
-                          final isMe = msg.senderId == _currentUserId;
+                ? Center(
+                    child: Text(
+                      'Dites bonjour ! 👋',
+                      style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+                    ),
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _messages.length,
+                    itemBuilder: (context, index) {
+                      final msg = _messages[index];
+                      final isMe = msg.senderId == _currentUserId;
 
-                          bool showDate = false;
-                          if (index == 0) {
-                            showDate = true;
-                          } else {
-                            final prevMsg = _messages[index - 1];
-                            if (!_isSameDay(msg.timestamp, prevMsg.timestamp)) {
-                              showDate = true;
-                            }
-                          }
+                      bool showDate = false;
+                      if (index == 0) {
+                        showDate = true;
+                      } else {
+                        final prevMsg = _messages[index - 1];
+                        if (!_isSameDay(msg.timestamp, prevMsg.timestamp)) {
+                          showDate = true;
+                        }
+                      }
 
-                          return Column(
-                            children: [
-                              if (showDate) _buildDateDivider(msg.timestamp),
-                              _buildMessageBubble(msg, isMe),
-                            ],
-                          );
-                        },
-                      ),
+                      return Column(
+                        children: [
+                          if (showDate) _buildDateDivider(msg.timestamp),
+                          _buildMessageBubble(msg, isMe),
+                        ],
+                      );
+                    },
+                  ),
           ),
           _buildInputArea(),
         ],
@@ -399,7 +446,9 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
         decoration: BoxDecoration(
           color: isMe ? AppTheme.primaryBlue : Colors.grey.shade100,
           borderRadius: BorderRadius.only(
@@ -425,7 +474,8 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
             if (msg.attachmentType != null) ...[
               _buildAttachment(msg, isMe),
-              if (msg.content.isNotEmpty && msg.content != 'Fichier partagé') const SizedBox(height: 8),
+              if (msg.content.isNotEmpty && msg.content != 'Fichier partagé')
+                const SizedBox(height: 8),
             ],
             if (msg.content.isNotEmpty && msg.content != 'Fichier partagé')
               Text(
@@ -442,7 +492,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text(
                   '${msg.timestamp.hour}:${msg.timestamp.minute.toString().padLeft(2, '0')}',
                   style: GoogleFonts.poppins(
-                    color: isMe ? Colors.white.withValues(alpha: 0.7) : AppTheme.textSecondary,
+                    color: isMe
+                        ? Colors.white.withValues(alpha: 0.7)
+                        : AppTheme.textSecondary,
                     fontSize: 10,
                   ),
                 ),
@@ -481,11 +533,20 @@ class _ChatScreenState extends State<ChatScreen> {
             MaterialPageRoute(
               builder: (_) => Scaffold(
                 backgroundColor: Colors.black,
-                appBar: AppBar(backgroundColor: Colors.black, iconTheme: const IconThemeData(color: Colors.white)),
+                appBar: AppBar(
+                  backgroundColor: Colors.black,
+                  iconTheme: const IconThemeData(color: Colors.white),
+                ),
                 body: Center(
                   child: isBase64
-                    ? Image.memory(bytes!)
-                    : (kIsWeb ? const Icon(Icons.image, color: Colors.white, size: 50) : Image.file(File(msg.attachmentUrl!))),
+                      ? Image.memory(bytes!)
+                      : (kIsWeb
+                            ? const Icon(
+                                Icons.image,
+                                color: Colors.white,
+                                size: 50,
+                              )
+                            : Image.file(File(msg.attachmentUrl!))),
                 ),
               ),
             ),
@@ -494,14 +555,26 @@ class _ChatScreenState extends State<ChatScreen> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: isBase64
-            ? Image.memory(bytes!, width: 200, height: 200, fit: BoxFit.cover)
-            : (kIsWeb
-                ? Container(width: 200, height: 200, color: Colors.grey.shade200, child: const Icon(Icons.image))
-                : Image.file(File(msg.attachmentUrl!), width: 200, height: 200, fit: BoxFit.cover)),
+              ? Image.memory(bytes!, width: 200, height: 200, fit: BoxFit.cover)
+              : (kIsWeb
+                    ? Container(
+                        width: 200,
+                        height: 200,
+                        color: Colors.grey.shade200,
+                        child: const Icon(Icons.image),
+                      )
+                    : Image.file(
+                        File(msg.attachmentUrl!),
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      )),
         ),
       );
     } else if (msg.attachmentType == 'pdf') {
-      final displayName = isBase64 ? (fileName ?? 'Document PDF') : msg.attachmentUrl!.split('/').last;
+      final displayName = isBase64
+          ? (fileName ?? 'Document PDF')
+          : msg.attachmentUrl!.split('/').last;
       return GestureDetector(
         onTap: () async {
           if (isBase64) {
@@ -517,7 +590,9 @@ class _ChatScreenState extends State<ChatScreen> {
             } catch (e) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Erreur lors de l\'affichage du PDF : $e')),
+                  SnackBar(
+                    content: Text('Erreur lors de l\'affichage du PDF : $e'),
+                  ),
                 );
               }
             }
@@ -529,17 +604,25 @@ class _ChatScreenState extends State<ChatScreen> {
                   await launchUrl(url, mode: LaunchMode.externalApplication);
                 }
               } else {
-                final OpenResult result = await OpenFilex.open(msg.attachmentUrl!);
+                final OpenResult result = await OpenFilex.open(
+                  msg.attachmentUrl!,
+                );
                 if (result.type != ResultType.done && context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Impossible d\'ouvrir le PDF: ${result.message}')),
+                    SnackBar(
+                      content: Text(
+                        'Impossible d\'ouvrir le PDF: ${result.message}',
+                      ),
+                    ),
                   );
                 }
               }
             } catch (e) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Erreur lors de l\'ouverture du PDF : $e')),
+                  SnackBar(
+                    content: Text('Erreur lors de l\'ouverture du PDF : $e'),
+                  ),
                 );
               }
             }
@@ -548,13 +631,19 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: isMe ? Colors.white.withValues(alpha: 0.2) : Colors.grey.shade200,
+            color: isMe
+                ? Colors.white.withValues(alpha: 0.2)
+                : Colors.grey.shade200,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.picture_as_pdf, color: isMe ? Colors.white : Colors.red, size: 32),
+              Icon(
+                Icons.picture_as_pdf,
+                color: isMe ? Colors.white : Colors.red,
+                size: 32,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -573,7 +662,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     Text(
                       'PDF Document',
                       style: GoogleFonts.poppins(
-                        color: isMe ? Colors.white.withValues(alpha: 0.7) : AppTheme.textSecondary,
+                        color: isMe
+                            ? Colors.white.withValues(alpha: 0.7)
+                            : AppTheme.textSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -595,12 +686,18 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: isMe ? Colors.white.withValues(alpha: 0.2) : Colors.grey.shade200,
+            color: isMe
+                ? Colors.white.withValues(alpha: 0.2)
+                : Colors.grey.shade200,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             children: [
-              Icon(Icons.link, color: isMe ? Colors.white : AppTheme.primaryBlue, size: 24),
+              Icon(
+                Icons.link,
+                color: isMe ? Colors.white : AppTheme.primaryBlue,
+                size: 24,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -626,7 +723,10 @@ class _ChatScreenState extends State<ChatScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (_selectedImage != null || _selectedPDF != null || _selectedLink != null || _selectedFileBytes != null)
+        if (_selectedImage != null ||
+            _selectedPDF != null ||
+            _selectedLink != null ||
+            _selectedFileBytes != null)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -638,39 +738,76 @@ class _ChatScreenState extends State<ChatScreen> {
                 if (_selectedImage != null)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.file(_selectedImage!, width: 50, height: 50, fit: BoxFit.cover),
+                    child: Image.file(
+                      _selectedImage!,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
                   )
                 else if (_selectedFileBytes != null)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: _selectedFileName!.toLowerCase().endsWith('.pdf')
-                      ? Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(8)),
-                          child: const Icon(Icons.picture_as_pdf, color: Colors.red, size: 30),
-                        )
-                      : Image.memory(_selectedFileBytes!, width: 50, height: 50, fit: BoxFit.cover),
+                        ? Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.picture_as_pdf,
+                              color: Colors.red,
+                              size: 30,
+                            ),
+                          )
+                        : Image.memory(
+                            _selectedFileBytes!,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
                   )
                 else if (_selectedPDF != null)
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(8)),
-                    child: const Icon(Icons.picture_as_pdf, color: Colors.red, size: 30),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.picture_as_pdf,
+                      color: Colors.red,
+                      size: 30,
+                    ),
                   )
                 else if (_selectedLink != null)
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: AppTheme.primaryBlue.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-                    child: const Icon(Icons.link, color: AppTheme.primaryBlue, size: 30),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryBlue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.link,
+                      color: AppTheme.primaryBlue,
+                      size: 30,
+                    ),
                   ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    _selectedImage != null ? 'Image sélectionnée' :
-                    _selectedFileBytes != null ? _selectedFileName! :
-                    _selectedPDF != null ? _selectedPDF!.path.split('/').last :
-                    _selectedLink!,
-                    style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textPrimary),
+                    _selectedImage != null
+                        ? 'Image sélectionnée'
+                        : _selectedFileBytes != null
+                        ? _selectedFileName!
+                        : _selectedPDF != null
+                        ? _selectedPDF!.path.split('/').last
+                        : _selectedLink!,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: AppTheme.textPrimary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -697,15 +834,24 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.image_outlined, color: AppTheme.primaryBlue),
+                icon: const Icon(
+                  Icons.image_outlined,
+                  color: AppTheme.primaryBlue,
+                ),
                 onPressed: _pickImage,
               ),
               IconButton(
-                icon: const Icon(Icons.picture_as_pdf_outlined, color: AppTheme.primaryBlue),
+                icon: const Icon(
+                  Icons.picture_as_pdf_outlined,
+                  color: AppTheme.primaryBlue,
+                ),
                 onPressed: _pickPDF,
               ),
               IconButton(
-                icon: const Icon(Icons.link_rounded, color: AppTheme.primaryBlue),
+                icon: const Icon(
+                  Icons.link_rounded,
+                  color: AppTheme.primaryBlue,
+                ),
                 onPressed: _showLinkDialog,
               ),
               const SizedBox(width: 8),
@@ -714,14 +860,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   controller: _messageController,
                   decoration: InputDecoration(
                     hintText: 'Votre message...',
-                    hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary),
+                    hintStyle: GoogleFonts.poppins(
+                      color: AppTheme.textSecondary,
+                    ),
                     filled: true,
                     fillColor: Colors.grey.shade50,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                   ),
                   minLines: 1,
                   maxLines: 4,
@@ -736,7 +887,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: AppTheme.primaryBlue,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+                  child: const Icon(
+                    Icons.send_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
               ),
             ],
@@ -746,4 +901,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-
