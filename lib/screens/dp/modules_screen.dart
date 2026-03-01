@@ -600,7 +600,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'FiliÃ¨re *',
+                              'Filière *',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -652,7 +652,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'AnnÃ©e *',
+                              'Année *',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,

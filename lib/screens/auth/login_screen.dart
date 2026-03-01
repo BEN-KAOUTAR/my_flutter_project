@@ -23,10 +23,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _isLoading = false;
-  
+
   UserRole? _selectedRole;
 
   @override
@@ -38,11 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_selectedRole == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Veuillez sÃ©lectionner un rÃ´le', style: GoogleFonts.poppins()),
+          content: Text(
+            'Veuillez sélectionner un rôle',
+            style: GoogleFonts.poppins(),
+          ),
           backgroundColor: AppTheme.accentOrange,
           behavior: SnackBarBehavior.floating,
         ),
@@ -62,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (success && mounted) {
       final actualRole = authService.currentUser!.role;
-      
+
       if (_selectedRole != null && actualRole != _selectedRole) {
         await authService.logout();
         if (mounted) {
@@ -90,7 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           backgroundColor: AppTheme.accentRed,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     }
@@ -138,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   Container(
+                  Container(
                     padding: EdgeInsets.all(isTablet ? 24 : 32),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -152,9 +157,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     child: Image.asset(
-                      'assets/images/logo.jpg', 
-                      width: isTablet ? 80 : 100, 
-                      height: isTablet ? 80 : 100
+                      'assets/images/logo.jpg',
+                      width: isTablet ? 80 : 100,
+                      height: isTablet ? 80 : 100,
                     ),
                   ),
                   SizedBox(height: isTablet ? 30 : 40),
@@ -168,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'La plateforme d\'excellence pÃ©dagogique',
+                    'La plateforme d\'excellence pédagogique',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: isTablet ? 16 : 18,
@@ -210,7 +215,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final labelSize = ResponsiveLayout.respSize(context, 16, 17, 18);
 
     return Column(
-      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         if (isMobile) ...[
           const SizedBox(height: 20),
@@ -239,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Text(
-            'Gestion PÃ©dagogique',
+            'Gestion Pédagogique',
             style: GoogleFonts.poppins(
               fontSize: 18,
               color: AppTheme.textSecondary,
@@ -258,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Connectez-vous pour accÃ©der Ã  votre espace',
+          'Connectez-vous pour accéder à votre espace',
           style: GoogleFonts.poppins(
             fontSize: subWelcomeSize,
             color: AppTheme.textSecondary,
@@ -267,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 40),
 
         Text(
-          'SÃ©lectionnez votre rÃ´le',
+          'Sélectionnez votre rôle',
           style: GoogleFonts.poppins(
             fontSize: labelSize,
             fontWeight: FontWeight.w600,
@@ -277,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 16),
         _buildRoleOption(
           role: UserRole.dp,
-          label: 'Directeur PÃ©dagogique',
+          label: 'Directeur Pédagogique',
           sublabel: 'Gestion globale et validation',
           icon: Icons.school_outlined,
           color: const Color(0xFF0EA5E9),
@@ -288,7 +295,7 @@ class _LoginScreenState extends State<LoginScreen> {
           label: 'Formateur',
           sublabel: 'Saisie avancement et notes',
           icon: Icons.book_outlined,
-          color: AppTheme.formateurColor, 
+          color: AppTheme.formateurColor,
         ),
         const SizedBox(height: 12),
         _buildRoleOption(
@@ -296,22 +303,22 @@ class _LoginScreenState extends State<LoginScreen> {
           label: 'Stagiaire',
           sublabel: 'Consultation notes et emploi',
           icon: Icons.people_outline_rounded,
-          color: AppTheme.stagiaireColor, 
+          color: AppTheme.stagiaireColor,
         ),
-        
+
         const SizedBox(height: 32),
 
         _buildLoginForm(),
 
         const SizedBox(height: 24),
-        
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
               onPressed: _showForgotPasswordDialog,
               child: Text(
-                'Mot de passe oubliÃ© ?',
+                'Mot de passe oublié ?',
                 style: GoogleFonts.poppins(
                   color: AppTheme.textSecondary,
                   fontWeight: FontWeight.w500,
@@ -325,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               onPressed: _showDirectorSignupDialog,
               child: Text(
-                'CrÃ©er un compte',
+                'Créer un compte',
                 style: GoogleFonts.poppins(
                   color: AppTheme.primaryBlue,
                   fontWeight: FontWeight.bold,
@@ -369,7 +376,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required Color color,
   }) {
     final isSelected = _selectedRole == role;
-    
+
     return InkWell(
       onTap: () => setState(() => _selectedRole = role),
       borderRadius: BorderRadius.circular(16),
@@ -377,7 +384,9 @@ class _LoginScreenState extends State<LoginScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : Colors.grey.shade50,
+          color: isSelected
+              ? color.withValues(alpha: 0.1)
+              : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? color : Colors.grey.shade200,
@@ -391,7 +400,9 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: BoxDecoration(
                 color: isSelected ? color : Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: isSelected ? null : Border.all(color: Colors.grey.shade200),
+                border: isSelected
+                    ? null
+                    : Border.all(color: Colors.grey.shade200),
               ),
               child: Icon(
                 icon,
@@ -448,7 +459,10 @@ class _LoginScreenState extends State<LoginScreen> {
             decoration: InputDecoration(
               hintText: 'votre.email@poledigital.ma',
               hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400),
-              prefixIcon: Icon(Icons.email_outlined, color: Colors.grey.shade500),
+              prefixIcon: Icon(
+                Icons.email_outlined,
+                color: Colors.grey.shade500,
+              ),
               filled: true,
               fillColor: Colors.grey.shade50,
               border: OutlineInputBorder(
@@ -465,10 +479,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             keyboardType: TextInputType.emailAddress,
-            validator: (value) => value == null || value.isEmpty ? 'Requis' : null,
+            validator: (value) =>
+                value == null || value.isEmpty ? 'Requis' : null,
           ),
           const SizedBox(height: 20),
-          
+
           Text(
             'Mot de passe',
             style: GoogleFonts.poppins(
@@ -481,15 +496,21 @@ class _LoginScreenState extends State<LoginScreen> {
           TextFormField(
             controller: _passwordController,
             decoration: InputDecoration(
-              hintText: 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢',
+              hintText: '••••••••',
               hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400),
-              prefixIcon: Icon(Icons.lock_outlined, color: Colors.grey.shade500),
+              prefixIcon: Icon(
+                Icons.lock_outlined,
+                color: Colors.grey.shade500,
+              ),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                  _obscurePassword
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
                   color: Colors.grey.shade500,
                 ),
-                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               ),
               filled: true,
               fillColor: Colors.grey.shade50,
@@ -507,11 +528,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             obscureText: _obscurePassword,
-            validator: (value) => value == null || value.isEmpty ? 'Requis' : null,
+            validator: (value) =>
+                value == null || value.isEmpty ? 'Requis' : null,
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           SizedBox(
             width: double.infinity,
             height: ResponsiveLayout.respSize(context, 50, 56, 62),
@@ -520,14 +542,28 @@ class _LoginScreenState extends State<LoginScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0EA5E9),
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: _isLoading
-                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                   : Text(
                       'Se connecter',
                       style: GoogleFonts.poppins(
-                        fontSize: ResponsiveLayout.respSize(context, 16, 17, 18),
+                        fontSize: ResponsiveLayout.respSize(
+                          context,
+                          16,
+                          17,
+                          18,
+                        ),
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -562,9 +598,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _getRoleLabel(UserRole role) {
     switch (role) {
-      case UserRole.dp: return 'Directeur PÃ©dagogique';
-      case UserRole.formateur: return 'Formateur';
-      case UserRole.stagiaire: return 'Stagiaire';
+      case UserRole.dp:
+        return 'Directeur Pédagogique';
+      case UserRole.formateur:
+        return 'Formateur';
+      case UserRole.stagiaire:
+        return 'Stagiaire';
     }
   }
 
@@ -602,12 +641,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text(
           label,
           style: GoogleFonts.poppins(
-            fontSize: ResponsiveLayout.respSize(context, 14, 16, 18), 
-            fontWeight: FontWeight.w500
+            fontSize: ResponsiveLayout.respSize(context, 14, 16, 18),
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
     );
   }
 }
-
