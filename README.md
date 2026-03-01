@@ -1,4 +1,4 @@
-# Academic Pro - Gestion du Pôle Digital
+git checkout -b gh-pages# Academic Pro - Gestion du Pôle Digital
 
 Academic Pro est une plateforme d'excellence pédagogique conçue pour la gestion et le suivi des activités au sein du Pôle Digital.
 
