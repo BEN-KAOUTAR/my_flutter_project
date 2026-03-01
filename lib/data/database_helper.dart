@@ -22,8 +22,7 @@ class DatabaseHelper {
   static Database? _database;
 
   DatabaseHelper._init();
-  
-  
+
   final _onDataChange = StreamController<void>.broadcast();
   Stream<void> get onDataChange => _onDataChange.stream;
 
@@ -31,7 +30,6 @@ class DatabaseHelper {
     _onDataChange.add(null);
   }
 
-  
   Future<int> createNotification(NotificationModel notification) async {
     final db = await database;
     final id = await db.insert('notifications', notification.toMap());
@@ -53,13 +51,18 @@ class DatabaseHelper {
     try {
       if (_database != null) return _database!;
       _database = await _initDB('academic_pro.db');
-      
-      
-      final usersCount = Sqflite.firstIntValue(await _database!.rawQuery('SELECT COUNT(*) FROM users')) ?? 0;
+
+      final usersCount =
+          Sqflite.firstIntValue(
+            await _database!.rawQuery('SELECT COUNT(*) FROM users'),
+          ) ??
+          0;
       if (usersCount == 0) {
         await _seedData(_database!);
+      } else {
+        await _fixGarbledData(_database!);
       }
-      
+
       return _database!;
     } catch (e) {
       debugPrint('Database access error: $e');
@@ -93,7 +96,7 @@ class DatabaseHelper {
       try {
         await db.execute('ALTER TABLE users ADD COLUMN photo_url TEXT');
       } catch (e) {}
-      
+
       await db.execute('''
         CREATE TABLE IF NOT EXISTS messages (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -122,7 +125,7 @@ class DatabaseHelper {
         )
       ''');
     }
-  
+
     if (oldVersion < 6) {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS reclamations (
@@ -156,16 +159,16 @@ class DatabaseHelper {
 
     if (oldVersion < 8) {
       try {
-        await db.execute('ALTER TABLE messages ADD COLUMN group_id INTEGER REFERENCES groupes(id)');
-      } catch (e) {
-      }
+        await db.execute(
+          'ALTER TABLE messages ADD COLUMN group_id INTEGER REFERENCES groupes(id)',
+        );
+      } catch (e) {}
     }
 
     if (oldVersion < 9) {
       try {
         await db.execute('ALTER TABLE users ADD COLUMN birth_date TEXT');
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     if (oldVersion < 10) {
@@ -199,13 +202,19 @@ class DatabaseHelper {
     if (oldVersion < 14) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(reclamations)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('attachment_url')) {
-          await db.execute('ALTER TABLE reclamations ADD COLUMN attachment_url TEXT');
+          await db.execute(
+            'ALTER TABLE reclamations ADD COLUMN attachment_url TEXT',
+          );
         }
         if (!columnNames.contains('attachment_type')) {
-          await db.execute('ALTER TABLE reclamations ADD COLUMN attachment_type TEXT');
+          await db.execute(
+            'ALTER TABLE reclamations ADD COLUMN attachment_type TEXT',
+          );
         }
       } catch (e) {
         debugPrint('Migration error v14: $e');
@@ -215,10 +224,14 @@ class DatabaseHelper {
     if (oldVersion < 15) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(notes)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('statut')) {
-          await db.execute("ALTER TABLE notes ADD COLUMN statut TEXT DEFAULT 'Valide'");
+          await db.execute(
+            "ALTER TABLE notes ADD COLUMN statut TEXT DEFAULT 'Valide'",
+          );
         }
       } catch (e) {
         debugPrint('Migration error v15: $e');
@@ -237,7 +250,7 @@ class DatabaseHelper {
         )
       ''');
     }
-    
+
     if (oldVersion < 17) {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS presences (
@@ -268,15 +281,16 @@ class DatabaseHelper {
             FOREIGN KEY (stagiaire_id) REFERENCES users (id)
           )
         ''');
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     if (oldVersion < 19) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(users)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         final requiredColumns = {
           'photo_url': 'TEXT',
           'phone': 'TEXT',
@@ -285,13 +299,17 @@ class DatabaseHelper {
           'matricule': 'TEXT',
           'specialite': 'TEXT',
           'total_heures_affectees': 'REAL DEFAULT 0',
-          'groupe_id': 'INTEGER'
+          'groupe_id': 'INTEGER',
         };
 
         for (var entry in requiredColumns.entries) {
           if (!columnNames.contains(entry.key)) {
-            await db.execute('ALTER TABLE users ADD COLUMN ${entry.key} ${entry.value}');
-            debugPrint('Migration v19: Added column ${entry.key} to users table');
+            await db.execute(
+              'ALTER TABLE users ADD COLUMN ${entry.key} ${entry.value}',
+            );
+            debugPrint(
+              'Migration v19: Added column ${entry.key} to users table',
+            );
           }
         }
       } catch (e) {
@@ -301,8 +319,12 @@ class DatabaseHelper {
 
     if (oldVersion < 20) {
       try {
-        await db.execute('ALTER TABLE users ADD COLUMN director_id INTEGER REFERENCES users(id)');
-        await db.execute('ALTER TABLE filieres ADD COLUMN director_id INTEGER REFERENCES users(id)');
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN director_id INTEGER REFERENCES users(id)',
+        );
+        await db.execute(
+          'ALTER TABLE filieres ADD COLUMN director_id INTEGER REFERENCES users(id)',
+        );
         debugPrint('Migration v20: Added director_id to users and filieres');
       } catch (e) {
         debugPrint('Migration error v20: $e');
@@ -323,26 +345,34 @@ class DatabaseHelper {
     if (oldVersion < 22) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(presences)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('formateur_id')) {
-          await db.execute('ALTER TABLE presences ADD COLUMN formateur_id INTEGER');
+          await db.execute(
+            'ALTER TABLE presences ADD COLUMN formateur_id INTEGER',
+          );
           debugPrint('Migration v22: Added formateur_id to presences');
         }
         if (!columnNames.contains('vu_par_dp')) {
-          await db.execute('ALTER TABLE presences ADD COLUMN vu_par_dp INTEGER DEFAULT 0');
+          await db.execute(
+            'ALTER TABLE presences ADD COLUMN vu_par_dp INTEGER DEFAULT 0',
+          );
           debugPrint('Migration v22: Added vu_par_dp to presences');
         }
       } catch (e) {
         debugPrint('Migration error v22: $e');
       }
     }
-    
+
     if (oldVersion < 23) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(users)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('phone')) {
           await db.execute('ALTER TABLE users ADD COLUMN phone TEXT');
           debugPrint('Migration v23: Added phone to users');
@@ -351,7 +381,7 @@ class DatabaseHelper {
           await db.execute('ALTER TABLE users ADD COLUMN birth_date TEXT');
           debugPrint('Migration v23: Added birth_date to users');
         }
-        
+
         await db.execute('''
           CREATE TABLE IF NOT EXISTS message_reads (
             message_id INTEGER NOT NULL,
@@ -370,8 +400,10 @@ class DatabaseHelper {
     if (oldVersion < 24) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(user_requests)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('phone')) {
           await db.execute('ALTER TABLE user_requests ADD COLUMN phone TEXT');
           debugPrint('Migration v24: Added phone to user_requests');
@@ -384,8 +416,10 @@ class DatabaseHelper {
     if (oldVersion < 25) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(seances)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('heure_debut')) {
           await db.execute('ALTER TABLE seances ADD COLUMN heure_debut TEXT');
           debugPrint('Migration v25: Added heure_debut to seances');
@@ -398,10 +432,14 @@ class DatabaseHelper {
     if (oldVersion < 26) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(modules)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('coefficient')) {
-          await db.execute('ALTER TABLE modules ADD COLUMN coefficient INTEGER DEFAULT 1');
+          await db.execute(
+            'ALTER TABLE modules ADD COLUMN coefficient INTEGER DEFAULT 1',
+          );
           debugPrint('Migration v26: Added coefficient to modules');
         }
       } catch (e) {
@@ -412,8 +450,10 @@ class DatabaseHelper {
     if (oldVersion < 28) {
       try {
         final columns = await db.rawQuery('PRAGMA table_info(presences)');
-        final columnNames = columns.map((c) => c['name'] as String? ?? '').toList();
-        
+        final columnNames = columns
+            .map((c) => c['name'] as String? ?? '')
+            .toList();
+
         if (!columnNames.contains('heure')) {
           await db.execute('ALTER TABLE presences ADD COLUMN heure TEXT');
           debugPrint('Migration v28: Added heure to presences');
@@ -425,8 +465,12 @@ class DatabaseHelper {
     if (oldVersion < 29) {
       try {
         await db.execute('ALTER TABLE groupes ADD COLUMN annee_scolaire TEXT');
-        await db.execute('ALTER TABLE modules ADD COLUMN annee INTEGER DEFAULT 1');
-        await db.execute('ALTER TABLE modules ADD COLUMN semestre INTEGER DEFAULT 1');
+        await db.execute(
+          'ALTER TABLE modules ADD COLUMN annee INTEGER DEFAULT 1',
+        );
+        await db.execute(
+          'ALTER TABLE modules ADD COLUMN semestre INTEGER DEFAULT 1',
+        );
         debugPrint('Migration v29: Added columns to groupes and modules');
       } catch (e) {
         debugPrint('Migration error v29: $e');
@@ -434,7 +478,9 @@ class DatabaseHelper {
     }
     if (oldVersion < 30) {
       try {
-        await db.execute('ALTER TABLE users ADD COLUMN is_expert INTEGER DEFAULT 0');
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN is_expert INTEGER DEFAULT 0',
+        );
         debugPrint('Migration v30: Added is_expert to users');
       } catch (e) {
         debugPrint('Migration error v30: $e');
@@ -631,7 +677,6 @@ class DatabaseHelper {
       )
     ''');
 
-
     await db.execute('''
       CREATE TABLE emplois (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -667,7 +712,6 @@ class DatabaseHelper {
       )
     ''');
 
-    
     await _seedData(db);
   }
 
@@ -681,7 +725,17 @@ class DatabaseHelper {
     });
   }
 
-  
+  Future<void> _fixGarbledData(Database db) async {
+    try {
+      // Fix the most common garbled user names from initial seeds or bad registrations
+      await db.rawUpdate(
+        "UPDATE users SET nom = 'Directeur Pédagogique' WHERE email = 'dp@digitalpole.ma' AND (nom LIKE '%PÃ%' OR nom LIKE '%P%g%')",
+      );
+    } catch (e) {
+      debugPrint('Error fixing garbled data: $e');
+    }
+  }
+
   Future<User?> authenticateUser(String email, String password) async {
     final db = await database;
     final result = await db.query(
@@ -690,15 +744,16 @@ class DatabaseHelper {
       whereArgs: [email, password],
     );
     if (result.isEmpty) return null;
-    
+
     final user = User.fromMap(result.first);
-    
-    
+
     if (user.role != UserRole.dp && user.directorId == null) {
-      debugPrint('Authentication failed: Non-DP user ${user.email} has no director_id');
+      debugPrint(
+        'Authentication failed: Non-DP user ${user.email} has no director_id',
+      );
       return null;
     }
-    
+
     return user;
   }
 
@@ -724,17 +779,13 @@ class DatabaseHelper {
     final db = await database;
     String where = 'role = ?';
     List<dynamic> args = [role.dbValue];
-    
+
     if (directorId != null) {
       where += ' AND director_id = ?';
       args.add(directorId);
     }
 
-    final result = await db.query(
-      'users',
-      where: where,
-      whereArgs: args,
-    );
+    final result = await db.query('users', where: where, whereArgs: args);
     return result.map((map) => User.fromMap(map)).toList();
   }
 
@@ -746,15 +797,15 @@ class DatabaseHelper {
       LEFT JOIN affectations a ON u.id = a.formateur_id
       WHERE u.role = 'FORMATEUR'
     ''';
-    
+
     List<dynamic> args = [];
     if (directorId != null) {
       query += ' AND u.director_id = ?';
       args.add(directorId);
     }
-    
+
     query += ' GROUP BY u.id';
-    
+
     final result = await db.rawQuery(query, args);
     return result.map((map) => User.fromMap(map)).toList();
   }
@@ -795,7 +846,12 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<bool> checkFormateurAvailability(int formateurId, int semaineNum, String jour, String heureDebut) async {
+  Future<bool> checkFormateurAvailability(
+    int formateurId,
+    int semaineNum,
+    String jour,
+    String heureDebut,
+  ) async {
     final db = await database;
     final result = await db.query(
       'emplois',
@@ -809,8 +865,8 @@ class DatabaseHelper {
         try {
           final List<dynamic> creneaux = jsonDecode(jsonStr);
           for (var c in creneaux) {
-            if (c['formateur_id'] == formateurId && 
-                c['jour'] == jour && 
+            if (c['formateur_id'] == formateurId &&
+                c['jour'] == jour &&
                 c['heure_debut'] == heureDebut) {
               return false;
             }
@@ -823,11 +879,14 @@ class DatabaseHelper {
     return true;
   }
 
-
   Future<List<Filiere>> getAllFilieres({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.query('filieres', where: 'director_id = ?', whereArgs: [directorId]);
+      final result = await db.query(
+        'filieres',
+        where: 'director_id = ?',
+        whereArgs: [directorId],
+      );
       return result.map((map) => Filiere.fromMap(map)).toList();
     }
     final result = await db.query('filieres');
@@ -870,20 +929,26 @@ class DatabaseHelper {
 
   Future<int> deleteFiliere(int id) async {
     final db = await database;
-    final result = await db.delete('filieres', where: 'id = ?', whereArgs: [id]);
+    final result = await db.delete(
+      'filieres',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     notifyDataChanged();
     return result;
   }
 
-
   Future<List<Groupe>> getAllGroupes({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT g.* FROM groupes g
         JOIN filieres f ON g.filiere_id = f.id
         WHERE f.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return result.map((map) => Groupe.fromMap(map)).toList();
     }
     final result = await db.query('groupes');
@@ -905,7 +970,11 @@ class DatabaseHelper {
     final groups = await db.query('groupes');
     List<Map<String, dynamic>> res = [];
     for (var g in groups) {
-      final students = await db.query('users', where: 'groupe_id = ? AND role = ?', whereArgs: [g['id'], 'STAGIAIRE']);
+      final students = await db.query(
+        'users',
+        where: 'groupe_id = ? AND role = ?',
+        whereArgs: [g['id'], 'STAGIAIRE'],
+      );
       res.add({
         'id': g['id'],
         'nom': g['nom'],
@@ -946,7 +1015,12 @@ class DatabaseHelper {
     final existing = await db.query(
       'groupes',
       where: 'nom = ? AND filiere_id = ? AND annee = ? AND annee_scolaire = ?',
-      whereArgs: [groupe.nom, groupe.filiereId, groupe.annee, groupe.anneeScolaire],
+      whereArgs: [
+        groupe.nom,
+        groupe.filiereId,
+        groupe.annee,
+        groupe.anneeScolaire,
+      ],
     );
     if (existing.isNotEmpty) {
       throw Exception('Un groupe avec ce nom existe déjà dans cette filière.');
@@ -975,15 +1049,17 @@ class DatabaseHelper {
     return result;
   }
 
-
   Future<List<Module>> getAllModules({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT m.* FROM modules m
         JOIN filieres f ON m.filiere_id = f.id
         WHERE f.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return result.map((map) => Module.fromMap(map)).toList();
     }
     final result = await db.query('modules');
@@ -1041,16 +1117,18 @@ class DatabaseHelper {
     return result;
   }
 
-
   Future<List<Affectation>> getAllAffectations({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT a.* FROM affectations a
         JOIN modules m ON a.module_id = m.id
         JOIN filieres f ON m.filiere_id = f.id
         WHERE f.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return result.map((map) => Affectation.fromMap(map)).toList();
     }
     final result = await db.query('affectations');
@@ -1079,36 +1157,41 @@ class DatabaseHelper {
 
   Future<int> insertAffectation(Affectation affectation) async {
     final db = await database;
-    
+
     final existing = await db.query(
       'affectations',
-      where: 'formateur_id = ? AND module_id = ? AND groupe_id = ? AND annee_scolaire = ?',
+      where:
+          'formateur_id = ? AND module_id = ? AND groupe_id = ? AND annee_scolaire = ?',
       whereArgs: [
         affectation.formateurId,
         affectation.moduleId,
         affectation.groupeId,
-        affectation.anneeScolaire
+        affectation.anneeScolaire,
       ],
     );
     if (existing.isNotEmpty) {
       throw Exception('Cette affectation existe déjà.');
     }
 
- 
     final formateur = await getUserById(affectation.formateurId);
     final module = await getModuleById(affectation.moduleId);
     if (formateur != null && module != null) {
       if ((formateur.totalHeuresAffectees + module.masseHoraireTotale) > 910) {
-        throw Exception('Le formateur ${formateur.nom} dépasserait la limit annuelle de 910h (${formateur.totalHeuresAffectees + module.masseHoraireTotale}h prévues).');
+        throw Exception(
+          'Le formateur ${formateur.nom} dépasserait la limit annuelle de 910h (${formateur.totalHeuresAffectees + module.masseHoraireTotale}h prévues).',
+        );
       }
     }
 
-    final id = await db.insert('affectations', affectation.toMap()..remove('id'));
-    
+    final id = await db.insert(
+      'affectations',
+      affectation.toMap()..remove('id'),
+    );
+
     if (module != null) {
       await db.rawUpdate(
         'UPDATE users SET total_heures_affectees = total_heures_affectees + ? WHERE id = ?',
-        [module.masseHoraireTotale, affectation.formateurId]
+        [module.masseHoraireTotale, affectation.formateurId],
       );
     }
 
@@ -1118,99 +1201,110 @@ class DatabaseHelper {
 
   Future<int> updateAffectation(Affectation affectation) async {
     final db = await database;
-    
+
     // Get the old affectation data to compare
     final oldResult = await db.query(
       'affectations',
       where: 'id = ?',
       whereArgs: [affectation.id],
     );
-    
+
     if (oldResult.isNotEmpty) {
       final oldAffectation = Affectation.fromMap(oldResult.first);
       final oldModule = await getModuleById(oldAffectation.moduleId);
       final newModule = await getModuleById(affectation.moduleId);
-      
+
       // If formateur changed, update hours for both
       if (oldAffectation.formateurId != affectation.formateurId) {
         // Check if new formateur would exceed 910h limit
         final newFormateur = await getUserById(affectation.formateurId);
         if (newFormateur != null && newModule != null) {
-          if ((newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale) > 910) {
+          if ((newFormateur.totalHeuresAffectees +
+                  newModule.masseHoraireTotale) >
+              910) {
             throw Exception(
               'Le formateur ${newFormateur.nom} dépasserait la limite annuelle de 910h '
-              '(${newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale}h prévues).'
+              '(${newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale}h prévues).',
             );
           }
         }
-        
+
         // Remove hours from old formateur
         if (oldModule != null) {
           await db.rawUpdate(
             'UPDATE users SET total_heures_affectees = MAX(0, total_heures_affectees - ?) WHERE id = ?',
-            [oldModule.masseHoraireTotale, oldAffectation.formateurId]
+            [oldModule.masseHoraireTotale, oldAffectation.formateurId],
           );
         }
-        
+
         // Add hours to new formateur
         if (newModule != null) {
           await db.rawUpdate(
             'UPDATE users SET total_heures_affectees = total_heures_affectees + ? WHERE id = ?',
-            [newModule.masseHoraireTotale, affectation.formateurId]
+            [newModule.masseHoraireTotale, affectation.formateurId],
           );
         }
       }
       // If same formateur but different module, adjust hours
       else if (oldAffectation.moduleId != affectation.moduleId) {
         if (oldModule != null && newModule != null) {
-          final hoursDifference = newModule.masseHoraireTotale - oldModule.masseHoraireTotale;
-          
+          final hoursDifference =
+              newModule.masseHoraireTotale - oldModule.masseHoraireTotale;
+
           // Check if formateur would exceed limit
           final formateur = await getUserById(affectation.formateurId);
           if (formateur != null) {
             if ((formateur.totalHeuresAffectees + hoursDifference) > 910) {
               throw Exception(
                 'Le formateur ${formateur.nom} dépasserait la limite annuelle de 910h '
-                '(${formateur.totalHeuresAffectees + hoursDifference}h prévues).'
+                '(${formateur.totalHeuresAffectees + hoursDifference}h prévues).',
               );
             }
           }
-          
+
           await db.rawUpdate(
             'UPDATE users SET total_heures_affectees = total_heures_affectees + ? WHERE id = ?',
-            [hoursDifference, affectation.formateurId]
+            [hoursDifference, affectation.formateurId],
           );
         }
       }
     }
-    
+
     final result = await db.update(
       'affectations',
       affectation.toMap(),
       where: 'id = ?',
       whereArgs: [affectation.id],
     );
-    
+
     notifyDataChanged();
     return result;
   }
 
   Future<int> deleteAffectation(int id) async {
     final db = await database;
-    
-    final result = await db.query('affectations', where: 'id = ?', whereArgs: [id]);
+
+    final result = await db.query(
+      'affectations',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     if (result.isNotEmpty) {
       final affectation = Affectation.fromMap(result.first);
       final module = await getModuleById(affectation.moduleId);
       if (module != null) {
         await db.rawUpdate(
           'UPDATE users SET total_heures_affectees = MAX(0, total_heures_affectees - ?) WHERE id = ?',
-          [module.masseHoraireTotale, affectation.formateurId]
+          [module.masseHoraireTotale, affectation.formateurId],
         );
       }
     }
 
-    final deleted = await db.delete('affectations', where: 'id = ?', whereArgs: [id]);
+    final deleted = await db.delete(
+      'affectations',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     notifyDataChanged();
     return deleted;
   }
@@ -1218,13 +1312,15 @@ class DatabaseHelper {
   Future<void> fixNegativeHours() async {
     final db = await database;
     await db.rawUpdate(
-      'UPDATE users SET total_heures_affectees = 0 WHERE total_heures_affectees < 0'
+      'UPDATE users SET total_heures_affectees = 0 WHERE total_heures_affectees < 0',
     );
     notifyDataChanged();
   }
 
-
-  Future<double> getFormateurWeeklyHours(int formateurId, int semaineNum) async {
+  Future<double> getFormateurWeeklyHours(
+    int formateurId,
+    int semaineNum,
+  ) async {
     final db = await database;
     final result = await db.query(
       'emplois',
@@ -1238,10 +1334,13 @@ class DatabaseHelper {
       if (jsonStr != null && jsonStr.isNotEmpty) {
         final List<dynamic> creneaux = jsonDecode(jsonStr);
         for (var c in creneaux) {
-          if (c['formateur_id'] == formateurId || c['formateurId'] == formateurId) {
+          if (c['formateur_id'] == formateurId ||
+              c['formateurId'] == formateurId) {
             final start = (c['heure_debut'] ?? c['heureDebut']).split(':');
             final end = (c['heure_fin'] ?? c['heureFin']).split(':');
-            final dur = (int.parse(end[0]) * 60 + int.parse(end[1])) - (int.parse(start[0]) * 60 + int.parse(start[1]));
+            final dur =
+                (int.parse(end[0]) * 60 + int.parse(end[1])) -
+                (int.parse(start[0]) * 60 + int.parse(start[1]));
             total += dur / 60.0;
           }
         }
@@ -1266,14 +1365,15 @@ class DatabaseHelper {
         for (var c in creneaux) {
           final start = (c['heure_debut'] ?? c['heureDebut']).split(':');
           final end = (c['heure_fin'] ?? c['heureFin']).split(':');
-          final dur = (int.parse(end[0]) * 60 + int.parse(end[1])) - (int.parse(start[0]) * 60 + int.parse(start[1]));
+          final dur =
+              (int.parse(end[0]) * 60 + int.parse(end[1])) -
+              (int.parse(start[0]) * 60 + int.parse(start[1]));
           total += dur / 60.0;
         }
       }
     }
     return total;
   }
-
 
   Future<List<Seance>> getSeancesByAffectation(int affectationId) async {
     final db = await database;
@@ -1298,13 +1398,16 @@ class DatabaseHelper {
   Future<List<Seance>> getSeancesEnAttente({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT s.* FROM seances s
         JOIN affectations a ON s.affectation_id = a.id
         JOIN modules m ON a.module_id = m.id
         JOIN filieres f ON m.filiere_id = f.id
         WHERE s.statut = 'EN_ATTENTE' AND f.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return result.map((map) => Seance.fromMap(map)).toList();
     }
     final result = await db.query('seances', where: "statut = 'EN_ATTENTE'");
@@ -1370,7 +1473,6 @@ class DatabaseHelper {
     return result;
   }
 
-
   Future<List<Note>> getNotesByStagiaire(int stagiaireId) async {
     final db = await database;
     final result = await db.query(
@@ -1394,11 +1496,14 @@ class DatabaseHelper {
   Future<List<Note>> getNotesEnAttente({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT n.* FROM notes n
         JOIN users u ON n.stagiaire_id = u.id
         WHERE n.statut = 'EN_ATTENTE' AND n.validee = 0 AND u.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return result.map((map) => Note.fromMap(map)).toList();
     }
     final result = await db.query(
@@ -1411,20 +1516,23 @@ class DatabaseHelper {
   Future<int> insertNote(Note note) async {
     final db = await database;
     final id = await db.insert('notes', note.toMap());
-    
+
     final stagiaire = await getUserById(note.stagiaireId);
     final module = await getModuleById(note.moduleId);
-    
+
     if (stagiaire?.directorId != null) {
-      await createNotification(NotificationModel(
-        userId: stagiaire!.directorId!,
-        title: 'Note à valider',
-        message: 'Le formateur a soumis une note pour ${stagiaire.nom} (Module: ${module?.nom ?? "N/A"})',
-        type: 'VALIDATION',
-        timestamp: DateTime.now(),
-      ));
+      await createNotification(
+        NotificationModel(
+          userId: stagiaire!.directorId!,
+          title: 'Note à valider',
+          message:
+              'Le formateur a soumis une note pour ${stagiaire.nom} (Module: ${module?.nom ?? "N/A"})',
+          type: 'VALIDATION',
+          timestamp: DateTime.now(),
+        ),
+      );
     }
-    
+
     notifyDataChanged();
     return id;
   }
@@ -1468,11 +1576,14 @@ class DatabaseHelper {
   Future<List<Note>> getNotesAPublier({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT n.* FROM notes n
         JOIN users u ON n.stagiaire_id = u.id
         WHERE n.validee = 1 AND n.publiee = 0 AND u.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return result.map((map) => Note.fromMap(map)).toList();
     }
     final result = await db.query(
@@ -1497,24 +1608,33 @@ class DatabaseHelper {
       if (note.isNotEmpty) {
         final stagiaireId = note.first['stagiaire_id'] as int;
         final moduleId = note.first['module_id'] as int;
-        
-        final module = await db.query('modules', columns: ['nom'], where: 'id = ?', whereArgs: [moduleId]);
-        final moduleName = module.isNotEmpty ? module.first['nom'] as String : 'un module';
 
-        await createNotification(NotificationModel(
-          userId: stagiaireId,
-          title: 'Nouvelle note disponible',
-          message: 'Une nouvelle note a été publiée pour le module $moduleName.',
-          type: 'NOTE',
-          timestamp: DateTime.now(),
-        ));
-        
+        final module = await db.query(
+          'modules',
+          columns: ['nom'],
+          where: 'id = ?',
+          whereArgs: [moduleId],
+        );
+        final moduleName = module.isNotEmpty
+            ? module.first['nom'] as String
+            : 'un module';
+
+        await createNotification(
+          NotificationModel(
+            userId: stagiaireId,
+            title: 'Nouvelle note disponible',
+            message:
+                'Une nouvelle note a été publiée pour le module $moduleName.',
+            type: 'NOTE',
+            timestamp: DateTime.now(),
+          ),
+        );
+
         notifyDataChanged();
       }
     }
     return result;
   }
-
 
   Future<List<Emploi>> getEmploisByGroupe(int groupeId) async {
     final db = await database;
@@ -1528,16 +1648,22 @@ class DatabaseHelper {
 
   Future<List<Emploi>> getEmploisByFormateur(int formateurId) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT DISTINCT e.* 
       FROM emplois e
       JOIN affectations a ON e.groupe_id = a.groupe_id
       WHERE a.formateur_id = ?
-    ''', [formateurId]);
+    ''',
+      [formateurId],
+    );
     return result.map((map) => Emploi.fromMap(map)).toList();
   }
 
-  Future<Emploi?> getEmploiBySemaineAndGroupe(int semaineNum, int groupeId) async {
+  Future<Emploi?> getEmploiBySemaineAndGroupe(
+    int semaineNum,
+    int groupeId,
+  ) async {
     final db = await database;
     final result = await db.query(
       'emplois',
@@ -1580,26 +1706,32 @@ class DatabaseHelper {
     final stagiaires = await getStagiairesByGroupe(emploi.groupeId);
     for (var s in stagiaires) {
       if (s.id != null) {
-        await createNotification(NotificationModel(
-          userId: s.id!,
-          title: 'Emploi du temps mis à jour',
-          message: 'L\'emploi du temps de la semaine ${emploi.semaineNum} pour $groupName est disponible.',
-          type: 'INFO',
-          timestamp: DateTime.now(),
-        ));
+        await createNotification(
+          NotificationModel(
+            userId: s.id!,
+            title: 'Emploi du temps mis à jour',
+            message:
+                'L\'emploi du temps de la semaine ${emploi.semaineNum} pour $groupName est disponible.',
+            type: 'INFO',
+            timestamp: DateTime.now(),
+          ),
+        );
       }
     }
 
     final formateurIds = emploi.creneaux.map((c) => c.formateurId).toSet();
     for (var fId in formateurIds) {
       if (fId != 0) {
-        await createNotification(NotificationModel(
-          userId: fId,
-          title: 'Planning mis à jour',
-          message: 'Votre planning pour la semaine ${emploi.semaineNum} a été mis à jour pour le groupe $groupName.',
-          type: 'INFO',
-          timestamp: DateTime.now(),
-        ));
+        await createNotification(
+          NotificationModel(
+            userId: fId,
+            title: 'Planning mis à jour',
+            message:
+                'Votre planning pour la semaine ${emploi.semaineNum} a été mis à jour pour le groupe $groupName.',
+            type: 'INFO',
+            timestamp: DateTime.now(),
+          ),
+        );
       }
     }
   }
@@ -1611,10 +1743,9 @@ class DatabaseHelper {
     return result;
   }
 
-
   Future<Map<String, dynamic>> getGlobalStats({int? directorId}) async {
     final db = await database;
-    
+
     String userWhere = 'role = ?';
     List<dynamic> userArgs = ['STAGIAIRE'];
     if (directorId != null) {
@@ -1625,60 +1756,63 @@ class DatabaseHelper {
       'SELECT COUNT(*) as count FROM users WHERE $userWhere',
       userArgs,
     );
-    
+
     userArgs[0] = 'FORMATEUR';
     final formateursCount = await db.rawQuery(
       'SELECT COUNT(*) as count FROM users WHERE $userWhere',
       userArgs,
     );
-    
+
     String filiereWhere = '';
     List<dynamic> filiereArgs = [];
     if (directorId != null) {
       filiereWhere = 'WHERE director_id = ?';
       filiereArgs.add(directorId);
     }
-    final filieresCount = await db.rawQuery('SELECT COUNT(*) as count FROM filieres $filiereWhere', filiereArgs);
-    
-    final groupesCount = await db.rawQuery(
-      directorId != null 
-        ? 'SELECT COUNT(*) as count FROM groupes g JOIN filieres f ON g.filiere_id = f.id WHERE f.director_id = ?'
-        : 'SELECT COUNT(*) as count FROM groupes',
-      directorId != null ? [directorId] : null
+    final filieresCount = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM filieres $filiereWhere',
+      filiereArgs,
     );
-    
+
+    final groupesCount = await db.rawQuery(
+      directorId != null
+          ? 'SELECT COUNT(*) as count FROM groupes g JOIN filieres f ON g.filiere_id = f.id WHERE f.director_id = ?'
+          : 'SELECT COUNT(*) as count FROM groupes',
+      directorId != null ? [directorId] : null,
+    );
+
     final modulesCount = await db.rawQuery(
-      directorId != null 
-        ? 'SELECT COUNT(*) as count FROM modules m JOIN filieres f ON m.filiere_id = f.id WHERE f.director_id = ?'
-        : 'SELECT COUNT(*) as count FROM modules',
-      directorId != null ? [directorId] : null
+      directorId != null
+          ? 'SELECT COUNT(*) as count FROM modules m JOIN filieres f ON m.filiere_id = f.id WHERE f.director_id = ?'
+          : 'SELECT COUNT(*) as count FROM modules',
+      directorId != null ? [directorId] : null,
     );
 
     final seancesValidees = await db.rawQuery(
       directorId != null
-        ? 'SELECT COUNT(*) as count FROM seances s JOIN affectations a ON s.affectation_id = a.id JOIN modules m ON a.module_id = m.id JOIN filieres f ON m.filiere_id = f.id WHERE s.statut = ? AND f.director_id = ?'
-        : 'SELECT COUNT(*) as count FROM seances WHERE statut = ?',
+          ? 'SELECT COUNT(*) as count FROM seances s JOIN affectations a ON s.affectation_id = a.id JOIN modules m ON a.module_id = m.id JOIN filieres f ON m.filiere_id = f.id WHERE s.statut = ? AND f.director_id = ?'
+          : 'SELECT COUNT(*) as count FROM seances WHERE statut = ?',
       directorId != null ? ['VALIDE', directorId] : ['VALIDE'],
     );
 
     final seancesEnAttente = await db.rawQuery(
       directorId != null
-        ? 'SELECT COUNT(*) as count FROM seances s JOIN affectations a ON s.affectation_id = a.id JOIN modules m ON a.module_id = m.id JOIN filieres f ON m.filiere_id = f.id WHERE s.statut = ? AND f.director_id = ?'
-        : 'SELECT COUNT(*) as count FROM seances WHERE statut = ?',
+          ? 'SELECT COUNT(*) as count FROM seances s JOIN affectations a ON s.affectation_id = a.id JOIN modules m ON a.module_id = m.id JOIN filieres f ON m.filiere_id = f.id WHERE s.statut = ? AND f.director_id = ?'
+          : 'SELECT COUNT(*) as count FROM seances WHERE statut = ?',
       directorId != null ? ['EN_ATTENTE', directorId] : ['EN_ATTENTE'],
     );
 
     final absencesCount = await db.rawQuery(
       directorId != null
-        ? 'SELECT COUNT(*) as count FROM presences p JOIN users u ON p.stagiaire_id = u.id WHERE p.statut = ? AND u.director_id = ?'
-        : 'SELECT COUNT(*) as count FROM presences WHERE statut = ?',
+          ? 'SELECT COUNT(*) as count FROM presences p JOIN users u ON p.stagiaire_id = u.id WHERE p.statut = ? AND u.director_id = ?'
+          : 'SELECT COUNT(*) as count FROM presences WHERE statut = ?',
       directorId != null ? ['ABSENT', directorId] : ['ABSENT'],
     );
 
     final presencesCount = await db.rawQuery(
       directorId != null
-        ? 'SELECT COUNT(*) as count FROM presences p JOIN users u ON p.stagiaire_id = u.id WHERE p.statut = ? AND u.director_id = ?'
-        : 'SELECT COUNT(*) as count FROM presences WHERE statut = ?',
+          ? 'SELECT COUNT(*) as count FROM presences p JOIN users u ON p.stagiaire_id = u.id WHERE p.statut = ? AND u.director_id = ?'
+          : 'SELECT COUNT(*) as count FROM presences WHERE statut = ?',
       directorId != null ? ['PRESENT', directorId] : ['PRESENT'],
     );
 
@@ -1695,18 +1829,21 @@ class DatabaseHelper {
     };
   }
 
-  Future<List<Map<String, dynamic>>> getRecentActivity({int? directorId}) async {
+  Future<List<Map<String, dynamic>>> getRecentActivity({
+    int? directorId,
+  }) async {
     final db = await database;
-    
+
     String seanceWhere = "s.statut = 'VALIDE'";
     String noteWhere = "n.statut = 'PUBLIE'";
-    
+
     if (directorId != null) {
       seanceWhere += " AND f.director_id = ?";
       noteWhere += " AND f.director_id = ?";
     }
 
-    final query = '''
+    final query =
+        '''
       SELECT 'SEANCE' as type, s.date as timestamp, m.nom as text, g.nom as subtext
       FROM seances s
       JOIN affectations a ON s.affectation_id = a.id
@@ -1723,11 +1860,16 @@ class DatabaseHelper {
       ORDER BY timestamp DESC
       LIMIT 10
     ''';
-    
-    return await db.rawQuery(query, directorId != null ? [directorId, directorId] : []);
+
+    return await db.rawQuery(
+      query,
+      directorId != null ? [directorId, directorId] : [],
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getPresenceStatsForDP({int? directorId}) async {
+  Future<List<Map<String, dynamic>>> getPresenceStatsForDP({
+    int? directorId,
+  }) async {
     final db = await database;
     String where = "u.role = 'STAGIAIRE'";
     List<dynamic> args = [];
@@ -1751,47 +1893,66 @@ class DatabaseHelper {
 
   Future<double> getFormateurTotalHours(int formateurId) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT SUM(s.duree) as total 
       FROM seances s
       JOIN affectations a ON s.affectation_id = a.id
       WHERE a.formateur_id = ? AND s.statut = ?
-    ''', [formateurId, 'VALIDE']);
+    ''',
+      [formateurId, 'VALIDE'],
+    );
     return (result.first['total'] as num?)?.toDouble() ?? 0.0;
   }
 
-  Future<Map<String, dynamic>> getDashboardStats({int? filiereId, int? directorId}) async {
+  Future<Map<String, dynamic>> getDashboardStats({
+    int? filiereId,
+    int? directorId,
+  }) async {
     final db = await database;
 
     String stagWhere = 'WHERE u.role = ?';
     List<dynamic> stagArgs = ['STAGIAIRE'];
     if (filiereId != null) {
-      stagWhere += ' AND u.groupe_id IN (SELECT id FROM groupes WHERE filiere_id = ?)';
+      stagWhere +=
+          ' AND u.groupe_id IN (SELECT id FROM groupes WHERE filiere_id = ?)';
       stagArgs.add(filiereId);
     }
     if (directorId != null) {
       stagWhere += ' AND u.director_id = ?';
       stagArgs.add(directorId);
     }
-    final stagiairesCount = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM users u $stagWhere', stagArgs)
-    ) ?? 0;
-    
+    final stagiairesCount =
+        Sqflite.firstIntValue(
+          await db.rawQuery(
+            'SELECT COUNT(*) FROM users u $stagWhere',
+            stagArgs,
+          ),
+        ) ??
+        0;
+
     String formWhere = 'WHERE u.role = ?';
     List<dynamic> formArgs = ['FORMATEUR'];
     if (filiereId != null) {
-      formWhere += ' AND EXISTS (SELECT 1 FROM affectations a JOIN modules m ON a.module_id = m.id WHERE a.formateur_id = u.id AND m.filiere_id = ?)';
+      formWhere +=
+          ' AND EXISTS (SELECT 1 FROM affectations a JOIN modules m ON a.module_id = m.id WHERE a.formateur_id = u.id AND m.filiere_id = ?)';
       formArgs.add(filiereId);
     }
     if (directorId != null) {
       formWhere += ' AND u.director_id = ?';
       formArgs.add(directorId);
     }
-    final formateursCount = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(DISTINCT u.id) FROM users u $formWhere', formArgs)
-    ) ?? 0;
-    
-    String hoursQuery = "SELECT SUM(s.duree) as total FROM seances s JOIN affectations a ON s.affectation_id = a.id JOIN modules m ON a.module_id = m.id";
+    final formateursCount =
+        Sqflite.firstIntValue(
+          await db.rawQuery(
+            'SELECT COUNT(DISTINCT u.id) FROM users u $formWhere',
+            formArgs,
+          ),
+        ) ??
+        0;
+
+    String hoursQuery =
+        "SELECT SUM(s.duree) as total FROM seances s JOIN affectations a ON s.affectation_id = a.id JOIN modules m ON a.module_id = m.id";
     String hoursWhere = "WHERE s.statut = 'VALIDE'";
     List<dynamic> hoursArgs = [];
     if (filiereId != null) {
@@ -1803,8 +1964,12 @@ class DatabaseHelper {
       hoursWhere += " AND f.director_id = ?";
       hoursArgs.add(directorId);
     }
-    final heuresValidees = await db.rawQuery('$hoursQuery $hoursWhere', hoursArgs);
-    final double totalHeures = (heuresValidees.first['total'] as num?)?.toDouble() ?? 0.0;
+    final heuresValidees = await db.rawQuery(
+      '$hoursQuery $hoursWhere',
+      hoursArgs,
+    );
+    final double totalHeures =
+        (heuresValidees.first['total'] as num?)?.toDouble() ?? 0.0;
 
     String repQuery = '''SELECT f.nom,
                  (SELECT COUNT(*) FROM users u JOIN groupes g ON u.groupe_id = g.id WHERE g.filiere_id = f.id AND u.role = 'STAGIAIRE') as stagiaires,
@@ -1820,7 +1985,10 @@ class DatabaseHelper {
       repWhere = "WHERE f.director_id = ?";
       repArgs.add(directorId);
     }
-    final repartitionFiliere = await db.rawQuery('$repQuery $repWhere', repArgs);
+    final repartitionFiliere = await db.rawQuery(
+      '$repQuery $repWhere',
+      repArgs,
+    );
 
     String noteQuery;
     List<dynamic> noteArgs = [];
@@ -1873,9 +2041,13 @@ class DatabaseHelper {
                  GROUP BY range''';
     }
 
-    final distributionNotes = await db.rawQuery(noteQuery, noteArgs.isNotEmpty ? noteArgs : null);
+    final distributionNotes = await db.rawQuery(
+      noteQuery,
+      noteArgs.isNotEmpty ? noteArgs : null,
+    );
 
-    String chargeQuery = '''SELECT u.nom, IFNULL(SUM(s.duree), 0) as done, IFNULL(u.total_heures_affectees, 0) as total
+    String chargeQuery =
+        '''SELECT u.nom, IFNULL(SUM(s.duree), 0) as done, IFNULL(u.total_heures_affectees, 0) as total
                FROM users u
                LEFT JOIN affectations a ON u.id = a.formateur_id
                LEFT JOIN modules m ON a.module_id = m.id
@@ -1899,7 +2071,8 @@ class DatabaseHelper {
       LIMIT 5
     ''', chargeArgs);
 
-    String avancQuery = '''SELECT m.nom, IFNULL(SUM(s.duree), 0) as done, m.masse_horaire_totale as total
+    String avancQuery =
+        '''SELECT m.nom, IFNULL(SUM(s.duree), 0) as done, m.masse_horaire_totale as total
                FROM modules m
                LEFT JOIN affectations a ON m.id = a.module_id
                LEFT JOIN seances s ON a.id = s.affectation_id AND s.statut = 'VALIDE'
@@ -1934,19 +2107,20 @@ class DatabaseHelper {
     };
   }
 
-
-
-  Future<List<Map<String, dynamic>>> getAllAffectationsWithProgress({int? filiereId, int? directorId}) async {
+  Future<List<Map<String, dynamic>>> getAllAffectationsWithProgress({
+    int? filiereId,
+    int? directorId,
+  }) async {
     final db = await database;
     String joinClause = '';
     String whereClause = '';
     List<dynamic> args = [];
-    
+
     if (filiereId != null) {
       whereClause = 'WHERE m.filiere_id = ?';
       args.add(filiereId);
     }
-    
+
     if (directorId != null) {
       joinClause = 'JOIN filieres f ON m.filiere_id = f.id';
       if (whereClause.isEmpty) {
@@ -1973,9 +2147,10 @@ class DatabaseHelper {
       $whereClause
       GROUP BY a.id, g.nom, m.nom, u.nom, m.masse_horaire_totale
     ''', args);
-    
+
     return result;
   }
+
   Future<void> close() async {
     final db = await database;
     db.close();
@@ -1984,23 +2159,30 @@ class DatabaseHelper {
   Future<int> sendMessage(Message message) async {
     final db = await database;
     final id = await db.insert('messages', message.toMap());
-    
+
     if (message.receiverId != null) {
       final sender = await getUserById(message.senderId);
-      await createNotification(NotificationModel(
-        userId: message.receiverId!,
-        title: 'Nouveau message',
-        message: 'Vous avez reçu un message de ${sender?.nom ?? "quelqu\'un"}',
-        type: 'MESSAGE',
-        timestamp: DateTime.now(),
-      ));
+      await createNotification(
+        NotificationModel(
+          userId: message.receiverId!,
+          title: 'Nouveau message',
+          message:
+              'Vous avez reçu un message de ${sender?.nom ?? "quelqu\'un"}',
+          type: 'MESSAGE',
+          timestamp: DateTime.now(),
+        ),
+      );
     }
-    
+
     notifyDataChanged();
     return id;
   }
 
-  Future<List<Message>> getMessages(int userId, {int? otherUserId, int? groupId}) async {
+  Future<List<Message>> getMessages(
+    int userId, {
+    int? otherUserId,
+    int? groupId,
+  }) async {
     final db = await database;
     if (groupId != null) {
       final result = await db.query(
@@ -2013,7 +2195,8 @@ class DatabaseHelper {
     } else if (otherUserId != null) {
       final result = await db.query(
         'messages',
-        where: '(sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)',
+        where:
+            '(sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)',
         whereArgs: [userId, otherUserId, otherUserId, userId],
         orderBy: 'timestamp ASC',
       );
@@ -2024,8 +2207,9 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getConversations(int userId) async {
     final db = await database;
-    
-    final userResult = await db.rawQuery('''
+
+    final userResult = await db.rawQuery(
+      '''
       SELECT DISTINCT 
         u.id, u.nom, u.email, u.role, u.phone, 0 as is_group,
         (SELECT content FROM messages 
@@ -2040,7 +2224,9 @@ class DatabaseHelper {
       JOIN messages m ON (m.sender_id = u.id OR m.receiver_id = u.id)
       WHERE u.id != ? AND m.group_id IS NULL AND ((m.sender_id = ? AND m.receiver_id = u.id) OR (m.sender_id = u.id AND m.receiver_id = ?))
       GROUP BY u.id
-    ''', [userId, userId, userId, userId, userId, userId, userId, userId]);
+    ''',
+      [userId, userId, userId, userId, userId, userId, userId, userId],
+    );
 
     String groupQuery = '''
       SELECT 
@@ -2052,11 +2238,14 @@ class DatabaseHelper {
          AND id NOT IN (SELECT message_id FROM message_reads WHERE user_id = ?)) as unread_count
       FROM groupes g
     ''';
-    
-    
-    final currentUser = await db.query('users', where: 'id = ?', whereArgs: [userId]);
+
+    final currentUser = await db.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
     List<dynamic> groupArgs = [userId, userId];
-    
+
     if (currentUser.isNotEmpty && currentUser.first['role'] == 'DP') {
       groupQuery = '''
         SELECT 
@@ -2074,24 +2263,34 @@ class DatabaseHelper {
     }
 
     final groupResult = await db.rawQuery(groupQuery, groupArgs);
-    
+
     List<Map<String, dynamic>> combined = List.from(userResult);
     combined.addAll(groupResult);
 
     if (userId != 1) {
-       final user = await db.query('users', columns: ['role', 'groupe_id'], where: 'id = ?', whereArgs: [userId]);
-       if (user.isNotEmpty && user.first['role'] == 'FORMATEUR') {
-         final assignedGroups = await getGroupsForFormateur(userId);
-         final assignedGroupIds = assignedGroups.map((g) => g.id!).toSet();
-         combined.removeWhere((item) => item['is_group'] == 1 && !assignedGroupIds.contains(item['id']));
-       } else if (user.isNotEmpty && user.first['role'] == 'STAGIAIRE') {
-         final userGroupId = user.first['groupe_id'] as int?;
-         if (userGroupId != null) {
-           combined.removeWhere((item) => item['is_group'] == 1 && item['id'] != userGroupId);
-         } else {
-           combined.removeWhere((item) => item['is_group'] == 1);
-         }
-       }
+      final user = await db.query(
+        'users',
+        columns: ['role', 'groupe_id'],
+        where: 'id = ?',
+        whereArgs: [userId],
+      );
+      if (user.isNotEmpty && user.first['role'] == 'FORMATEUR') {
+        final assignedGroups = await getGroupsForFormateur(userId);
+        final assignedGroupIds = assignedGroups.map((g) => g.id!).toSet();
+        combined.removeWhere(
+          (item) =>
+              item['is_group'] == 1 && !assignedGroupIds.contains(item['id']),
+        );
+      } else if (user.isNotEmpty && user.first['role'] == 'STAGIAIRE') {
+        final userGroupId = user.first['groupe_id'] as int?;
+        if (userGroupId != null) {
+          combined.removeWhere(
+            (item) => item['is_group'] == 1 && item['id'] != userGroupId,
+          );
+        } else {
+          combined.removeWhere((item) => item['is_group'] == 1);
+        }
+      }
     }
 
     combined.sort((a, b) {
@@ -2099,7 +2298,7 @@ class DatabaseHelper {
       final timeB = b['last_time'] as String? ?? '';
       return timeB.compareTo(timeA);
     });
-    
+
     return combined;
   }
 
@@ -2116,12 +2315,15 @@ class DatabaseHelper {
 
   Future<void> markGroupMessagesAsRead(int groupId, int userId) async {
     final db = await database;
-    
-    final unreadMessages = await db.rawQuery('''
+
+    final unreadMessages = await db.rawQuery(
+      '''
       SELECT id FROM messages 
       WHERE group_id = ? AND sender_id != ? 
       AND id NOT IN (SELECT message_id FROM message_reads WHERE user_id = ?)
-    ''', [groupId, userId, userId]);
+    ''',
+      [groupId, userId, userId],
+    );
 
     if (unreadMessages.isNotEmpty) {
       final batch = db.batch();
@@ -2138,27 +2340,34 @@ class DatabaseHelper {
 
   Future<int> getTotalUnreadMessageCount(int userId) async {
     final db = await database;
-    
+
     final privateResult = await db.rawQuery(
       'SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND is_read = 0 AND group_id IS NULL',
-      [userId]
+      [userId],
     );
     int privateCount = Sqflite.firstIntValue(privateResult) ?? 0;
-    
-    final groupResult = await db.rawQuery('''
+
+    final groupResult = await db.rawQuery(
+      '''
       SELECT COUNT(*) FROM messages 
       WHERE group_id IS NOT NULL 
       AND sender_id != ? 
       AND id NOT IN (SELECT message_id FROM message_reads WHERE user_id = ?)
-    ''', [userId, userId]);
+    ''',
+      [userId, userId],
+    );
     int groupCount = Sqflite.firstIntValue(groupResult) ?? 0;
-    
+
     return privateCount + groupCount;
   }
 
-  Future<void> markMessageNotificationsAsRead(int userId, {int? otherUserId, int? groupId}) async {
+  Future<void> markMessageNotificationsAsRead(
+    int userId, {
+    int? otherUserId,
+    int? groupId,
+  }) async {
     final db = await database;
-    
+
     if (groupId != null) {
       await db.update(
         'notifications',
@@ -2177,7 +2386,7 @@ class DatabaseHelper {
         );
       }
     }
-    
+
     notifyDataChanged();
   }
 
@@ -2217,12 +2426,15 @@ class DatabaseHelper {
   Future<int> getUnreadReclamationsCount({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT COUNT(*)
         FROM reclamations r
         JOIN users u ON r.user_id = u.id
         WHERE r.status = 'EN_ATTENTE' AND u.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return Sqflite.firstIntValue(result) ?? 0;
     }
     final result = await db.query(
@@ -2236,12 +2448,15 @@ class DatabaseHelper {
   Future<int> getPendingPresenceValidationsCount({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT COUNT(DISTINCT p.formateur_id) as count 
         FROM presences p
         JOIN users u ON p.stagiaire_id = u.id
         WHERE p.vu_par_dp = 0 AND p.formateur_id IS NOT NULL AND u.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return Sqflite.firstIntValue(result) ?? 0;
     }
     final result = await db.rawQuery('''
@@ -2255,16 +2470,15 @@ class DatabaseHelper {
   Future<void> markPresencesAsSeen({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      await db.execute('''
+      await db.execute(
+        '''
         UPDATE presences SET vu_par_dp = 1 
         WHERE vu_par_dp = 0 AND stagiaire_id IN (SELECT id FROM users WHERE director_id = ?)
-      ''', [directorId]);
-    } else {
-      await db.update(
-        'presences',
-        {'vu_par_dp': 1},
-        where: 'vu_par_dp = 0',
+      ''',
+        [directorId],
       );
+    } else {
+      await db.update('presences', {'vu_par_dp': 1}, where: 'vu_par_dp = 0');
     }
     notifyDataChanged();
   }
@@ -2272,12 +2486,15 @@ class DatabaseHelper {
   Future<int> getUnvalidatedNotesCount({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT COUNT(*)
         FROM notes n
         JOIN users u ON n.stagiaire_id = u.id
         WHERE n.validee = 0 AND u.director_id = ?
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return Sqflite.firstIntValue(result) ?? 0;
     }
     final result = await db.query(
@@ -2310,7 +2527,6 @@ class DatabaseHelper {
     notifyDataChanged();
   }
 
-
   Future<int> insertExam(Map<String, dynamic> exam) async {
     final db = await database;
     final id = await db.insert('exams', exam);
@@ -2320,7 +2536,8 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getUpcomingExams(int formateurId) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT e.*, a.groupe_id, a.module_id, m.nom as module_name, g.nom as groupe_name
       FROM exams e
       JOIN affectations a ON e.affectation_id = a.id
@@ -2328,14 +2545,18 @@ class DatabaseHelper {
       JOIN groupes g ON a.groupe_id = g.id
       WHERE a.formateur_id = ? AND e.date >= ?
       ORDER BY e.date ASC
-    ''', [formateurId, DateTime.now().toIso8601String()]);
+    ''',
+      [formateurId, DateTime.now().toIso8601String()],
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getGlobalUpcomingExams({int? directorId}) async {
+  Future<List<Map<String, dynamic>>> getGlobalUpcomingExams({
+    int? directorId,
+  }) async {
     final db = await database;
     String where = "e.date >= ?";
     List<dynamic> args = [DateTime.now().toIso8601String()];
-    
+
     String join = "";
     if (directorId != null) {
       join = "JOIN filieres f ON m.filiere_id = f.id";
@@ -2360,11 +2581,10 @@ class DatabaseHelper {
     final db = await database;
     final result = await db.rawQuery(
       "SELECT SUM(duree) as total FROM seances WHERE affectation_id = ? AND statut = 'VALIDE'",
-      [affectationId]
+      [affectationId],
     );
     return (result.first['total'] as num?)?.toDouble() ?? 0.0;
   }
-
 
   Future<int> deleteExam(int id) async {
     final db = await database;
@@ -2375,29 +2595,9 @@ class DatabaseHelper {
 
   Future<int> updateExam(int id, Map<String, dynamic> data) async {
     final db = await database;
-    final result = await db.update('exams', data, where: 'id = ?', whereArgs: [id]);
-    notifyDataChanged();
-    return result;
-  }
-
-  Future<List<Map<String, dynamic>>> getAffectationsWithProgress(int formateurId) async {
-    final db = await database;
-    return await db.rawQuery('''
-      SELECT a.*, m.nom as module_name, m.masse_horaire_totale, g.nom as groupe_name,
-      (SELECT IFNULL(SUM(s.duree), 0) FROM seances s WHERE s.affectation_id = a.id AND s.statut = 'VALIDE') as hours_done
-      FROM affectations a
-      JOIN modules m ON a.module_id = m.id
-      JOIN groupes g ON a.groupe_id = g.id
-      WHERE a.formateur_id = ?
-    ''', [formateurId]);
-  }
-
-
-
-  Future<int> deleteNote(int id) async {
-    final db = await database;
-    final result = await db.delete(
-      'notes',
+    final result = await db.update(
+      'exams',
+      data,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -2405,21 +2605,45 @@ class DatabaseHelper {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> getAffectationsWithProgress(
+    int formateurId,
+  ) async {
+    final db = await database;
+    return await db.rawQuery(
+      '''
+      SELECT a.*, m.nom as module_name, m.masse_horaire_totale, g.nom as groupe_name,
+      (SELECT IFNULL(SUM(s.duree), 0) FROM seances s WHERE s.affectation_id = a.id AND s.statut = 'VALIDE') as hours_done
+      FROM affectations a
+      JOIN modules m ON a.module_id = m.id
+      JOIN groupes g ON a.groupe_id = g.id
+      WHERE a.formateur_id = ?
+    ''',
+      [formateurId],
+    );
+  }
 
-
+  Future<int> deleteNote(int id) async {
+    final db = await database;
+    final result = await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+    notifyDataChanged();
+    return result;
+  }
 
   Future<int> createUserRequest(UserRequest request) async {
     final db = await database;
     final id = await db.insert('user_requests', request.toMap());
-    
-    await createNotification(NotificationModel(
-      userId: request.directorId,
-      title: 'Nouvelle demande d\'inscription',
-      message: 'Une nouvelle demande d\'inscription a été reçue de ${request.nom}',
-      type: 'ACCOUNT',
-      timestamp: DateTime.now(),
-    ));
-    
+
+    await createNotification(
+      NotificationModel(
+        userId: request.directorId,
+        title: 'Nouvelle demande d\'inscription',
+        message:
+            'Une nouvelle demande d\'inscription a été reçue de ${request.nom}',
+        type: 'ACCOUNT',
+        timestamp: DateTime.now(),
+      ),
+    );
+
     notifyDataChanged();
     return id;
   }
@@ -2446,50 +2670,62 @@ class DatabaseHelper {
     notifyDataChanged();
   }
 
-  Future<List<Map<String, dynamic>>> getUpcomingExamsForGroup(int groupId) async {
+  Future<List<Map<String, dynamic>>> getUpcomingExamsForGroup(
+    int groupId,
+  ) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT e.*, m.nom as module_name
       FROM exams e
       JOIN affectations a ON e.affectation_id = a.id
       JOIN modules m ON a.module_id = m.id
       WHERE a.groupe_id = ? AND e.date >= ? AND e.status = 'PUBLIE'
       ORDER BY e.date ASC
-    ''', [groupId, DateTime.now().toIso8601String()]);
+    ''',
+      [groupId, DateTime.now().toIso8601String()],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getPastExamsForGroup(int groupId) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT e.*, m.nom as module_name
       FROM exams e
       JOIN affectations a ON e.affectation_id = a.id
       JOIN modules m ON a.module_id = m.id
       WHERE a.groupe_id = ? AND e.date < ? AND e.status = 'PUBLIE'
       ORDER BY e.date DESC
-    ''', [groupId, DateTime.now().toIso8601String()]);
+    ''',
+      [groupId, DateTime.now().toIso8601String()],
+    );
   }
-
-
 
   Future<List<Groupe>> getGroupsForFormateur(int formateurId) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT DISTINCT g.*
       FROM groupes g
       JOIN affectations a ON g.id = a.groupe_id
       WHERE a.formateur_id = ?
-    ''', [formateurId]);
+    ''',
+      [formateurId],
+    );
     return result.map((map) => Groupe.fromMap(map)).toList();
   }
 
   Future<List<Groupe>> getGroupesByDirectorId(int directorId) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT g.* FROM groupes g
       JOIN filieres f ON g.filiere_id = f.id
       WHERE f.director_id = ?
-    ''', [directorId]);
+    ''',
+      [directorId],
+    );
     return result.map((map) => Groupe.fromMap(map)).toList();
   }
 
@@ -2504,13 +2740,11 @@ class DatabaseHelper {
     return Groupe.fromMap(result.first);
   }
 
-
-
   Future<List<User>> searchUsers(String query, {int? directorId}) async {
     final db = await database;
     String where = '(nom LIKE ? OR email LIKE ?)';
     List<dynamic> args = ['%$query%', '%$query%'];
-    
+
     if (directorId != null) {
       where += ' AND director_id = ?';
       args.add(directorId);
@@ -2528,25 +2762,31 @@ class DatabaseHelper {
   Future<int> createReclamation(Reclamation rec) async {
     final db = await database;
     final id = await db.insert('reclamations', rec.toMap());
-    
+
     final dps = await getUsersByRole(UserRole.dp);
     for (var dp in dps) {
-      await createNotification(NotificationModel(
-        userId: dp.id!,
-        title: 'Nouvelle réclamation',
-        message: 'Une nouvelle réclamation a été soumise par ${rec.userId}',
-        type: 'RECLAMATION',
-        timestamp: DateTime.now(),
-      ));
+      await createNotification(
+        NotificationModel(
+          userId: dp.id!,
+          title: 'Nouvelle réclamation',
+          message: 'Une nouvelle réclamation a été soumise par ${rec.userId}',
+          type: 'RECLAMATION',
+          timestamp: DateTime.now(),
+        ),
+      );
     }
-    
+
     notifyDataChanged();
     return id;
   }
 
   Future<Reclamation?> getReclamationById(int id) async {
     final db = await database;
-    final result = await db.query('reclamations', where: 'id = ?', whereArgs: [id]);
+    final result = await db.query(
+      'reclamations',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     if (result.isEmpty) return null;
     return Reclamation.fromMap(result.first);
   }
@@ -2565,44 +2805,46 @@ class DatabaseHelper {
   Future<List<Reclamation>> getAllReclamations({int? directorId}) async {
     final db = await database;
     if (directorId != null) {
-      final result = await db.rawQuery('''
+      final result = await db.rawQuery(
+        '''
         SELECT r.* FROM reclamations r
         JOIN users u ON r.user_id = u.id
         WHERE u.director_id = ?
         ORDER BY r.timestamp DESC
-      ''', [directorId]);
+      ''',
+        [directorId],
+      );
       return result.map((map) => Reclamation.fromMap(map)).toList();
     }
-    final result = await db.query(
-      'reclamations',
-      orderBy: 'timestamp DESC',
-    );
+    final result = await db.query('reclamations', orderBy: 'timestamp DESC');
     return result.map((map) => Reclamation.fromMap(map)).toList();
   }
 
-  Future<void> updateReclamationStatus(int id, String status, {String? response}) async {
+  Future<void> updateReclamationStatus(
+    int id,
+    String status, {
+    String? response,
+  }) async {
     final db = await database;
     final Map<String, dynamic> updates = {'status': status};
     if (response != null) {
       updates['response'] = response;
     }
-    await db.update(
-      'reclamations',
-      updates,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.update('reclamations', updates, where: 'id = ?', whereArgs: [id]);
 
     if (status == 'RESOLUE') {
       final rec = await getReclamationById(id);
       if (rec != null) {
-        await createNotification(NotificationModel(
-          userId: rec.userId,
-          title: 'Réclamation résolue',
-          message: 'Votre réclamation concernant "${rec.subject}" a été traitée.',
-          type: 'RECLAMATION',
-          timestamp: DateTime.now(),
-        ));
+        await createNotification(
+          NotificationModel(
+            userId: rec.userId,
+            title: 'Réclamation résolue',
+            message:
+                'Votre réclamation concernant "${rec.subject}" a été traitée.',
+            type: 'RECLAMATION',
+            timestamp: DateTime.now(),
+          ),
+        );
       }
     }
     notifyDataChanged();
@@ -2619,10 +2861,11 @@ class DatabaseHelper {
     return result.map((map) => NotificationModel.fromMap(map)).toList();
   }
 
-
-
-
-  Future<List<Map<String, dynamic>>> getPresenceByDateGroup(String date, int groupeId, {String? heure}) async {
+  Future<List<Map<String, dynamic>>> getPresenceByDateGroup(
+    String date,
+    int groupeId, {
+    String? heure,
+  }) async {
     final db = await database;
     if (heure != null) {
       return await db.query(
@@ -2638,7 +2881,14 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> savePresence(int stagiaireId, int groupeId, String date, String statut, int formateurId, {String? heure}) async {
+  Future<void> savePresence(
+    int stagiaireId,
+    int groupeId,
+    String date,
+    String statut,
+    int formateurId, {
+    String? heure,
+  }) async {
     final db = await database;
     final existing = await db.query(
       'presences',
@@ -2651,10 +2901,10 @@ class DatabaseHelper {
         await db.update(
           'presences',
           {
-            'statut': statut, 
+            'statut': statut,
             'timestamp': DateTime.now().toIso8601String(),
             'formateur_id': formateurId,
-            'vu_par_dp': 0
+            'vu_par_dp': 0,
           },
           where: 'id = ?',
           whereArgs: [existing.first['id']],
@@ -2682,41 +2932,47 @@ class DatabaseHelper {
       final parts = heureRange.split(' - ');
       final start = parts[0].trim().split(':');
       final end = parts[1].trim().split(':');
-      
+
       final startMinutes = int.parse(start[0]) * 60 + int.parse(start[1]);
       final endMinutes = int.parse(end[0]) * 60 + int.parse(end[1]);
-      
+
       return (endMinutes - startMinutes) / 60.0;
     } catch (e) {
       return 0.0;
     }
   }
 
-  Future<void> syncSeanceWithPresence(int formateurId, int groupeId, int moduleId, String date, String? heureRange) async {
+  Future<void> syncSeanceWithPresence(
+    int formateurId,
+    int groupeId,
+    int moduleId,
+    String date,
+    String? heureRange,
+  ) async {
     if (heureRange == null) return;
     final db = await database;
-    
+
     final affectationResult = await db.query(
       'affectations',
       where: 'formateur_id = ? AND groupe_id = ? AND module_id = ?',
       whereArgs: [formateurId, groupeId, moduleId],
-      limit: 1
+      limit: 1,
     );
-    
+
     if (affectationResult.isEmpty) return;
     final affectationId = affectationResult.first['id'] as int;
-    
+
     final parts = heureRange.split(' - ');
     final heureDebut = parts[0].trim();
     final duration = _calculateDuration(heureRange);
-    
+
     final existingSeance = await db.query(
       'seances',
       where: 'affectation_id = ? AND date = ? AND heure_debut = ?',
       whereArgs: [affectationId, date, heureDebut],
-      limit: 1
+      limit: 1,
     );
-    
+
     if (existingSeance.isEmpty) {
       await db.insert('seances', {
         'affectation_id': affectationId,
@@ -2724,7 +2980,7 @@ class DatabaseHelper {
         'heure_debut': heureDebut,
         'duree': duration,
         'contenu': 'Séance validée via présence',
-        'statut': 'VALIDE'
+        'statut': 'VALIDE',
       });
     } else {
       if (existingSeance.first['statut'] != 'VALIDE') {
@@ -2732,14 +2988,18 @@ class DatabaseHelper {
           'seances',
           {'statut': 'VALIDE'},
           where: 'id = ?',
-          whereArgs: [existingSeance.first['id']]
+          whereArgs: [existingSeance.first['id']],
         );
       }
     }
     notifyDataChanged();
   }
 
-  Future<void> validerPresenceDP(int groupeId, String date, {String? heure}) async {
+  Future<void> validerPresenceDP(
+    int groupeId,
+    String date, {
+    String? heure,
+  }) async {
     final db = await database;
     if (heure != null) {
       await db.update(
@@ -2759,22 +3019,26 @@ class DatabaseHelper {
 
     try {
       final presences = await db.query(
-        'presences', 
-        where: 'groupe_id = ? AND date = ?${heure != null ? " AND heure = ?" : ""}', 
-        whereArgs: [groupeId, date, if (heure != null) heure], 
-        limit: 1
+        'presences',
+        where:
+            'groupe_id = ? AND date = ?${heure != null ? " AND heure = ?" : ""}',
+        whereArgs: [groupeId, date, if (heure != null) heure],
+        limit: 1,
       );
       if (presences.isNotEmpty) {
         final formateurId = presences.first['formateur_id'] as int?;
         if (formateurId != null) {
           final groupe = await getGroupeById(groupeId);
-          await createNotification(NotificationModel(
-            userId: formateurId,
-            title: 'Présence validée',
-            message: 'La présence du ${date}${heure != null ? " ($heure)" : ""} pour le groupe ${groupe?.nom ?? ""} a été validée par le DP.',
-            type: 'INFO',
-            timestamp: DateTime.now(),
-          ));
+          await createNotification(
+            NotificationModel(
+              userId: formateurId,
+              title: 'Présence validée',
+              message:
+                  'La présence du ${date}${heure != null ? " ($heure)" : ""} pour le groupe ${groupe?.nom ?? ""} a été validée par le DP.',
+              type: 'INFO',
+              timestamp: DateTime.now(),
+            ),
+          );
         }
       }
     } catch (e) {
@@ -2784,7 +3048,9 @@ class DatabaseHelper {
     notifyDataChanged();
   }
 
-  Future<List<Map<String, dynamic>>> getPresencesEnAttente({int? directorId}) async {
+  Future<List<Map<String, dynamic>>> getPresencesEnAttente({
+    int? directorId,
+  }) async {
     final db = await database;
     String where = "p.valide_par_dp = 0";
     List<dynamic> args = [];
@@ -2792,7 +3058,7 @@ class DatabaseHelper {
       where += " AND u.director_id = ?";
       args.add(directorId);
     }
-    
+
     return await db.rawQuery('''
       SELECT p.date, p.groupe_id, p.heure, g.nom as groupe_nom, COUNT(DISTINCT p.stagiaire_id) as student_count
       FROM presences p
@@ -2804,7 +3070,11 @@ class DatabaseHelper {
     ''', args);
   }
 
-  Future<List<Map<String, dynamic>>> getPresenceDetails(String date, int groupeId, {String? heure}) async {
+  Future<List<Map<String, dynamic>>> getPresenceDetails(
+    String date,
+    int groupeId, {
+    String? heure,
+  }) async {
     final db = await database;
     String where = "p.date = ? AND p.groupe_id = ?";
     List<dynamic> args = [date, groupeId];
@@ -2822,10 +3092,6 @@ class DatabaseHelper {
     return result;
   }
 
-
-
-
-
   Future<void> markAllNotificationsAsRead(int userId) async {
     final db = await database;
     await db.update(
@@ -2836,22 +3102,28 @@ class DatabaseHelper {
     );
     notifyDataChanged();
   }
-  
-  
-  Future<List<Map<String, dynamic>>> getModuleProgressForStagiaire(int stagiaireId) async {
+
+  Future<List<Map<String, dynamic>>> getModuleProgressForStagiaire(
+    int stagiaireId,
+  ) async {
     final db = await database;
-    
+
     final user = await getUserById(stagiaireId);
     if (user == null || user.groupeId == null) {
       return [];
     }
-    
-    final groupeResult = await db.query('groupes', where: 'id = ?', whereArgs: [user.groupeId]);
+
+    final groupeResult = await db.query(
+      'groupes',
+      where: 'id = ?',
+      whereArgs: [user.groupeId],
+    );
     if (groupeResult.isEmpty) return [];
-    
+
     final filiereId = groupeResult.first['filiere_id'] as int;
-    
-    final result = await db.rawQuery('''
+
+    final result = await db.rawQuery(
+      '''
       SELECT 
         m.id as module_id,
         m.nom as module_name,
@@ -2868,13 +3140,17 @@ class DatabaseHelper {
       FROM modules m
       WHERE m.filiere_id = ?
       ORDER BY m.nom
-    ''', [user.groupeId, filiereId]);
-    
+    ''',
+      [user.groupeId, filiereId],
+    );
+
     return result.map((row) {
       final totalHours = (row['masse_horaire_totale'] as num).toDouble();
       final completedHours = (row['heures_effectuees'] as num).toDouble();
-      final percentage = totalHours > 0 ? (completedHours / totalHours * 100).clamp(0, 100) : 0.0;
-      
+      final percentage = totalHours > 0
+          ? (completedHours / totalHours * 100).clamp(0, 100)
+          : 0.0;
+
       return {
         'module_id': row['module_id'],
         'module_name': row['module_name'],
@@ -2887,31 +3163,36 @@ class DatabaseHelper {
 
   Future<double> getStagiaireAverage(int stagiaireId) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT AVG(valeur) as average FROM notes 
       WHERE stagiaire_id = ? AND validee = 1
-    ''', [stagiaireId]);
-    
+    ''',
+      [stagiaireId],
+    );
+
     if (result.isEmpty || result.first['average'] == null) return 0.0;
     return (result.first['average'] as num).toDouble();
   }
 
   Future<double> getGroupAttendanceRate(int groupId) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT 
         COUNT(CASE WHEN statut = 'PRESENT' THEN 1 END) as present,
         COUNT(*) as total
       FROM presences
       WHERE groupe_id = ? AND valide_par_dp = 1
-    ''', [groupId]);
+    ''',
+      [groupId],
+    );
 
     if (result.isEmpty || result.first['total'] == 0) return 100.0;
     final present = (result.first['present'] as num).toDouble();
     final total = (result.first['total'] as num).toDouble();
     return (present / total) * 100;
   }
-
 
   Future<List<Map<String, dynamic>>> getExamsAPublier({int? directorId}) async {
     final db = await database;
@@ -2946,7 +3227,3 @@ class DatabaseHelper {
     notifyDataChanged();
   }
 }
-
-
-
-
