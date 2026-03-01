@@ -360,76 +360,81 @@ class _PlanningScreenState extends State<PlanningScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 12,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Générez et gérez les plannings hebdomadaires',
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Générez et gérez les plannings hebdomadaires',
+                    style: GoogleFonts.poppins(
+                      fontSize: isMobile ? 12 : 14,
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => _showCreateDialog(),
+                    icon: const Icon(
+                      Icons.add_rounded,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      isMobile ? 'Nouveau' : 'Nouvel emploi',
                       style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                         fontSize: isMobile ? 12 : 14,
-                        color: AppTheme.textSecondary,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: () => _showCreateDialog(),
-                icon: const Icon(
-                  Icons.add_rounded,
-                  size: 20,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  isMobile ? 'Nouveau' : 'Nouvel emploi',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: isMobile ? 12 : 14,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryBlue,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 12 : 20,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 12 : 20,
-                    vertical: 12,
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed: _generateBatchPdf,
+                    icon: const Icon(
+                      Icons.picture_as_pdf_rounded,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      isMobile ? 'Tout' : 'Exporter Tout',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: isMobile ? 12 : 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.accentGreen,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 12 : 20,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _generateBatchPdf,
-                icon: const Icon(
-                  Icons.picture_as_pdf_rounded,
-                  size: 20,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  isMobile ? 'Tout' : 'Exporter Tout',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: isMobile ? 12 : 14,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.accentGreen,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 12 : 20,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                ],
               ),
             ],
           ),
