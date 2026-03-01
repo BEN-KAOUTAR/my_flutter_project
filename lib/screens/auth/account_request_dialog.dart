@@ -17,7 +17,7 @@ class AccountRequestDialog extends StatefulWidget {
 class _AccountRequestDialogState extends State<AccountRequestDialog> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  
+
   String? _selectedRole;
   User? _selectedDirector;
   Groupe? _selectedGroupe;
@@ -119,7 +119,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                 Text(
                   'Demande de Création de Compte',
                   style: GoogleFonts.poppins(
-                    fontSize: ResponsiveLayout.respSize(context, 20, 24, 28), 
+                    fontSize: ResponsiveLayout.respSize(context, 20, 24, 28),
                     fontWeight: FontWeight.bold
                   ),
                   textAlign: TextAlign.center,
@@ -128,13 +128,13 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                 Text(
                   'Envoyez une demande au Directeur Pédagogique pour créer votre compte.',
                   style: GoogleFonts.poppins(
-                    fontSize: ResponsiveLayout.respSize(context, 13, 14, 15), 
+                    fontSize: ResponsiveLayout.respSize(context, 13, 14, 15),
                     color: AppTheme.textSecondary
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                
+
                 DropdownButtonFormField<User>(
                   decoration: const InputDecoration(labelText: 'Directeur Pédagogique'),
                   value: _selectedDirector,
@@ -191,7 +191,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                     return null;
                   },
                 ),
-                
+
                 if (_selectedRole == 'STAGIAIRE') ...[
                   const SizedBox(height: 16),
                   Row(
@@ -210,14 +210,14 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                 ],
 
                 const SizedBox(height: 32),
-                
+
                 Row(
                   children: [
                     Expanded(
                       child: TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: Text(
-                          'Annuler', 
+                          'Annuler',
                           style: GoogleFonts.poppins(
                             color: AppTheme.textSecondary,
                             fontSize: ResponsiveLayout.respSize(context, 14, 16, 18)
@@ -233,7 +233,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                           backgroundColor: AppTheme.primaryBlue,
                           foregroundColor: Colors.white,
                         ),
-                        child: _isLoading 
+                        child: _isLoading
                             ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                             : Text(
                                 'Envoyer',
@@ -253,6 +253,4 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
     );
   }
 }
-
-
 

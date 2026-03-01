@@ -63,7 +63,7 @@ class _DPDashboardState extends State<DPDashboard> {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
     });
-    
+
     _dataSubscription = DatabaseHelper.instance.onDataChange.listen((_) {
       _loadStats(showLoading: false);
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
@@ -72,17 +72,13 @@ class _DPDashboardState extends State<DPDashboard> {
       }
     });
 
-    
-    
-    
-    _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+_refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && _currentIndex == 0 && !_isLoading) {
         _loadStats(showLoading: false);
       }
     });
 
-    
-    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+_notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       if (mounted && user != null) {
         Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
@@ -114,8 +110,7 @@ class _DPDashboardState extends State<DPDashboard> {
     }
   }
 
-
-  @override
+@override
   void dispose() {
     _dataSubscription?.cancel();
     _refreshTimer?.cancel();
@@ -134,7 +129,7 @@ class _DPDashboardState extends State<DPDashboard> {
       final stats = await DatabaseHelper.instance.getGlobalStats(directorId: directorId);
       final exams = await DatabaseHelper.instance.getGlobalUpcomingExams(directorId: directorId);
       final activity = await DatabaseHelper.instance.getRecentActivity(directorId: directorId);
-      
+
       if (mounted) {
         setState(() {
           _stats = stats;
@@ -157,7 +152,7 @@ class _DPDashboardState extends State<DPDashboard> {
   @override
   Widget build(BuildContext context) {
     final showSidebar = !ResponsiveLayout.isMobile(context);
-    
+
     return DashboardLayout(
       appBar: _buildAppBar(),
       drawer: showSidebar ? null : _buildDrawer(),
@@ -197,7 +192,7 @@ class _DPDashboardState extends State<DPDashboard> {
     if (isLargeScreen) {
       return null;
     }
-    
+
     return AppBar(
       backgroundColor: AppTheme.dpColor,
       elevation: 0,
@@ -213,8 +208,8 @@ class _DPDashboardState extends State<DPDashboard> {
         ),
       ),
       leading: isDesktop && isHome
-          ? null 
-          : !isHome 
+          ? null
+          : !isHome
             ? IconButton(
                 icon: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 28),
                 onPressed: () => setState(() => _currentIndex = 0),
@@ -248,7 +243,7 @@ class _DPDashboardState extends State<DPDashboard> {
           child: CircleAvatar(
             radius: 18,
             backgroundColor: Colors.white.withOpacity(0.2),
-            backgroundImage: kIsWeb 
+            backgroundImage: kIsWeb
               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
               : (_profileImage != null ? FileImage(_profileImage!) : null),
             child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
@@ -290,7 +285,7 @@ class _DPDashboardState extends State<DPDashboard> {
                    CircleAvatar(
                     radius: 24,
                     backgroundColor: AppTheme.primaryBlue,
-                    backgroundImage: kIsWeb 
+                    backgroundImage: kIsWeb
                       ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
                       : (_profileImage != null ? FileImage(_profileImage!) : null),
                     child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
@@ -317,7 +312,7 @@ class _DPDashboardState extends State<DPDashboard> {
               accountEmail: Text(user?.email ?? '', style: GoogleFonts.poppins()),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
-                backgroundImage: kIsWeb 
+                backgroundImage: kIsWeb
                   ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
                   : (_profileImage != null ? FileImage(_profileImage!) : null),
                 child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
@@ -325,7 +320,7 @@ class _DPDashboardState extends State<DPDashboard> {
                     : null,
               ),
             ),
-          
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
@@ -348,7 +343,7 @@ class _DPDashboardState extends State<DPDashboard> {
                     15, Icons.chat_bubble_outline_rounded, 'Messages', isPermanent,
                     badgeCount: notifProvider.unreadMessageCount,
                   ),
-                ), 
+                ),
                 const Divider(),
                 _buildDrawerItem(11, Icons.grid_view_rounded, 'Filières', isPermanent),
                 _buildDrawerItem(12, Icons.book_rounded, 'Modules', isPermanent),
@@ -377,15 +372,15 @@ class _DPDashboardState extends State<DPDashboard> {
               ],
             ),
           ),
-          
+
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListTile(
               leading: const Icon(Icons.logout_rounded, color: AppTheme.accentRed, size: 24),
               title: Text(
-                'Déconnexion', 
+                'Déconnexion',
                 style: GoogleFonts.poppins(
-                  color: AppTheme.accentRed, 
+                  color: AppTheme.accentRed,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
@@ -427,7 +422,7 @@ class _DPDashboardState extends State<DPDashboard> {
       setState(() => _currentIndex = 0);
       _loadStats(showLoading: false);
     };
-    
+
     switch (_currentIndex) {
       case 0: return _buildDashboardHome();
       case 1: return GroupesScreen(onBack: onBack);
@@ -443,14 +438,14 @@ class _DPDashboardState extends State<DPDashboard> {
       case 12: return ModulesScreen(onBack: onBack);
       case 14: return InscriptionRequestsScreen(onBack: onBack);
       case 17: return ReclamationsListScreen(onBack: onBack);
-      case 15: return ChatListScreen(onBack: onBack); 
+      case 15: return ChatListScreen(onBack: onBack);
       case 16:
         return ProfileScreen(
           onBack: onBack,
           onProfileUpdated: (File? newImage) {
              _loadProfileImage();
           },
-        ); 
+        );
       default: return _buildDashboardHome();
     }
   }
@@ -663,7 +658,7 @@ class _DPDashboardState extends State<DPDashboard> {
     final authService = Provider.of<AuthService>(context);
     final user = authService.currentUser;
     final isLargeScreen = MediaQuery.of(context).size.width >= 600;
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -723,7 +718,7 @@ class _DPDashboardState extends State<DPDashboard> {
         final double width = constraints.maxWidth;
         int crossAxisCount;
         double aspectRatio;
-        
+
         if (width > 800) {
           crossAxisCount = 4;
           aspectRatio = 2.4;
@@ -839,10 +834,4 @@ class _DPDashboardState extends State<DPDashboard> {
     );
   }
 }
-
-
-
-
-
-
 

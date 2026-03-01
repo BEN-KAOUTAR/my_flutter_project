@@ -36,7 +36,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
 
   List<Filiere> get _filteredFilieres {
     if (_searchQuery.isEmpty) return _filieres;
-    return _filieres.where((f) => 
+    return _filieres.where((f) =>
       f.nom.toLowerCase().startsWith(_searchQuery.toLowerCase()) ||
       f.description.toLowerCase().startsWith(_searchQuery.toLowerCase())
     ).toList();
@@ -159,7 +159,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 14),
                       border: InputBorder.none,
                       icon: const Icon(Icons.search, color: AppTheme.textSecondary, size: 20),
-                      suffixIcon: _searchQuery.isNotEmpty 
+                      suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
                             onPressed: () {
@@ -480,6 +480,4 @@ class _FilieresScreenState extends State<FilieresScreen> {
     }
   }
 }
-
-
 

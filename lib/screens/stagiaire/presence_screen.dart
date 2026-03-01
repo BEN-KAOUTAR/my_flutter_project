@@ -46,7 +46,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
 
         final statsResult = await db.rawQuery(
           '''
-          SELECT 
+          SELECT
             COUNT(CASE WHEN statut = 'PRESENT' THEN 1 END) as presences,
             COUNT(CASE WHEN statut = 'ABSENT' THEN 1 END) as absences,
             COUNT(CASE WHEN statut = 'RETARD' THEN 1 END) as retards
@@ -64,7 +64,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
 
         final historyResult = await db.rawQuery(
           '''
-          SELECT 
+          SELECT
             p.date,
             p.statut,
             p.groupe_id,
@@ -94,7 +94,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
           if (groupeId != null) {
             final seances = await db.rawQuery(
               '''
-              SELECT 
+              SELECT
                 m.nom as module_nom,
                 u.nom as formateur_nom
               FROM seances s

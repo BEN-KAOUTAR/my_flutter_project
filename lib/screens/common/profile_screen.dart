@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadSavedImage() async {
     final prefs = await SharedPreferences.getInstance();
     final imagePath = prefs.getString('profile_image_${_currentUser.id}');
-    
+
     if (imagePath != null && imagePath.isNotEmpty) {
       if (kIsWeb) {
         if (imagePath.startsWith('data:image')) {
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _saveProfile() async {
     setState(() => _isLoading = true);
-    
+
     String? newPhotoUrl = _currentUser.photoUrl;
     if (_selectedImage != null || _selectedImageBytes != null) {
       final prefs = await SharedPreferences.getInstance();
@@ -88,25 +88,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
       password: _passwordController.text.trim(),
       photoUrl: newPhotoUrl,
     );
-    
+
     try {
        await DatabaseHelper.instance.updateUser(updatedUser);
-       
+
        await NotificationService().notifyUser(
-         userId: updatedUser.id!, 
-         title: 'Profil mis à jour', 
+         userId: updatedUser.id!,
+         title: 'Profil mis à jour',
          message: 'Vos informations ont été modifiées avec succès',
          type: 'SUCCESS'
        );
-       
+
        if (mounted) {
          setState(() {
            _currentUser = updatedUser;
            _isEditing = false;
          });
-          
+
           Provider.of<AuthService>(context, listen: false).updateCurrentUser(updatedUser);
-          
+
           if (widget.onProfileUpdated != null) {
             widget.onProfileUpdated!(_selectedImage);
           }
@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         maxHeight: 512,
         imageQuality: 85,
       );
-      
+
       if (image != null) {
         final bytes = await image.readAsBytes();
         setState(() {
@@ -156,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading 
+    return _isLoading
       ? const Center(child: CircularProgressIndicator())
       : Stack(
           children: [
@@ -171,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CircleAvatar(
                           radius: 50,
                           backgroundColor: AppTheme.primaryBlue,
-                          backgroundImage: kIsWeb 
+                          backgroundImage: kIsWeb
                             ? (_selectedImageBytes != null ? MemoryImage(_selectedImageBytes!) : null)
                             : (_selectedImage != null ? FileImage(_selectedImage!) : null),
                           child: (kIsWeb ? _selectedImageBytes == null : _selectedImage == null)
@@ -217,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   _buildProfileCard(),
                 ],
               ),
@@ -286,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        if (label == 'Email' || label == 'Matricule') 
+        if (label == 'Email' || label == 'Matricule')
            const Icon(Icons.lock, size: 16, color: Colors.grey),
       ],
     );
@@ -317,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         isDense: true,
                         contentPadding: const EdgeInsets.symmetric(vertical: 8),
                         border: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primaryBlue)),
-                        suffixIcon: isPassword 
+                        suffixIcon: isPassword
                           ? IconButton(
                               icon: Icon(
                                 _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
@@ -354,5 +354,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
 

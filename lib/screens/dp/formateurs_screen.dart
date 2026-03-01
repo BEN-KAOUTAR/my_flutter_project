@@ -44,14 +44,14 @@ class _FormateursScreenState extends State<FormateursScreen> {
 
   List<User> get _filteredFormateurs {
     List<User> filtered = _formateurs;
-    
+
     if (_searchQuery.isNotEmpty) {
-      filtered = filtered.where((f) => 
+      filtered = filtered.where((f) =>
         f.nom.toLowerCase().startsWith(_searchQuery.toLowerCase()) ||
         f.email.toLowerCase().startsWith(_searchQuery.toLowerCase())
       ).toList();
     }
-    
+
     if (_sortBy == 'name_asc') {
       filtered.sort((a, b) => a.nom.compareTo(b.nom));
     } else if (_sortBy == 'name_desc') {
@@ -59,10 +59,10 @@ class _FormateursScreenState extends State<FormateursScreen> {
     } else if (_sortBy == 'worked_hrs') {
       filtered.sort((a, b) => b.totalHeuresAffectees.compareTo(a.totalHeuresAffectees));
     }
-    
+
     return filtered;
   }
-  
+
   String _sortBy = 'name_asc';
 
   Future<void> _loadFormateurs({bool showLoading = true}) async {
@@ -163,7 +163,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 14),
                       border: InputBorder.none,
                       icon: const Icon(Icons.search, color: AppTheme.textSecondary, size: 20),
-                      suffixIcon: _searchQuery.isNotEmpty 
+                      suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
                             onPressed: () {
@@ -392,8 +392,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
     );
   }
 
-
-  Widget _buildFactItem(String label, String value) {
+Widget _buildFactItem(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -706,5 +705,4 @@ class _FormateursScreenState extends State<FormateursScreen> {
     }
   }
 }
-
 

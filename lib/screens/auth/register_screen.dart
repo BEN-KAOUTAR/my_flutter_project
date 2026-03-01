@@ -22,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   UserRole _selectedRole = UserRole.stagiaire;
   bool _obscurePassword = true;
   bool _isLoading = false;
@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
       begin: const Offset(0, 0.1),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
-    
+
     _animationController.forward();
   }
 
@@ -154,8 +154,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                       ],
                     ),
                     child: Image.asset(
-                      'assets/images/logo.jpg', 
-                      width: isTablet ? 80 : 100, 
+                      'assets/images/logo.jpg',
+                      width: isTablet ? 80 : 100,
                       height: isTablet ? 80 : 100
                     ),
                   ),
@@ -367,9 +367,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
               child: _isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
                   : Text(
-                      'S\'inscrire', 
+                      'S\'inscrire',
                       style: GoogleFonts.poppins(
-                        fontSize: ResponsiveLayout.respSize(context, 16, 17, 18), 
+                        fontSize: ResponsiveLayout.respSize(context, 16, 17, 18),
                         fontWeight: FontWeight.w600
                       )
                     ),
@@ -386,7 +386,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
       child: Text(
         'Déjà un compte ? Se connecter',
         style: GoogleFonts.poppins(
-          color: AppTheme.primaryBlue, 
+          color: AppTheme.primaryBlue,
           fontWeight: FontWeight.w500,
           fontSize: ResponsiveLayout.respSize(context, 14, 15, 16)
         ),
@@ -394,6 +394,4 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
     );
   }
 }
-
-
 

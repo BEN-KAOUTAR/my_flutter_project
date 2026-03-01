@@ -125,8 +125,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
     );
   }
 
-
-  Widget _buildEmptyState() {
+Widget _buildEmptyState() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(48),
@@ -345,6 +344,4 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
     );
   }
 }
-
-
 

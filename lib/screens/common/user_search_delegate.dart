@@ -104,4 +104,3 @@ class UserSearchDelegate extends SearchDelegate<User?> {
   }
 }
 
-

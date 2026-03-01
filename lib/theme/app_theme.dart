@@ -5,18 +5,18 @@ class AppTheme {
   static const Color primaryBlue = Color(0xFF0EA5E9);
   static const Color primaryDark = Color(0xFF0369A1);
   static const Color primaryLight = Color(0xFFBAE6FD);
-  
+
   static const Color accentBlue = Color(0xFF3B82F6);
   static const Color accentGreen = Color(0xFF10B981);
   static const Color accentOrange = Color(0xFFF59E0B);
   static const Color accentRed = Color(0xFFEF4444);
-  
+
   static const Color background = Color(0xFFF8FAFC);
   static const Color surface = Colors.white;
   static const Color textPrimary = Color(0xFF0F172A);
   static const Color textSecondary = Color(0xFF64748B);
   static const Color border = Color(0xFFE2E8F0);
-  
+
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -161,5 +161,4 @@ class AppTheme {
   static BorderRadius get borderRadiusLarge => BorderRadius.circular(16);
   static BorderRadius get borderRadiusXLarge => BorderRadius.circular(24);
 }
-
 

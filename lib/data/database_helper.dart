@@ -727,7 +727,7 @@ class DatabaseHelper {
 
   Future<void> _fixGarbledData(Database db) async {
     try {
-      // Fix the most common garbled user names from initial seeds or bad registrations
+
       await db.rawUpdate(
         "UPDATE users SET nom = 'Directeur Pédagogique' WHERE email = 'dp@digitalpole.ma' AND (nom LIKE '%PÃ%' OR nom LIKE '%P%g%')",
       );
@@ -1202,8 +1202,7 @@ class DatabaseHelper {
   Future<int> updateAffectation(Affectation affectation) async {
     final db = await database;
 
-    // Get the old affectation data to compare
-    final oldResult = await db.query(
+final oldResult = await db.query(
       'affectations',
       where: 'id = ?',
       whereArgs: [affectation.id],
@@ -1214,9 +1213,8 @@ class DatabaseHelper {
       final oldModule = await getModuleById(oldAffectation.moduleId);
       final newModule = await getModuleById(affectation.moduleId);
 
-      // If formateur changed, update hours for both
-      if (oldAffectation.formateurId != affectation.formateurId) {
-        // Check if new formateur would exceed 910h limit
+if (oldAffectation.formateurId != affectation.formateurId) {
+
         final newFormateur = await getUserById(affectation.formateurId);
         if (newFormateur != null && newModule != null) {
           if ((newFormateur.totalHeuresAffectees +
@@ -1229,30 +1227,27 @@ class DatabaseHelper {
           }
         }
 
-        // Remove hours from old formateur
-        if (oldModule != null) {
+if (oldModule != null) {
           await db.rawUpdate(
             'UPDATE users SET total_heures_affectees = MAX(0, total_heures_affectees - ?) WHERE id = ?',
             [oldModule.masseHoraireTotale, oldAffectation.formateurId],
           );
         }
 
-        // Add hours to new formateur
-        if (newModule != null) {
+if (newModule != null) {
           await db.rawUpdate(
             'UPDATE users SET total_heures_affectees = total_heures_affectees + ? WHERE id = ?',
             [newModule.masseHoraireTotale, affectation.formateurId],
           );
         }
       }
-      // If same formateur but different module, adjust hours
+
       else if (oldAffectation.moduleId != affectation.moduleId) {
         if (oldModule != null && newModule != null) {
           final hoursDifference =
               newModule.masseHoraireTotale - oldModule.masseHoraireTotale;
 
-          // Check if formateur would exceed limit
-          final formateur = await getUserById(affectation.formateurId);
+final formateur = await getUserById(affectation.formateurId);
           if (formateur != null) {
             if ((formateur.totalHeuresAffectees + hoursDifference) > 910) {
               throw Exception(
@@ -1650,7 +1645,7 @@ class DatabaseHelper {
     final db = await database;
     final result = await db.rawQuery(
       '''
-      SELECT DISTINCT e.* 
+      SELECT DISTINCT e.*
       FROM emplois e
       JOIN affectations a ON e.groupe_id = a.groupe_id
       WHERE a.formateur_id = ?
@@ -1895,7 +1890,7 @@ class DatabaseHelper {
     final db = await database;
     final result = await db.rawQuery(
       '''
-      SELECT SUM(s.duree) as total 
+      SELECT SUM(s.duree) as total
       FROM seances s
       JOIN affectations a ON s.affectation_id = a.id
       WHERE a.formateur_id = ? AND s.statut = ?
@@ -1994,8 +1989,8 @@ class DatabaseHelper {
     List<dynamic> noteArgs = [];
 
     if (filiereId != null) {
-      noteQuery = '''SELECT 
-                CASE 
+      noteQuery = '''SELECT
+                CASE
                   WHEN n.valeur < 5 THEN '0-5'
                   WHEN n.valeur < 8 THEN '5-8'
                   WHEN n.valeur < 10 THEN '8-10'
@@ -2011,8 +2006,8 @@ class DatabaseHelper {
                GROUP BY range''';
       noteArgs.add(filiereId);
     } else if (directorId != null) {
-      noteQuery = '''SELECT 
-                  CASE 
+      noteQuery = '''SELECT
+                  CASE
                     WHEN n.valeur < 5 THEN '0-5'
                     WHEN n.valeur < 8 THEN '5-8'
                     WHEN n.valeur < 10 THEN '8-10'
@@ -2027,8 +2022,8 @@ class DatabaseHelper {
                  GROUP BY range''';
       noteArgs.add(directorId);
     } else {
-      noteQuery = '''SELECT 
-                  CASE 
+      noteQuery = '''SELECT
+                  CASE
                     WHEN valeur < 5 THEN '0-5'
                     WHEN valeur < 8 THEN '5-8'
                     WHEN valeur < 10 THEN '8-10'
@@ -2132,7 +2127,7 @@ class DatabaseHelper {
     }
 
     final result = await db.rawQuery('''
-      SELECT 
+      SELECT
         g.nom as groupe_name,
         m.nom as module_name,
         u.nom as formateur_name,
@@ -2210,15 +2205,15 @@ class DatabaseHelper {
 
     final userResult = await db.rawQuery(
       '''
-      SELECT DISTINCT 
+      SELECT DISTINCT
         u.id, u.nom, u.email, u.role, u.phone, 0 as is_group,
-        (SELECT content FROM messages 
+        (SELECT content FROM messages
          WHERE (sender_id = u.id AND receiver_id = ?) OR (sender_id = ? AND receiver_id = u.id)
          ORDER BY timestamp DESC LIMIT 1) as last_message,
-        (SELECT timestamp FROM messages 
+        (SELECT timestamp FROM messages
          WHERE (sender_id = u.id AND receiver_id = ?) OR (sender_id = ? AND receiver_id = u.id)
          ORDER BY timestamp DESC LIMIT 1) as last_time,
-        (SELECT COUNT(*) FROM messages 
+        (SELECT COUNT(*) FROM messages
          WHERE sender_id = u.id AND receiver_id = ? AND is_read = 0) as unread_count
       FROM users u
       JOIN messages m ON (m.sender_id = u.id OR m.receiver_id = u.id)
@@ -2229,12 +2224,12 @@ class DatabaseHelper {
     );
 
     String groupQuery = '''
-      SELECT 
+      SELECT
         g.id, g.nom, '' as email, 'GROUPE' as role, '' as phone, 1 as is_group,
         (SELECT content FROM messages WHERE group_id = g.id ORDER BY timestamp DESC LIMIT 1) as last_message,
         (SELECT timestamp FROM messages WHERE group_id = g.id ORDER BY timestamp DESC LIMIT 1) as last_time,
-        (SELECT COUNT(*) FROM messages 
-         WHERE group_id = g.id AND sender_id != ? 
+        (SELECT COUNT(*) FROM messages
+         WHERE group_id = g.id AND sender_id != ?
          AND id NOT IN (SELECT message_id FROM message_reads WHERE user_id = ?)) as unread_count
       FROM groupes g
     ''';
@@ -2248,12 +2243,12 @@ class DatabaseHelper {
 
     if (currentUser.isNotEmpty && currentUser.first['role'] == 'DP') {
       groupQuery = '''
-        SELECT 
+        SELECT
           g.id, g.nom, '' as email, 'GROUPE' as role, '' as phone, 1 as is_group,
           (SELECT content FROM messages WHERE group_id = g.id ORDER BY timestamp DESC LIMIT 1) as last_message,
           (SELECT timestamp FROM messages WHERE group_id = g.id ORDER BY timestamp DESC LIMIT 1) as last_time,
-          (SELECT COUNT(*) FROM messages 
-           WHERE group_id = g.id AND sender_id != ? 
+          (SELECT COUNT(*) FROM messages
+           WHERE group_id = g.id AND sender_id != ?
            AND id NOT IN (SELECT message_id FROM message_reads WHERE user_id = ?)) as unread_count
         FROM groupes g
         JOIN filieres f ON g.filiere_id = f.id
@@ -2318,8 +2313,8 @@ class DatabaseHelper {
 
     final unreadMessages = await db.rawQuery(
       '''
-      SELECT id FROM messages 
-      WHERE group_id = ? AND sender_id != ? 
+      SELECT id FROM messages
+      WHERE group_id = ? AND sender_id != ?
       AND id NOT IN (SELECT message_id FROM message_reads WHERE user_id = ?)
     ''',
       [groupId, userId, userId],
@@ -2349,9 +2344,9 @@ class DatabaseHelper {
 
     final groupResult = await db.rawQuery(
       '''
-      SELECT COUNT(*) FROM messages 
-      WHERE group_id IS NOT NULL 
-      AND sender_id != ? 
+      SELECT COUNT(*) FROM messages
+      WHERE group_id IS NOT NULL
+      AND sender_id != ?
       AND id NOT IN (SELECT message_id FROM message_reads WHERE user_id = ?)
     ''',
       [userId, userId],
@@ -2450,7 +2445,7 @@ class DatabaseHelper {
     if (directorId != null) {
       final result = await db.rawQuery(
         '''
-        SELECT COUNT(DISTINCT p.formateur_id) as count 
+        SELECT COUNT(DISTINCT p.formateur_id) as count
         FROM presences p
         JOIN users u ON p.stagiaire_id = u.id
         WHERE p.vu_par_dp = 0 AND p.formateur_id IS NOT NULL AND u.director_id = ?
@@ -2460,8 +2455,8 @@ class DatabaseHelper {
       return Sqflite.firstIntValue(result) ?? 0;
     }
     final result = await db.rawQuery('''
-      SELECT COUNT(DISTINCT formateur_id) as count 
-      FROM presences 
+      SELECT COUNT(DISTINCT formateur_id) as count
+      FROM presences
       WHERE vu_par_dp = 0 AND formateur_id IS NOT NULL
     ''');
     return Sqflite.firstIntValue(result) ?? 0;
@@ -2472,7 +2467,7 @@ class DatabaseHelper {
     if (directorId != null) {
       await db.execute(
         '''
-        UPDATE presences SET vu_par_dp = 1 
+        UPDATE presences SET vu_par_dp = 1
         WHERE vu_par_dp = 0 AND stagiaire_id IN (SELECT id FROM users WHERE director_id = ?)
       ''',
         [directorId],
@@ -3124,17 +3119,17 @@ class DatabaseHelper {
 
     final result = await db.rawQuery(
       '''
-      SELECT 
+      SELECT
         m.id as module_id,
         m.nom as module_name,
         m.masse_horaire_totale,
         COALESCE(
-          (SELECT SUM(s.duree) 
+          (SELECT SUM(s.duree)
            FROM seances s
            JOIN affectations a ON s.affectation_id = a.id
-           WHERE a.module_id = m.id 
+           WHERE a.module_id = m.id
              AND a.groupe_id = ?
-             AND s.statut = 'VALIDE'), 
+             AND s.statut = 'VALIDE'),
           0
         ) as heures_effectuees
       FROM modules m
@@ -3165,7 +3160,7 @@ class DatabaseHelper {
     final db = await database;
     final result = await db.rawQuery(
       '''
-      SELECT AVG(valeur) as average FROM notes 
+      SELECT AVG(valeur) as average FROM notes
       WHERE stagiaire_id = ? AND validee = 1
     ''',
       [stagiaireId],
@@ -3179,7 +3174,7 @@ class DatabaseHelper {
     final db = await database;
     final result = await db.rawQuery(
       '''
-      SELECT 
+      SELECT
         COUNT(CASE WHEN statut = 'PRESENT' THEN 1 END) as present,
         COUNT(*) as total
       FROM presences

@@ -14,7 +14,6 @@ import '../../providers/notification_provider.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 
-
 class ValidationScreen extends StatefulWidget {
   final VoidCallback? onBack;
   const ValidationScreen({super.key, this.onBack});
@@ -61,12 +60,12 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
       final notesPublier = await DatabaseHelper.instance.getNotesAPublier(directorId: directorId);
       final presencesAttente = await DatabaseHelper.instance.getPresencesEnAttente(directorId: directorId);
       final examsAPublier = await DatabaseHelper.instance.getExamsAPublier(directorId: directorId);
-      
+
       final modules = await DatabaseHelper.instance.getAllModules(directorId: directorId);
       final stagiaires = await DatabaseHelper.instance.getUsersByRole(UserRole.stagiaire, directorId: directorId);
       final formateurs = await DatabaseHelper.instance.getUsersByRole(UserRole.formateur, directorId: directorId);
       final affectations = await DatabaseHelper.instance.getAllAffectations(directorId: directorId);
-      
+
       Map<int, String> modNames = {for (var m in modules) m.id!: m.nom};
       Map<int, String> stagNames = {for (var s in stagiaires) s.id!: s.nom};
       Map<int, User> stagMap = {for (var s in stagiaires) s.id!: s};
@@ -112,7 +111,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
   String _getFormateurNameForNote(Note note) {
     final stagiaire = _stagiairesMap[note.stagiaireId];
     if (stagiaire != null && stagiaire.groupeId != null) {
-      final aff = _affectations.where((a) => 
+      final aff = _affectations.where((a) =>
         a.groupeId == stagiaire.groupeId && a.moduleId == note.moduleId
       ).firstOrNull;
       if (aff != null) {
@@ -149,8 +148,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     );
   }
 
-
-  Widget _buildExamsAPublierList() {
+Widget _buildExamsAPublierList() {
     if (_examsAPublier.isEmpty) {
       return _buildEmptyState('Aucun examen à publier', 'Les examens validés apparaîtront ici', Icons.assignment_turned_in_outlined);
     }
@@ -299,7 +297,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
   Future<void> _handlePublierExam(int id) async {
     try {
       await DatabaseHelper.instance.updateExamStatus(id, 'PUBLIE');
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Examen publié avec succès'), backgroundColor: AppTheme.accentGreen),
       );
@@ -577,7 +575,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     if (_notesEnAttente.isEmpty) {
       return _buildEmptyState('Tout est validé', 'Aucune note en attente de validation', Icons.check_circle_outline_rounded);
     }
-    
+
     final isMobile = MediaQuery.of(context).size.width < 950;
 
     return GridView.builder(
@@ -1032,13 +1030,13 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Future<void> _showPresenceDetails(String date, int groupeId, String groupeNom, {String? heure}) async {
     final details = await DatabaseHelper.instance.getPresenceDetails(date, groupeId, heure: heure);
-    
+
     if (!mounted) return;
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Détails Présence - $groupeNom${heure != null ? " ($heure)" : ""}', 
+        title: Text('Détails Présence - $groupeNom${heure != null ? " ($heure)" : ""}',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
         content: SizedBox(
           width: double.maxFinite,
@@ -1085,11 +1083,11 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Future<void> _handleValiderPresence(String date, int groupeId, {String? heure}) async {
     await DatabaseHelper.instance.validerPresenceDP(groupeId, date, heure: heure);
-    
+
     if (mounted) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Fiche de présence validée avec succès'), backgroundColor: AppTheme.accentGreen),
       );
@@ -1108,13 +1106,13 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Future<void> _handleRejeterNote(Note note) async {
     await DatabaseHelper.instance.rejeterNote(note.id!);
-    
+
     final stagiaire = _stagiairesMap[note.stagiaireId];
     if (stagiaire != null && stagiaire.groupeId != null) {
-      final aff = _affectations.where((a) => 
+      final aff = _affectations.where((a) =>
         a.groupeId == stagiaire.groupeId && a.moduleId == note.moduleId
       ).firstOrNull;
-      
+
       if (aff != null) {
         await NotificationService().notifyUser(
           userId: aff.formateurId,
@@ -1124,7 +1122,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
         );
       }
     }
-    
+
     _loadData();
     if (mounted) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
@@ -1137,14 +1135,14 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Future<void> _handlePublierNote(Note note) async {
     await DatabaseHelper.instance.publierNote(note.id!);
-    
+
     await NotificationService().notifyUser(
       userId: note.stagiaireId,
       title: 'Nouvelle note publiée',
       message: 'Une note a été publiée pour le module ${_moduleNames[note.moduleId]}',
       type: 'INFO'
     );
-    
+
     _loadData();
     if (mounted) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
@@ -1163,7 +1161,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Future<void> _handleRejeterSeance(Seance seance) async {
     await DatabaseHelper.instance.rejeterSeance(seance.id!);
-    
+
     final aff = _affectations.where((a) => a.id == seance.affectationId).firstOrNull;
     if (aff != null) {
       await NotificationService().notifyUser(
@@ -1173,7 +1171,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
         type: 'WARNING'
       );
     }
-    
+
     _loadData();
     if (mounted) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
@@ -1186,6 +1184,4 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     }
   }
 }
-
-
 

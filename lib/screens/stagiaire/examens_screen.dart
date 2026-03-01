@@ -33,7 +33,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
       try {
         final upcoming = await DatabaseHelper.instance.getUpcomingExamsForGroup(user.groupeId!);
         final past = await DatabaseHelper.instance.getPastExamsForGroup(user.groupeId!);
-        
+
         if (mounted) {
           setState(() {
             _upcomingExams = upcoming;
@@ -207,8 +207,8 @@ class _ExamensScreenState extends State<ExamensScreen> {
             final date = DateTime.parse(exam['date']);
             final formattedDate = DateFormat('dd MMM yyyy').format(date);
             final formattedTime = DateFormat('HH:mm').format(date);
-            
-            final timeDisplay = formattedTime; 
+
+            final timeDisplay = formattedTime;
 
             if (isUpcoming) {
               return _buildExamCard(
@@ -221,9 +221,9 @@ class _ExamensScreenState extends State<ExamensScreen> {
               );
             } else {
               return _buildPastExamCard(
-                exam['module_name'] ?? 'N/A', 
-                exam['type'] ?? 'Examen', 
-                formattedDate, 
+                exam['module_name'] ?? 'N/A',
+                exam['type'] ?? 'Examen',
+                formattedDate,
                 'Terminé'
               );
             }
@@ -355,6 +355,4 @@ class _ExamensScreenState extends State<ExamensScreen> {
     );
   }
 }
-
-
 

@@ -86,15 +86,15 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     if (showLoading) {
       setState(() => _isLoading = true);
     }
-    
+
     final authService = Provider.of<AuthService>(context, listen: false);
     final userId = authService.currentUser?.id;
-    
+
     if (userId != null) {
       final affectationsWithProgress = await DatabaseHelper.instance.getAffectationsWithProgress(userId);
       final totalHeures = await DatabaseHelper.instance.getFormateurTotalHours(userId);
       final exams = await DatabaseHelper.instance.getUpcomingExams(userId);
-      
+
       if (mounted) {
         setState(() {
           _affectationsWithProgress = affectationsWithProgress;
@@ -144,8 +144,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     }
   }
 
-
-  String _getScreenTitle(int index) {
+String _getScreenTitle(int index) {
     switch (index) {
       case 0: return 'Academic Pro';
       case 1: return 'Mes séances';
@@ -163,7 +162,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
   @override
   Widget build(BuildContext context) {
     final showSidebar = !ResponsiveLayout.isMobile(context);
-    
+
     return DashboardLayout(
       appBar: _buildAppBar(),
       drawer: showSidebar ? null : _buildDrawer(),
@@ -173,8 +172,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     );
   }
 
-
-  PreferredSizeWidget? _buildAppBar() {
+PreferredSizeWidget? _buildAppBar() {
     final isLargeScreen = !ResponsiveLayout.isMobile(context);
     final user = Provider.of<AuthService>(context).currentUser;
     final isHome = _currentIndex == 0;
@@ -183,7 +181,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     if (isLargeScreen) {
       return null;
     }
-    
+
     return AppBar(
       backgroundColor: AppTheme.formateurColor,
       elevation: 0,
@@ -230,11 +228,11 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
         ),
         const SizedBox(width: 8),
         GestureDetector(
-          onTap: () => setState(() => _currentIndex = 5), 
+          onTap: () => setState(() => _currentIndex = 5),
           child: CircleAvatar(
             radius: 18,
             backgroundColor: Colors.white.withOpacity(0.2),
-            backgroundImage: kIsWeb 
+            backgroundImage: kIsWeb
                ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
                : (_profileImage != null ? FileImage(_profileImage!) : null),
             child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
@@ -270,7 +268,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                    CircleAvatar(
                     radius: 20,
                     backgroundColor: AppTheme.formateurColor,
-                    backgroundImage: kIsWeb 
+                    backgroundImage: kIsWeb
                        ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
                        : (_profileImage != null ? FileImage(_profileImage!) : null),
                     child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
@@ -381,15 +379,15 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
               ],
             ),
           ),
-          
+
           Padding(
             padding: const EdgeInsets.all(16),
             child: ListTile(
               leading: const Icon(Icons.logout_rounded, color: AppTheme.accentRed, size: 24),
               title: Text(
-                'Déconnexion', 
+                'Déconnexion',
                 style: GoogleFonts.poppins(
-                  color: AppTheme.accentRed, 
+                  color: AppTheme.accentRed,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
@@ -423,7 +421,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
           CircleAvatar(
             radius: 28,
             backgroundColor: Colors.white,
-            backgroundImage: kIsWeb 
+            backgroundImage: kIsWeb
                ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
                : (_profileImage != null ? FileImage(_profileImage!) : null),
             child: (kIsWeb ? _profileImageBytes == null : _profileImage == null) ? Text(
@@ -526,7 +524,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
   Widget _buildDashboardHome() {
     final authService = Provider.of<AuthService>(context);
     final user = authService.currentUser;
-    
+
     return RefreshIndicator(
       onRefresh: () => _loadData(showLoading: false),
       child: SingleChildScrollView(
@@ -585,7 +583,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
               builder: (context, constraints) {
                 final double availableWidth = constraints.maxWidth;
                 double cardWidth;
-                
+
                 if (availableWidth > 1100) {
                   cardWidth = (availableWidth - 32) / 3;
                 } else {
@@ -885,5 +883,4 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     );
   }
 }
-
 

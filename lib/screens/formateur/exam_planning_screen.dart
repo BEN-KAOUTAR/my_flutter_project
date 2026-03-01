@@ -34,7 +34,7 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
     if (userId != null) {
       final affectations = await DatabaseHelper.instance.getAffectationsWithProgress(userId);
       final examMaps = await DatabaseHelper.instance.getUpcomingExams(userId);
-      
+
       if (mounted) {
         setState(() {
           _affectations = affectations;
@@ -115,8 +115,7 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
     );
   }
 
-
-  Widget _buildEmptyState() {
+Widget _buildEmptyState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -294,7 +293,7 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (selectedAffectationId == null) return;
-                      
+
                       final examDateTime = DateTime(
                         selectedDate.year,
                         selectedDate.month,
@@ -302,14 +301,14 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
                         selectedTime.hour,
                         selectedTime.minute,
                       );
-                      
+
                       final exam = Exam(
                         affectationId: selectedAffectationId!,
                         date: examDateTime,
                         type: selectedType!,
                         description: descriptionController.text,
                       );
-                      
+
                       await DatabaseHelper.instance.insertExam(exam.toMap());
                       if (mounted) {
                         Navigator.pop(context);
@@ -351,5 +350,4 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
     }
   }
 }
-
 

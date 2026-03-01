@@ -56,7 +56,7 @@ class AuthService extends ChangeNotifier {
         groupeId: groupeId,
         directorId: directorId,
       );
-      
+
       final id = await _dbHelper.insertUser(newUser);
       if (id > 0) {
         _currentUser = newUser.copyWith(id: id);
@@ -89,7 +89,7 @@ class AuthService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getInt('user_id');
-      
+
       if (userId != null) {
         final user = await _dbHelper.getUserById(userId);
         if (user != null) {

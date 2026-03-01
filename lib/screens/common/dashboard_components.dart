@@ -61,17 +61,17 @@ class SidebarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isDark 
+    final color = isDark
         ? (isSelected ? Colors.white : Colors.white70)
         : (isSelected ? (selectedColor ?? AppTheme.primaryBlue) : AppTheme.textSecondary);
-    
-    final bgColor = isSelected 
+
+    final bgColor = isSelected
         ? (isDark ? Colors.white.withValues(alpha: 0.1) : (selectedColor ?? AppTheme.primaryBlue).withValues(alpha: 0.1))
         : Colors.transparent;
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 16, 
+        horizontal: 16,
         vertical: ResponsiveLayout.respSize(context, 4, 6, 8),
       ),
       child: Material(
@@ -80,8 +80,8 @@ class SidebarItem extends StatelessWidget {
         child: ListTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           leading: Icon(
-            icon, 
-            color: color, 
+            icon,
+            color: color,
             size: ResponsiveLayout.respSize(context, 20, 22, 24),
           ),
           title: Row(

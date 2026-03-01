@@ -33,7 +33,7 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
 
     final stagiaires = await DatabaseHelper.instance.getUsersByRole(UserRole.stagiaire, directorId: directorId);
     final formateurs = await DatabaseHelper.instance.getUsersByRole(UserRole.formateur, directorId: directorId);
-    
+
     setState(() {
       _stagiaires = stagiaires;
       _formateurs = formateurs;
@@ -279,8 +279,8 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: user.invitationStatus == 'Invitée' || user.invitationStatus == 'Acceptée' 
-                          ? const Color(0xFFDCFCE7) 
+                      color: user.invitationStatus == 'Invitée' || user.invitationStatus == 'Acceptée'
+                          ? const Color(0xFFDCFCE7)
                           : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -298,8 +298,8 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: user.invitationStatus == 'Invitée' || user.invitationStatus == 'Acceptée' 
-                                  ? const Color(0xFF166534) 
+                              color: user.invitationStatus == 'Invitée' || user.invitationStatus == 'Acceptée'
+                                  ? const Color(0xFF166534)
                                   : AppTheme.textSecondary,
                             ),
                             maxLines: 1,
@@ -324,6 +324,4 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
         color: AppTheme.textSecondary,
       );
 }
-
-
 

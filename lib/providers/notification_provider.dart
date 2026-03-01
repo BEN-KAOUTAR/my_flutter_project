@@ -10,7 +10,7 @@ class NotificationProvider with ChangeNotifier {
   int _unreadInscriptionRequestsCount = 0;
   int _unreadNotesCount = 0;
   int _pendingSeanceValidationsCount = 0;
-  
+
   int get unreadMessageCount => _unreadMessageCount;
   int get unreadNotificationCount => _unreadNotificationCount;
   int get unreadReclamationsCount => _unreadReclamationsCount;
@@ -18,8 +18,8 @@ class NotificationProvider with ChangeNotifier {
   int get unreadInscriptionRequestsCount => _unreadInscriptionRequestsCount;
   int get unreadNotesCount => _unreadNotesCount;
   int get pendingSeanceValidationsCount => _pendingSeanceValidationsCount;
-  
-  int get totalCount => _unreadMessageCount + _unreadNotificationCount + 
+
+  int get totalCount => _unreadMessageCount + _unreadNotificationCount +
                         _unreadReclamationsCount + _pendingPresenceValidationsCount +
                         _unreadInscriptionRequestsCount + _unreadNotesCount +
                         _pendingSeanceValidationsCount;
@@ -32,16 +32,16 @@ class NotificationProvider with ChangeNotifier {
 
     try {
       final db = DatabaseHelper.instance;
-      
+
       _unreadMessageCount = await db.getTotalUnreadMessageCount(user.id!);
       _unreadNotificationCount = await db.getUnreadNotificationsCount(user.id!);
-      
+
       if (user.role == UserRole.dp) {
         _unreadReclamationsCount = await db.getUnreadReclamationsCount(directorId: user.id);
         _pendingPresenceValidationsCount = await db.getPendingPresenceValidationsCount(directorId: user.id);
         _unreadInscriptionRequestsCount = await db.getPendingUserRequestsCount(user.id!);
         _unreadNotesCount = await db.getUnvalidatedNotesCount(directorId: user.id);
-        
+
         final dynamicStats = await db.getGlobalStats(directorId: user.id);
         _pendingSeanceValidationsCount = dynamicStats['seancesEnAttente'] ?? 0;
       } else if (user.role == UserRole.stagiaire) {
@@ -60,7 +60,7 @@ class NotificationProvider with ChangeNotifier {
         _unreadInscriptionRequestsCount = 0;
         _unreadNotesCount = 0;
       }
-      
+
       notifyListeners();
     } catch (e) {
       debugPrint('Error refreshing notification counts: $e');

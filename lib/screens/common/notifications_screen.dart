@@ -33,9 +33,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         _notifications = list;
         _isLoading = false;
       });
-      
+
       await DatabaseHelper.instance.markAllNotificationsAsRead(user.id!);
-      
+
       if (mounted) {
         Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
       }
@@ -88,7 +88,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget _buildNotificationCard(NotificationModel notif) {
     Color iconColor;
     IconData icon;
-    
+
     switch (notif.type) {
       case 'SUCCESS':
         iconColor = AppTheme.accentGreen;
@@ -147,5 +147,4 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return '${dt.day}/${dt.month} ${dt.hour}:${dt.minute.toString().padLeft(2, '0')}';
   }
 }
-
 

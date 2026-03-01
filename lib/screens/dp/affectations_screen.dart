@@ -27,7 +27,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
   List<Groupe> _groupes = [];
   Map<int, double> _progressionMap = {};
   bool _isLoading = true;
-  
+
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   int? _selectedGroupeId;
@@ -53,7 +53,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
     final formateurs = await DatabaseHelper.instance.getUsersByRole(UserRole.formateur, directorId: directorId);
     final modules = await DatabaseHelper.instance.getAllModules(directorId: directorId);
     final groupes = await DatabaseHelper.instance.getAllGroupes(directorId: directorId);
-    
+
     Map<int, double> progressions = {};
     for (var aff in affectations) {
       final validatedHours = await DatabaseHelper.instance.getValidatedHoursByAffectation(aff.id!);
@@ -78,16 +78,16 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
   List<Affectation> get _filteredAffectations {
     return _affectations.where((aff) {
       final matchesGroupe = _selectedGroupeId == null || aff.groupeId == _selectedGroupeId;
-      
+
       final formateur = _getFormateur(aff.formateurId);
       final module = _getModule(aff.moduleId);
       final groupe = _getGroupe(aff.groupeId);
-      
-      final matchesSearch = _searchQuery.isEmpty || 
+
+      final matchesSearch = _searchQuery.isEmpty ||
           (formateur?.nom.toLowerCase().startsWith(_searchQuery.toLowerCase()) ?? false) ||
           (module?.nom.toLowerCase().startsWith(_searchQuery.toLowerCase()) ?? false) ||
           (groupe?.nom.toLowerCase().startsWith(_searchQuery.toLowerCase()) ?? false);
-          
+
       return matchesGroupe && matchesSearch;
     }).toList();
   }
@@ -102,7 +102,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
       children: [
         _buildHeader(),
         Expanded(
-          child: _isLoading 
+          child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: _loadData,
@@ -175,7 +175,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 14),
                       border: InputBorder.none,
                       icon: const Icon(Icons.search, color: AppTheme.textSecondary, size: 20),
-                      suffixIcon: _searchQuery.isNotEmpty 
+                      suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
                             onPressed: () {
@@ -226,7 +226,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
 
   Widget _buildAffectationsTable() {
     final isMobile = MediaQuery.of(context).size.width < 600;
-    
+
     return GridView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -403,7 +403,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary),
                     ),
                     const SizedBox(height: 32),
-                    
+
                     Text('Formateur *', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<int>(
@@ -420,7 +420,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       )).toList(),
                       onChanged: (value) => setModalState(() => selectedFormateurId = value),
                     ),
-                    
+
                     const SizedBox(height: 24),
                     Text('Module *', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
                     const SizedBox(height: 8),
@@ -438,7 +438,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       )).toList(),
                       onChanged: (value) => setModalState(() => selectedModuleId = value),
                     ),
-                    
+
                     const SizedBox(height: 24),
                     Text('Groupe *', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
                     const SizedBox(height: 8),
@@ -456,9 +456,8 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       )).toList(),
                       onChanged: (value) => setModalState(() => selectedGroupeId = value),
                     ),
-                    
-                    
-                    const SizedBox(height: 24),
+
+const SizedBox(height: 24),
                     Text('Année scolaire', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
                     const SizedBox(height: 8),
                     TextFormField(
@@ -474,7 +473,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       ),
                       onChanged: (val) => anneeScolaire = val,
                     ),
-                    
+
                     const SizedBox(height: 48),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -494,7 +493,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                         ElevatedButton(
                           onPressed: () async {
                             if (selectedFormateurId == null || selectedModuleId == null || selectedGroupeId == null) return;
-                            
+
                             final newAff = Affectation(
                               id: affectation?.id,
                               formateurId: selectedFormateurId!,
@@ -502,14 +501,14 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                               groupeId: selectedGroupeId!,
                               anneeScolaire: anneeScolaire,
                             );
-                            
+
                             try {
                               if (isEdit) {
                                 await DatabaseHelper.instance.updateAffectation(newAff);
                               } else {
                                 await DatabaseHelper.instance.insertAffectation(newAff);
                               }
-                              
+
                               if (context.mounted) {
                                 Navigator.pop(context);
                                 _loadData();
@@ -574,5 +573,4 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
     }
   }
 }
-
 

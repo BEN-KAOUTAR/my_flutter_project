@@ -29,9 +29,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
   Creneau? _selectedCreneau;
   List<Map<String, dynamic>> _todaySessions = [];
 
-
-
-  bool _isValidated = false;
+bool _isValidated = false;
 
   @override
   void initState() {
@@ -47,19 +45,19 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
     if (user != null) {
       try {
         final groupes = await DatabaseHelper.instance.getGroupsForFormateur(user.id!);
-        
+
         final weekNum = _getWeekNumber(_selectedDate);
         final dayName = _getFrenchDayName(_selectedDate.weekday);
-        
+
         List<Map<String, dynamic>> dailySessions = [];
-        
+
         for (var g in groupes) {
           final emploi = await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(weekNum, g.id!);
           if (emploi != null) {
-            final sessionCreneaux = emploi.creneaux.where((c) => 
+            final sessionCreneaux = emploi.creneaux.where((c) =>
               c.jour == dayName && c.formateurId == user.id
             ).toList();
-            
+
             for (var c in sessionCreneaux) {
               dailySessions.add({
                 'creneau': c,
@@ -97,22 +95,22 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
       final user = authService.currentUser;
-      
+
       await _loadAvailableCreneaux(groupeId);
 
       final stagiaires = await DatabaseHelper.instance.getStagiairesByGroupe(groupeId);
-      
+
       final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
-      String? selectedHeure = _selectedCreneau != null 
-          ? '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}' 
+      String? selectedHeure = _selectedCreneau != null
+          ? '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}'
           : null;
 
       final presenceData = await DatabaseHelper.instance.getPresenceByDateGroup(
-        dateStr, 
+        dateStr,
         groupeId,
         heure: selectedHeure
       );
-      
+
       Map<int, String> statusMap = {};
       bool isValidated = false;
 
@@ -130,7 +128,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
           statusMap[s.id!] = 'PRESENT';
         }
       }
-      
+
       if (mounted) {
         setState(() {
           _stagiaires = stagiaires;
@@ -156,13 +154,13 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
 
     final weekNum = _getWeekNumber(_selectedDate);
     final emploi = await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(weekNum, groupeId);
-    
+
     if (emploi != null) {
       final dayName = _getFrenchDayName(_selectedDate.weekday);
-      final valid = emploi.creneaux.where((c) => 
+      final valid = emploi.creneaux.where((c) =>
         c.jour == dayName && c.formateurId == user.id
       ).toList();
-      
+
       if (mounted) {
         setState(() {
           _availableCreneaux = valid;
@@ -189,9 +187,9 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
     final firstDayOfYear = DateTime(date.year, 1, 1);
     final daysToFirstMonday = (8 - firstDayOfYear.weekday) % 7;
     final firstMonday = DateTime(date.year, 1, 1 + daysToFirstMonday);
-    
+
     if (date.isBefore(firstMonday)) return 1;
-    
+
     final daysSinceFirstMonday = date.difference(firstMonday).inDays;
     return (daysSinceFirstMonday / 7).floor() + 1;
   }
@@ -224,15 +222,15 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
 
     for (var student in _stagiaires) {
       final status = _presenceStatus[student.id!] ?? 'PRESENT';
-      String? selectedHeure = _selectedCreneau != null 
-          ? '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}' 
+      String? selectedHeure = _selectedCreneau != null
+          ? '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}'
           : null;
-          
+
       await DatabaseHelper.instance.savePresence(
-        student.id!, 
-        _selectedGroupeId!, 
-        dateStr, 
-        status, 
+        student.id!,
+        _selectedGroupeId!,
+        dateStr,
+        status,
         formateurId,
         heure: selectedHeure
       );
@@ -247,7 +245,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
         '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}'
       );
     }
-    
+
     setState(() => _isLoading = false);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -325,7 +323,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
                 if (_selectedDate.weekday == DateTime.sunday) {
                   initial = _selectedDate.subtract(const Duration(days: 1));
                 }
-                
+
                 final date = await showDatePicker(
                   context: context,
                   initialDate: initial,
@@ -548,8 +546,8 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _selectedCreneau != null 
-                          ? '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}' 
+                      _selectedCreneau != null
+                          ? '${_selectedCreneau!.heureDebut} - ${_selectedCreneau!.heureFin}'
                           : '',
                       style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
                     ),
@@ -686,5 +684,4 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
     );
   }
 }
-
 

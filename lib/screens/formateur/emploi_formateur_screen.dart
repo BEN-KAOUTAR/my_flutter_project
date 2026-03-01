@@ -35,9 +35,9 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
     final firstDayOfYear = DateTime(now.year, 1, 1);
     final daysToFirstMonday = (8 - firstDayOfYear.weekday) % 7;
     final firstMonday = DateTime(now.year, 1, 1 + daysToFirstMonday);
-    
+
     if (now.isBefore(firstMonday)) return 1;
-    
+
     final daysSinceFirstMonday = now.difference(firstMonday).inDays;
     return (daysSinceFirstMonday / 7).floor() + 1;
   }
@@ -47,20 +47,20 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
     final firstDayOfYear = DateTime(year, 1, 1);
     final daysToFirstMonday = (8 - firstDayOfYear.weekday) % 7;
     final firstMonday = DateTime(year, 1, 1 + daysToFirstMonday);
-    
+
     final weekMonday = firstMonday.add(Duration(days: (yearlyWeekNum - 1) * 7));
-    
+
     final firstDayOfMonth = DateTime(weekMonday.year, weekMonday.month, 1);
     int offsetToFirstMonday = (DateTime.monday - firstDayOfMonth.weekday + 7) % 7;
     final monthFirstMonday = firstDayOfMonth.add(Duration(days: offsetToFirstMonday));
-    
+
     int weekIndex;
     if (weekMonday.isBefore(monthFirstMonday)) {
-      weekIndex = 1; 
+      weekIndex = 1;
     } else {
       weekIndex = (weekMonday.difference(monthFirstMonday).inDays / 7).floor() + 1;
     }
-    
+
     final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
     return 'Semaine $weekIndex (${months[weekMonday.month - 1]})';
   }
@@ -70,10 +70,10 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
     final firstDayOfYear = DateTime(year, 1, 1);
     final daysToFirstMonday = (8 - firstDayOfYear.weekday) % 7;
     final firstMonday = DateTime(year, 1, 1 + daysToFirstMonday);
-    
+
     final weekStart = firstMonday.add(Duration(days: (yearlyWeekNum - 1) * 7));
     final weekEnd = weekStart.add(const Duration(days: 5));
-    
+
     final dateFormat = DateFormat('dd MMM');
     return '${dateFormat.format(weekStart)} - ${dateFormat.format(weekEnd)}';
   }
@@ -85,7 +85,7 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
 
     if (user != null) {
       final emplois = await DatabaseHelper.instance.getEmploisByFormateur(user.id!);
-      
+
       for (var emploi in emplois) {
         if (!_groupNames.containsKey(emploi.groupeId)) {
           final groupe = await DatabaseHelper.instance.getGroupeById(emploi.groupeId);
@@ -125,7 +125,7 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
             onPressed: () {
           final authService = Provider.of<AuthService>(context, listen: false);
           final user = authService.currentUser;
-          
+
           if (_emplois.isNotEmpty && user != null) {
             List<Creneau> myCreneaux = [];
             for (var emploi in _emplois) {
@@ -420,6 +420,4 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
     );
   }
 }
-
-
 

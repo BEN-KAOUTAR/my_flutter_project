@@ -56,7 +56,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
 
     final groupes = await DatabaseHelper.instance.getAllGroupes(directorId: directorId);
     final filieres = await DatabaseHelper.instance.getAllFilieres(directorId: directorId);
-    
+
     Map<int, int> counts = {};
     for (var groupe in groupes) {
       counts[groupe.id!] = await DatabaseHelper.instance.getGroupeStagiairesCount(groupe.id!);
@@ -78,7 +78,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
   List<Groupe> get _filteredGroupes {
     return _groupes.where((g) {
       final matchesFiliere = _selectedFiliereId == null || g.filiereId == _selectedFiliereId;
-      final matchesSearch = _searchQuery.isEmpty || 
+      final matchesSearch = _searchQuery.isEmpty ||
           g.nom.toLowerCase().startsWith(_searchQuery.toLowerCase());
       return matchesFiliere && matchesSearch;
     }).toList();
@@ -171,7 +171,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 14),
                       border: InputBorder.none,
                       icon: const Icon(Icons.search, color: AppTheme.textSecondary, size: 20),
-                      suffixIcon: _searchQuery.isNotEmpty 
+                      suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
                             onPressed: () {
@@ -558,7 +558,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                       const SizedBox(width: 12),
                       ElevatedButton(
                         onPressed: () async {
-                          if (nomController.text.trim().isEmpty || 
+                          if (nomController.text.trim().isEmpty ||
                               anneeScolaireController.text.trim().isEmpty ||
                               selectedFiliereId == null) return;
                           final newGroupe = Groupe(
@@ -695,6 +695,4 @@ class _GroupesScreenState extends State<GroupesScreen> {
     });
   }
 }
-
-
 

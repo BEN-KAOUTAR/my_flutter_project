@@ -39,7 +39,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
       final user = authService.currentUser;
       final affectations = await DatabaseHelper.instance.getAffectationsByFormateur(userId);
       final modules = await DatabaseHelper.instance.getAllModules(directorId: user?.directorId);
-      
+
       List<Seance> allSeances = [];
       for (var affectation in affectations) {
         final seances = await DatabaseHelper.instance.getSeancesByAffectation(affectation.id!);
@@ -392,13 +392,13 @@ class _SeancesScreenState extends State<SeancesScreen> {
         final parts = existingSeance!.heureDebut!.split(':');
         int hour = 0;
         int minute = 0;
-        
+
         if (parts.length >= 2) {
           hour = int.parse(parts[0].replaceAll(RegExp(r'[^0-9]'), ''));
-          
+
           final minutePart = parts[1].split(' ').first;
           minute = int.parse(minutePart.replaceAll(RegExp(r'[^0-9]'), ''));
-          
+
           if (existingSeance!.heureDebut!.toUpperCase().contains('PM') && hour < 12) {
             hour += 12;
           } else if (existingSeance!.heureDebut!.toUpperCase().contains('AM') && hour == 12) {
@@ -533,25 +533,25 @@ class _SeancesScreenState extends State<SeancesScreen> {
                         );
                         return;
                       }
-  
+
                       final seance = Seance(
                         id: existingSeance?.id,
                         affectationId: selectedAffectationId!,
                         date: selectedDate,
-                        heureDebut: selectedTime != null 
+                        heureDebut: selectedTime != null
                             ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
                             : null,
                         duree: duree,
                         contenu: contenuController.text.trim(),
                         statut: existingSeance?.statut ?? SeanceStatus.enAttente,
                       );
-  
+
                       if (isEditing) {
                         await DatabaseHelper.instance.updateSeance(seance);
                       } else {
                         await DatabaseHelper.instance.insertSeance(seance);
                       }
-  
+
                       if (context.mounted) {
                         Navigator.pop(context);
                         _loadData();
@@ -576,6 +576,4 @@ class _SeancesScreenState extends State<SeancesScreen> {
     );
   }
 }
-
-
 

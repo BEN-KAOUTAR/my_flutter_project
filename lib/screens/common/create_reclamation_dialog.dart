@@ -61,7 +61,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
-    
+
     try {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       if (user == null) return;
@@ -77,7 +77,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
       );
 
       await DatabaseHelper.instance.createReclamation(reclamation);
-      
+
       if (mounted) {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -122,7 +122,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               DropdownButtonFormField<String>(
                 value: _selectedType,
                 decoration: InputDecoration(
@@ -138,7 +138,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                 onChanged: (v) => setState(() => _selectedType = v!),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _subjectController,
                 decoration: InputDecoration(
@@ -148,7 +148,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                 validator: (v) => v?.isEmpty ?? true ? 'Requis' : null,
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _messageController,
                 decoration: InputDecoration(
@@ -160,7 +160,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                 validator: (v) => v?.isEmpty ?? true ? 'Requis' : null,
               ),
               const SizedBox(height: 16),
-              
+
               InkWell(
                 onTap: _pickFile,
                 child: Container(
@@ -176,9 +176,9 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          _attachmentUrl != null 
-                            ? (kIsWeb && _attachmentUrl!.startsWith('data:base64,') 
-                                ? _attachmentUrl!.split('|').last 
+                          _attachmentUrl != null
+                            ? (kIsWeb && _attachmentUrl!.startsWith('data:base64,')
+                                ? _attachmentUrl!.split('|').last
                                 : _attachmentUrl!.split('/').last)
                             : 'Joindre un fichier (PDF, Image)',
                           style: GoogleFonts.poppins(
@@ -204,7 +204,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -214,7 +214,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: _isLoading 
+                  child: _isLoading
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : Text('Envoyer', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
@@ -226,6 +226,4 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
     );
   }
 }
-
-
 

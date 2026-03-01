@@ -62,7 +62,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
   List<User> get _filteredStagiaires {
     return _stagiaires.where((s) {
       final matchesGroup = _selectedGroupeId == null || s.groupeId == _selectedGroupeId;
-      final matchesSearch = _searchQuery.isEmpty || 
+      final matchesSearch = _searchQuery.isEmpty ||
           s.nom.toLowerCase().startsWith(_searchQuery.toLowerCase());
       return matchesGroup && matchesSearch;
     }).toList();
@@ -161,7 +161,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 14),
                       border: InputBorder.none,
                       icon: const Icon(Icons.search, color: AppTheme.textSecondary, size: 20),
-                      suffixIcon: _searchQuery.isNotEmpty 
+                      suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
                             onPressed: () {
@@ -714,7 +714,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                               return;
                             }
                           }
-                          
+
                           final user = Provider.of<AuthService>(context, listen: false).currentUser;
                           final newStagiaire = User(
                             id: stagiaire?.id,
@@ -728,13 +728,13 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                             directorId: user?.id,
                             anneeScolaire: anneeScolaireController.text.trim(),
                           );
-                          
+
                           if (isEdit) {
                             await DatabaseHelper.instance.updateUser(newStagiaire);
                           } else {
                             await DatabaseHelper.instance.insertUser(newStagiaire);
                           }
-                          
+
                           if (context.mounted) {
                             Navigator.pop(context);
                             _loadData();
@@ -788,6 +788,4 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
     }
   }
 }
-
-
 

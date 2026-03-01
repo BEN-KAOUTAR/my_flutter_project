@@ -15,7 +15,7 @@ class DirectorSignupDialog extends StatefulWidget {
 class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -51,7 +51,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim(),
         password: _passwordController.text,
-        role: UserRole.dp, 
+        role: UserRole.dp,
       );
 
       await DatabaseHelper.instance.insertUser(newDirector);
@@ -95,8 +95,8 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                 Text(
                   'Création Compte Directeur',
                   style: GoogleFonts.poppins(
-                    fontSize: ResponsiveLayout.respSize(context, 20, 24, 28), 
-                    fontWeight: FontWeight.bold, 
+                    fontSize: ResponsiveLayout.respSize(context, 20, 24, 28),
+                    fontWeight: FontWeight.bold,
                     color: AppTheme.textPrimary
                   ),
                   textAlign: TextAlign.center,
@@ -105,13 +105,13 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                 Text(
                   'Espace réservé à la direction pédagogique.',
                   style: GoogleFonts.poppins(
-                    fontSize: ResponsiveLayout.respSize(context, 13, 14, 15), 
+                    fontSize: ResponsiveLayout.respSize(context, 13, 14, 15),
                     color: AppTheme.textSecondary
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                
+
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
@@ -122,7 +122,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                   validator: (val) => val == null || val.isEmpty ? 'Requis' : null,
                 ),
                 const SizedBox(height: 16),
-                
+
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -134,7 +134,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                   validator: (val) => val == null || val.isEmpty ? 'Requis' : null,
                 ),
                 const SizedBox(height: 16),
-                
+
                 TextFormField(
                   controller: _phoneController,
                   decoration: InputDecoration(
@@ -153,7 +153,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -164,9 +164,9 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                   obscureText: true,
                   validator: (val) => val == null || val.length < 6 ? 'Min 6 caractères' : null,
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 Row(
                   children: [
                     Expanded(
@@ -175,7 +175,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                         child: Text(
                           'Annuler',
                           style: GoogleFonts.poppins(
-                            color: AppTheme.textSecondary, 
+                            color: AppTheme.textSecondary,
                             fontWeight: FontWeight.w600,
                             fontSize: ResponsiveLayout.respSize(context, 14, 16, 18)
                           ),
@@ -196,7 +196,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                             : Text(
                                 'Créer',
                                 style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.bold, 
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   fontSize: ResponsiveLayout.respSize(context, 14, 16, 18)
                                 ),
@@ -213,5 +213,4 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
     );
   }
 }
-
 

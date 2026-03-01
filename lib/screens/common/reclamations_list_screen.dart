@@ -56,7 +56,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
 
   Future<void> _loadData({bool showLoading = true}) async {
     if (showLoading) setState(() => _isLoading = true);
-    
+
     List<Reclamation> data;
     if (_currentUser.role == UserRole.dp) {
       data = await DatabaseHelper.instance.getAllReclamations(directorId: _currentUser.id);
@@ -81,15 +81,15 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
     }
 
     await DatabaseHelper.instance.updateReclamationStatus(
-      reclamation.id!, 
-      status, 
+      reclamation.id!,
+      status,
       response: response
     );
-    
-      final statusMessage = status == 'TRAITEE' 
-        ? 'Votre réclamation "${reclamation.subject}" a été traitée.' 
+
+      final statusMessage = status == 'TRAITEE'
+        ? 'Votre réclamation "${reclamation.subject}" a été traitée.'
         : 'Votre réclamation "${reclamation.subject}" a été rejetée.';
-      
+
       final fullMessage = response != null && response.isNotEmpty
           ? '$statusMessage\nRéponse: $response'
           : statusMessage;
@@ -100,7 +100,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
       message: fullMessage,
       type: status == 'TRAITEE' ? 'SUCCESS' : 'WARNING'
     );
-    
+
     if (mounted) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
@@ -114,9 +114,9 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
     try {
       final sender = await DatabaseHelper.instance.getUserById(reclamation.userId);
       if (sender == null) throw Exception('Utilisateur introuvable');
-      
+
       final dateStr = '${reclamation.timestamp.day}/${reclamation.timestamp.month}/${reclamation.timestamp.year} ${reclamation.timestamp.hour}:${reclamation.timestamp.minute.toString().padLeft(2, '0')}';
-      
+
       await PdfService.generateFormalReclamationPdf(
         fromName: sender.nom,
         fromEmail: sender.email,
@@ -193,7 +193,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
   Widget _buildCard(Reclamation rec) {
     Color statusColor;
     IconData statusIcon;
-    
+
     switch (rec.status) {
       case 'TRAITEE':
         statusColor = AppTheme.accentGreen;
@@ -253,7 +253,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
               rec.message,
               style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary),
             ),
-            
+
             if (rec.attachmentUrl != null) ...[
               const SizedBox(height: 12),
               Container(
@@ -268,7 +268,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                     final isBase64 = rec.attachmentUrl?.startsWith('data:base64,') ?? false;
                     String displayName = '';
                     Uint8List? bytes;
-                    
+
                     if (isBase64) {
                       final parts = rec.attachmentUrl!.split('|');
                       displayName = parts.length > 1 ? parts[1] : 'Fichier';
@@ -279,7 +279,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                     }
 
                     final isImage = rec.attachmentType == 'IMAGE' || displayName.toLowerCase().endsWith('.png') || displayName.toLowerCase().endsWith('.jpg') || displayName.toLowerCase().endsWith('.jpeg');
-                    
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -294,7 +294,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                                   final parts = rec.attachmentUrl!.split('|');
                                   final base64Data = parts[0].substring('data:base64,'.length);
                                   final bytes = base64Decode(base64Data);
-                                  
+
                                   await Printing.layoutPdf(
                                     onLayout: (_) => bytes,
                                     name: parts.length > 1 ? parts[1] : 'Reclamation_PDF',
@@ -420,7 +420,7 @@ class _DetailedImageViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isBase64 = bytes != null;
-    
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -441,7 +441,7 @@ class _DetailedImageViewer extends StatelessWidget {
           maxScale: 4.0,
           child: isBase64
             ? Image.memory(bytes!)
-            : (!kIsWeb 
+            : (!kIsWeb
                 ? Image.file(File(rec.attachmentUrl!))
                 : const Center(child: Icon(Icons.broken_image, size: 64, color: Colors.grey))),
         ),
@@ -491,6 +491,4 @@ class _ResponseDialogState extends State<_ResponseDialog> {
     );
   }
 }
-
-
 

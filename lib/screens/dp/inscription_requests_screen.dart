@@ -56,13 +56,13 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
         final newUser = User(
           nom: request.nom,
           email: request.email,
-          password: '123456', 
+          password: '123456',
           role: UserRoleExtension.fromDbValue(request.role),
           groupeId: resolvedGroupId,
           phone: request.phone,
           directorId: currentUser?.id,
         );
-        
+
         await DatabaseHelper.instance.insertUser(newUser);
       }
 
@@ -76,7 +76,7 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
           ),
         );
       }
-      
+
       _loadRequests();
     } catch (e) {
       if (!mounted) return;
@@ -130,8 +130,8 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: req.role == 'FORMATEUR' 
-                        ? AppTheme.formateurColor.withValues(alpha: 0.1) 
+                    color: req.role == 'FORMATEUR'
+                        ? AppTheme.formateurColor.withValues(alpha: 0.1)
                         : req.role == 'DP'
                             ? AppTheme.primaryBlue.withValues(alpha: 0.1)
                             : AppTheme.stagiaireColor.withValues(alpha: 0.1),
@@ -142,10 +142,10 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: req.role == 'FORMATEUR' 
-                          ? AppTheme.formateurColor 
-                          : req.role == 'DP' 
-                              ? AppTheme.primaryBlue 
+                      color: req.role == 'FORMATEUR'
+                          ? AppTheme.formateurColor
+                          : req.role == 'DP'
+                              ? AppTheme.primaryBlue
                               : AppTheme.stagiaireColor,
                     ),
                   ),
@@ -222,6 +222,4 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
     );
   }
 }
-
-
 

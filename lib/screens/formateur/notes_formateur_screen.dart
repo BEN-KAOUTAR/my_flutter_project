@@ -105,8 +105,7 @@ class _NotesFormateurScreenState extends State<NotesFormateurScreen> {
     );
   }
 
-
-  Widget _buildEmptyState() {
+Widget _buildEmptyState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -210,7 +209,7 @@ class _NotesFormateurScreenState extends State<NotesFormateurScreen> {
 
   void _showNotesForAffectation(Affectation affectation) async {
     final stagiaires = await DatabaseHelper.instance.getStagiairesByGroupe(affectation.groupeId);
-    
+
     if (!mounted) return;
 
     Navigator.push(
@@ -256,7 +255,7 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
 
   Future<void> _loadNotes() async {
     setState(() => _isLoading = true);
-    
+
     Map<int, List<Note>> notes = {};
     for (var stagiaire in widget.stagiaires) {
       final stagiaireNotes = await DatabaseHelper.instance.getNotesByStagiaire(stagiaire.id!);
@@ -646,15 +645,15 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
                   onPressed: () async {
                     final value = double.tryParse(noteController.text);
                     if (value == null || value < 0 || value > 20) return;
-                    
+
                     final updatedNote = note.copyWith(
                       valeur: value,
                       type: selectedType,
                       dateExamen: selectedDate,
                     );
-                    
+
                     await DatabaseHelper.instance.updateNote(updatedNote);
-                    
+
                     if (context.mounted) {
                       Navigator.pop(context);
                       _loadNotes();
@@ -826,6 +825,4 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
     );
   }
 }
-
-
 

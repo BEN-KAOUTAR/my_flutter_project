@@ -10,7 +10,6 @@ import '../../theme/app_theme.dart';
 import '../../services/pdf_service.dart';
 import '../common/dashboard_components.dart';
 
-
 class StatistiquesScreen extends StatefulWidget {
   final VoidCallback? onBack;
   const StatistiquesScreen({super.key, this.onBack});
@@ -181,11 +180,11 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
                   icon: Icon(Icons.arrow_drop_down_rounded, color: AppTheme.textSecondary),
                   items: [
                     DropdownMenuItem<int>(
-                      value: null, 
+                      value: null,
                       child: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 13))
                     ),
                     ..._filieres.map((f) => DropdownMenuItem(
-                      value: f.id, 
+                      value: f.id,
                       child: Text(f.nom, style: GoogleFonts.poppins(fontSize: 13))
                     )),
                   ],
@@ -224,7 +223,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
         final double width = constraints.maxWidth;
         int crossAxisCount;
         double aspectRatio;
-        
+
         if (width > 800) {
           crossAxisCount = 4;
           aspectRatio = 2.0;
@@ -280,7 +279,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
 
   Widget _buildRepartitionChart() {
     final data = (_stats['repartitionFiliere'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
-    
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppTheme.border)),
@@ -444,7 +443,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
                   ),
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
-                      showTitles: true, 
+                      showTitles: true,
                       reservedSize: 30,
                       getTitlesWidget: (value, meta) {
                         return Text(
@@ -586,6 +585,4 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
     );
   }
 }
-
-
 

@@ -30,7 +30,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
 
     if (user != null) {
       final progress = await DatabaseHelper.instance.getModuleProgressForStagiaire(user.id!);
-      
+
       double totalProgress = 0.0;
       if (progress.isNotEmpty) {
         for (var module in progress) {
@@ -126,7 +126,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
 
   Widget _buildOverallProgressCard() {
     final progressColor = _getProgressColor(_overallProgress);
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(28),
@@ -203,8 +203,8 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              _overallProgress >= 75 
-                  ? Icons.emoji_events_rounded 
+              _overallProgress >= 75
+                  ? Icons.emoji_events_rounded
                   : Icons.trending_up_rounded,
               size: 56,
               color: progressColor,
@@ -398,5 +398,4 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
     );
   }
 }
-
 

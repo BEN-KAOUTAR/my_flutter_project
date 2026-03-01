@@ -63,8 +63,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
     });
   }
   Future<void> _exportData() async {
-    final groupName = _selectedGroupeId != null 
-        ? _groupes.firstWhere((g) => g.id == _selectedGroupeId).nom 
+    final groupName = _selectedGroupeId != null
+        ? _groupes.firstWhere((g) => g.id == _selectedGroupeId).nom
         : 'Tous les groupes';
 
     await PdfService.generatePresenceReportPdf(_filteredStats, groupName);
@@ -203,13 +203,13 @@ class _PresenceScreenState extends State<PresenceScreen> {
     int totalPresences = 0;
     int totalAbsences = 0;
     int totalRetards = 0;
-    
+
     for (var s in _filteredStats) {
       totalPresences += (s['presences'] as int);
       totalAbsences += (s['absences'] as int);
       totalRetards += (s['retards'] as int);
     }
-    
+
     double totalRate = 0;
     int ratedCount = 0;
     for (var s in _filteredStats) {
@@ -223,13 +223,13 @@ class _PresenceScreenState extends State<PresenceScreen> {
       }
     }
     final avgRate = ratedCount > 0 ? (totalRate / ratedCount) : 0.0;
-    
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double width = constraints.maxWidth;
         int crossAxisCount;
         double aspectRatio;
-        
+
         if (width > 800) {
           crossAxisCount = 4;
           aspectRatio = 2.4;
@@ -445,6 +445,4 @@ class _PresenceScreenState extends State<PresenceScreen> {
         color: AppTheme.textSecondary,
       );
 }
-
-
 

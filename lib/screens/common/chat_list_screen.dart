@@ -80,11 +80,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
         where: 'id = ?',
         whereArgs: [user!.groupeId],
       );
-      
+
       if (groupResult.isNotEmpty) {
         final groupData = groupResult.first;
         final students = await DatabaseHelper.instance.getStagiairesByGroupe(user.groupeId!);
-        
+
         if (mounted) {
           setState(() {
             _groupsWithStudents = [{
@@ -300,14 +300,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
     final String lastMessage = conv['last_message'] as String? ?? '';
     final String? lastTimeStr = conv['last_time'] as String?;
     final int unreadCount = conv['unread_count'] as int? ?? 0;
-    
+
     final String name = conv['nom'] as String;
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       leading: CircleAvatar(
         radius: 28,
-        backgroundColor: isGroup 
+        backgroundColor: isGroup
             ? AppTheme.accentOrange.withValues(alpha: 0.1)
             : AppTheme.primaryBlue.withValues(alpha: 0.1),
         child: isGroup
@@ -401,5 +401,4 @@ class _ChatListScreenState extends State<ChatListScreen> {
     }
   }
 }
-
 
