@@ -1,4 +1,4 @@
-enum SeanceStatus {
+﻿enum SeanceStatus {
   enAttente,
   valide,
   rejetee,
@@ -21,9 +21,9 @@ extension SeanceStatusExtension on SeanceStatus {
       case SeanceStatus.enAttente:
         return 'En attente';
       case SeanceStatus.valide:
-        return 'Validée';
+        return 'ValidÃ©e';
       case SeanceStatus.rejetee:
-        return 'Rejetée';
+        return 'RejetÃ©e';
     }
   }
 
@@ -102,4 +102,5 @@ class Seance {
     );
   }
 }
+
 

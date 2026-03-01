@@ -1,4 +1,4 @@
-class Message {
+﻿class Message {
   final int? id;
   final int senderId;
   final int? receiverId;
@@ -49,4 +49,5 @@ class Message {
     );
   }
 }
+
 

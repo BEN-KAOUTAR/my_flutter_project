@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -125,7 +125,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Gérez les unités de formation',
+                      'GÃ©rez les unitÃ©s de formation',
                       style: GoogleFonts.poppins(
                         fontSize: isMobile ? 12 : 14,
                         color: AppTheme.textSecondary,
@@ -344,7 +344,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Année ${module.annee} • Semestre ${module.semestre}',
+                      'AnnÃ©e ${module.annee} â€¢ Semestre ${module.semestre}',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -600,7 +600,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Filière *',
+                              'FiliÃ¨re *',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -652,7 +652,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Année *',
+                              'AnnÃ©e *',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -786,7 +786,11 @@ class _ModulesScreenState extends State<ModulesScreen> {
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
                               decoration: InputDecoration(
+<<<<<<< HEAD
                                 hintText: 'Ex: 120 (max)',
+=======
+                                hintText: 'Entre 10 et 120',
+>>>>>>> 8751e7b (fix(web): set correct base href for GitHub Pages and add welcome screen)
                                 suffixText: 'h',
                                 hintStyle: GoogleFonts.poppins(
                                   color: AppTheme.textSecondary,
@@ -882,11 +886,16 @@ class _ModulesScreenState extends State<ModulesScreen> {
 
                           final heures =
                               int.tryParse(heuresController.text) ?? 0;
+<<<<<<< HEAD
                           if (heures == 0) {
+=======
+                          if (heures < 10 || heures > 120) {
+>>>>>>> 8751e7b (fix(web): set correct base href for GitHub Pages and add welcome screen)
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
+<<<<<<< HEAD
                                     'La masse horaire doit être supérieure à 0',
                                     style: GoogleFonts.poppins(),
                                   ),
@@ -903,6 +912,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
                                 SnackBar(
                                   content: Text(
                                     'La masse horaire ne peut pas dépasser 120 h',
+=======
+                                    'La masse horaire doit Ãªtre comprise entre 10h et 120h',
+>>>>>>> 8751e7b (fix(web): set correct base href for GitHub Pages and add welcome screen)
                                     style: GoogleFonts.poppins(),
                                   ),
                                   backgroundColor: AppTheme.accentRed,
@@ -918,7 +930,11 @@ class _ModulesScreenState extends State<ModulesScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
+<<<<<<< HEAD
                                     'Le coefficient doit être compris entre 1 et 5',
+=======
+                                    'Le coefficient doit Ãªtre compris entre 1 et 5',
+>>>>>>> 8751e7b (fix(web): set correct base href for GitHub Pages and add welcome screen)
                                     style: GoogleFonts.poppins(),
                                   ),
                                   backgroundColor: AppTheme.accentRed,
@@ -979,7 +995,11 @@ class _ModulesScreenState extends State<ModulesScreen> {
                           ),
                         ),
                         child: Text(
+<<<<<<< HEAD
                           isEdit ? 'Modifier' : 'Créer',
+=======
+                          isEdit ? 'Modifier' : 'CrÃ©er',
+>>>>>>> 8751e7b (fix(web): set correct base href for GitHub Pages and add welcome screen)
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/user.dart';
 import '../../data/database_helper.dart';
@@ -74,7 +74,7 @@ class UserSearchDelegate extends SearchDelegate<User?> {
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
             child: Text(
-              'Aucun utilisateur trouvé',
+              'Aucun utilisateur trouvÃ©',
               style: GoogleFonts.poppins(color: AppTheme.textSecondary),
             ),
           );
@@ -94,7 +94,7 @@ class UserSearchDelegate extends SearchDelegate<User?> {
                 ),
               ),
               title: Text(user.nom, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
-              subtitle: Text('${user.role.displayName} • ${user.email}', style: GoogleFonts.poppins(fontSize: 12)),
+              subtitle: Text('${user.role.displayName} â€¢ ${user.email}', style: GoogleFonts.poppins(fontSize: 12)),
               onTap: () => close(context, user),
             );
           },
@@ -103,3 +103,4 @@ class UserSearchDelegate extends SearchDelegate<User?> {
     );
   }
 }
+

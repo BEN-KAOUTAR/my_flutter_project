@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -148,7 +148,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
                     child: Text(
-                      'Messages récents',
+                      'Messages rÃ©cents',
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -287,7 +287,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textSecondary),
           ),
           Text(
-            'Commencez à discuter avec vos contacts',
+            'Commencez Ã  discuter avec vos contacts',
             style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary),
           ),
         ],
@@ -401,3 +401,4 @@ class _ChatListScreenState extends State<ChatListScreen> {
     }
   }
 }
+

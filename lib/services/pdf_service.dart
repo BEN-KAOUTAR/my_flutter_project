@@ -1,4 +1,4 @@
-import 'package:pdf/pdf.dart';
+﻿import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +49,7 @@ class PdfService {
     if (emplois.isEmpty) {
       pdf.addPage(
         pw.Page(
-          build: (context) => pw.Center(child: pw.Text('Aucun emploi du temps trouvé pour cette semaine.')),
+          build: (context) => pw.Center(child: pw.Text('Aucun emploi du temps trouvÃ© pour cette semaine.')),
         ),
       );
     }
@@ -139,7 +139,7 @@ class PdfService {
           children: [
             pw.Text('Groupe/Formateur: $name', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 12)),
             pw.Text('Semaine: $semaineNum', style: const pw.TextStyle(fontSize: 12)),
-            pw.Text('Année de Formation: 2025/2026', style: const pw.TextStyle(fontSize: 10)),
+            pw.Text('AnnÃ©e de Formation: 2025/2026', style: const pw.TextStyle(fontSize: 10)),
           ],
         ),
       ],
@@ -206,8 +206,8 @@ class PdfService {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       children: [
-        pw.Text('Directeur Pédagogique', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10)),
-        pw.Text('Surveillant Général', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10)),
+        pw.Text('Directeur PÃ©dagogique', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10)),
+        pw.Text('Surveillant GÃ©nÃ©ral', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10)),
         pw.Text('Formateur', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10)),
       ],
     );
@@ -223,7 +223,7 @@ class PdfService {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               _buildFormalHeader(),
-              pw.Center(child: pw.Text('RELEVÉ DE NOTES', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold))),
+              pw.Center(child: pw.Text('RELEVÃ‰ DE NOTES', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold))),
               pw.SizedBox(height: 20),
               pw.Divider(),
               pw.SizedBox(height: 10),
@@ -296,7 +296,7 @@ class PdfService {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('RAPPORT DE PROGRESSION PÉDAGOGIQUE', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                  pw.Text('RAPPORT DE PROGRESSION PÃ‰DAGOGIQUE', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
                   pw.Text('Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}', style: const pw.TextStyle(fontSize: 10)),
                 ],
               ),
@@ -310,7 +310,7 @@ class PdfService {
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Groupe', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9))),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Module', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9))),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Formateur', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9))),
-                      pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Heures Réalisées', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Heures RÃ©alisÃ©es', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Masse Totale', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Progression', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
                     ],
@@ -337,7 +337,7 @@ class PdfService {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('Direction Pédagogique - Academic Pro', style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
+                  pw.Text('Direction PÃ©dagogique - Academic Pro', style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
                   pw.Text('Page 1/1', style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
                 ],
               ),
@@ -447,7 +447,7 @@ class PdfService {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('RAPPORT DE PRÉSENCE', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                  pw.Text('RAPPORT DE PRÃ‰SENCE', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
                   pw.Text('Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}', style: const pw.TextStyle(fontSize: 10)),
                 ],
               ),
@@ -462,7 +462,7 @@ class PdfService {
                     children: [
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Stagiaire', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9))),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Groupe', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9))),
-                      pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Présences', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
+                      pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('PrÃ©sences', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Absences', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Retards', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
                       pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Taux', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9), textAlign: pw.TextAlign.center)),
@@ -492,7 +492,7 @@ class PdfService {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('Direction Pédagogique - Academic Pro', style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
+                  pw.Text('Direction PÃ©dagogique - Academic Pro', style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
                   pw.Text('Page 1/1', style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
                 ],
               ),
@@ -505,3 +505,4 @@ class PdfService {
     await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save(), name: 'Rapport_Presence_${groupName.replaceAll(' ', '_')}.pdf');
   }
 }
+

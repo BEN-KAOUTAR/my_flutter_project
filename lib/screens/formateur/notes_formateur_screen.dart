@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -121,7 +121,7 @@ class _NotesFormateurScreenState extends State<NotesFormateurScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Aucun module affecté',
+            'Aucun module affectÃ©',
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -459,7 +459,7 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
             ),
           ),
           subtitle: Text(
-            '${notes.length} note(s) enregistrée(s)',
+            '${notes.length} note(s) enregistrÃ©e(s)',
             style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textSecondary),
           ),
           children: [
@@ -541,7 +541,7 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              note.validee ? 'VALIDÉE' : 'ATTENTE',
+              note.validee ? 'VALIDÃ‰E' : 'ATTENTE',
               style: GoogleFonts.poppins(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
@@ -612,7 +612,7 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
                 const SizedBox(height: 24),
                 DropdownButtonFormField<NoteType>(
                   value: selectedType,
-                  decoration: const InputDecoration(labelText: 'Évaluation', prefixIcon: Icon(Icons.category_outlined)),
+                  decoration: const InputDecoration(labelText: 'Ã‰valuation', prefixIcon: Icon(Icons.category_outlined)),
                   items: NoteType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.displayName))).toList(),
                   onChanged: (value) => setModalState(() => selectedType = value ?? note.type),
                 ),
@@ -729,7 +729,7 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
                 DropdownButtonFormField<NoteType>(
                   initialValue: selectedType,
                   decoration: const InputDecoration(
-                    labelText: 'Évaluation',
+                    labelText: 'Ã‰valuation',
                     prefixIcon: Icon(Icons.category_outlined),
                   ),
                   items: NoteType.values.map((t) => DropdownMenuItem(
@@ -766,7 +766,7 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
                   },
                   child: InputDecorator(
                     decoration: const InputDecoration(
-                      labelText: 'Date de l\'évaluation',
+                      labelText: 'Date de l\'Ã©valuation',
                       prefixIcon: Icon(Icons.calendar_today_rounded),
                     ),
                     child: Text(DateFormat('dd MMMM yyyy').format(selectedDate)),
@@ -789,7 +789,7 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
                     if (noteValue < 0 || noteValue > 20) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('La note doit être entre 0 et 20', style: GoogleFonts.poppins()),
+                          content: Text('La note doit Ãªtre entre 0 et 20', style: GoogleFonts.poppins()),
                           backgroundColor: AppTheme.accentRed,
                         ),
                       );
@@ -826,4 +826,5 @@ class _NotesDetailScreenState extends State<_NotesDetailScreen> {
     );
   }
 }
+
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
 import 'theme/app_theme.dart';
@@ -13,7 +13,6 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'models/user.dart';
 import 'data/database_helper.dart';
-
 import 'providers/notification_provider.dart';
 import 'screens/welcome_screen.dart';
 
@@ -39,7 +38,6 @@ void main() async {
   } catch (e) {
     debugPrint('Session check error during startup: $e');
   }
-
 
   try {
     await DatabaseHelper.instance.fixNegativeHours();
@@ -67,16 +65,27 @@ class AcademicProApp extends StatelessWidget {
       title: 'Academic Pro',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const WelcomeScreen(),
+      initialRoute: '/',
       routes: {
-        '/login': (context) => Consumer<AuthService>(
-          builder: (context, authService, child) {
-            if (authService.isLoggedIn) {
-              return _getDashboardForRole(authService.currentUser?.role);
-            }
-            return const LoginScreen();
-          },
-        ),
+        '/': (context) => const WelcomeScreen(),
+        '/auth-wrapper': (context) => const AuthWrapper(),
+        '/login': (context) => const LoginScreen(),
+      },
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthService>(
+      builder: (context, authService, child) {
+        if (authService.isLoggedIn) {
+          return _getDashboardForRole(authService.currentUser?.role);
+        }
+        return const LoginScreen();
       },
     );
   }

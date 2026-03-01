@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../models/user.dart';
@@ -82,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
     if (success && mounted) {
       _navigateToDashboard(authService.currentUser!.role);
     } else if (mounted) {
-      _showError('Erreur lors de l\'inscription. L\'email est peut-être déjà utilisé.');
+      _showError('Erreur lors de l\'inscription. L\'email est peut-Ãªtre dÃ©jÃ  utilisÃ©.');
     }
   }
 
@@ -170,7 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Rejoignez l\'excellence pédagogique',
+                    'Rejoignez l\'excellence pÃ©dagogique',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: isTablet ? 16 : 18,
@@ -261,7 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
       crossAxisAlignment: ResponsiveLayout.isMobile(context) ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
         Text(
-          'Créer un compte',
+          'CrÃ©er un compte',
           style: GoogleFonts.poppins(
             fontSize: ResponsiveLayout.respSize(context, 28, 34, 40),
             fontWeight: FontWeight.bold,
@@ -340,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                 onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
               ),
             ),
-            validator: (value) => value == null || value.length < 6 ? 'Minimum 6 caractères' : null,
+            validator: (value) => value == null || value.length < 6 ? 'Minimum 6 caractÃ¨res' : null,
           ),
           const SizedBox(height: 16),
           TextFormField(
@@ -384,7 +384,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
     return TextButton(
       onPressed: () => Navigator.pop(context),
       child: Text(
-        'Déjà un compte ? Se connecter',
+        'DÃ©jÃ  un compte ? Se connecter',
         style: GoogleFonts.poppins(
           color: AppTheme.primaryBlue, 
           fontWeight: FontWeight.w500,
@@ -394,4 +394,5 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
     );
   }
 }
+
 

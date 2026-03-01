@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
@@ -161,4 +161,5 @@ class AppTheme {
   static BorderRadius get borderRadiusLarge => BorderRadius.circular(16);
   static BorderRadius get borderRadiusXLarge => BorderRadius.circular(24);
 }
+
 

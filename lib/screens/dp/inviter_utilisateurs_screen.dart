@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/database_helper.dart';
 import '../../models/user.dart';
@@ -72,14 +72,14 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${_selectedIds.length} sélectionné(s)',
+                  '${_selectedIds.length} sÃ©lectionnÃ©(s)',
                   style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textSecondary),
                 ),
                 if (_selectedIds.isNotEmpty)
                   ElevatedButton.icon(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Invitations envoyées aux ${_selectedIds.length} utilisateurs !'))
+                        SnackBar(content: Text('Invitations envoyÃ©es aux ${_selectedIds.length} utilisateurs !'))
                       );
                       setState(() => _selectedIds.clear());
                     },
@@ -113,7 +113,7 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Créez des comptes pour les stagiaires et formateurs',
+          'CrÃ©ez des comptes pour les stagiaires et formateurs',
           style: GoogleFonts.poppins(
             fontSize: 14,
             color: AppTheme.textSecondary,
@@ -149,12 +149,12 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Comment ça marche ?',
+                  'Comment Ã§a marche ?',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 15, color: const Color(0xFF0369A1)),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Sélectionnez les stagiaires et formateurs pour leur envoyer une invitation par email. Ils recevront un lien pour créer leur compte et accéder à la plateforme.',
+                  'SÃ©lectionnez les stagiaires et formateurs pour leur envoyer une invitation par email. Ils recevront un lien pour crÃ©er leur compte et accÃ©der Ã  la plateforme.',
                   style: GoogleFonts.poppins(fontSize: 13, color: const Color(0xFF0369A1).withValues(alpha: 0.8)),
                 ),
               ],
@@ -240,7 +240,7 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
           Expanded(flex: 3, child: Text('Nom', style: _headerStyle)),
           Expanded(flex: 3, child: Text('Matricule', style: _headerStyle)),
           Expanded(flex: 5, child: Text('Email', style: _headerStyle)),
-          if (!isStagiaire) Expanded(flex: 3, child: Text('Spécialité', style: _headerStyle)),
+          if (!isStagiaire) Expanded(flex: 3, child: Text('SpÃ©cialitÃ©', style: _headerStyle)),
           Expanded(flex: 2, child: Text('Statut', style: _headerStyle)),
         ],
       ),
@@ -279,7 +279,7 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: user.invitationStatus == 'Invitée' || user.invitationStatus == 'Acceptée' 
+                      color: user.invitationStatus == 'InvitÃ©e' || user.invitationStatus == 'AcceptÃ©e' 
                           ? const Color(0xFFDCFCE7) 
                           : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(6),
@@ -287,7 +287,7 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (user.invitationStatus == 'Invitée' || user.invitationStatus == 'Acceptée')
+                        if (user.invitationStatus == 'InvitÃ©e' || user.invitationStatus == 'AcceptÃ©e')
                           const Padding(
                             padding: EdgeInsets.only(right: 4),
                             child: Icon(Icons.check_circle_outline, size: 12, color: Color(0xFF166534)),
@@ -298,7 +298,7 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: user.invitationStatus == 'Invitée' || user.invitationStatus == 'Acceptée' 
+                              color: user.invitationStatus == 'InvitÃ©e' || user.invitationStatus == 'AcceptÃ©e' 
                                   ? const Color(0xFF166534) 
                                   : AppTheme.textSecondary,
                             ),
@@ -324,4 +324,5 @@ class _InviterUtilisateursScreenState extends State<InviterUtilisateursScreen> {
         color: AppTheme.textSecondary,
       );
 }
+
 

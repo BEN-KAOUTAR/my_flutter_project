@@ -1,4 +1,4 @@
-enum NoteType {
+﻿enum NoteType {
   cc,
   efm,
 }
@@ -16,7 +16,7 @@ extension NoteTypeExtension on NoteType {
   String get displayName {
     switch (this) {
       case NoteType.cc:
-        return 'Contrôle Continu';
+        return 'ContrÃ´le Continu';
       case NoteType.efm:
         return 'Examen de Fin de Module';
     }
@@ -138,4 +138,5 @@ class Note {
     );
   }
 }
+
 

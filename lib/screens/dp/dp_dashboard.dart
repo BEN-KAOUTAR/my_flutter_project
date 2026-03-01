@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -72,22 +72,16 @@ class _DPDashboardState extends State<DPDashboard> {
       }
     });
 
-    /* Removing aggressive 1s timer as it impacts performance and DB locks
-    _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted && _currentIndex == 0 && !_isLoading) {
-        _loadStats(showLoading: false);
-      }
-    });
-    */
     
-    // Restore 1s timer as requested by user for "live" feeling
+    
+    
     _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && _currentIndex == 0 && !_isLoading) {
         _loadStats(showLoading: false);
       }
     });
 
-    // Sync notifications frequently as well
+    
     _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       if (mounted && user != null) {
@@ -181,15 +175,15 @@ class _DPDashboardState extends State<DPDashboard> {
       case 4: return 'Affectations';
       case 5: return 'Emplois du temps';
       case 6: return 'Validation & Publication';
-      case 7: return 'Présences';
+      case 7: return 'PrÃ©sences';
       case 8: return 'Inviter utilisateurs';
       case 9: return 'Statistiques';
-      case 11: return 'Filières';
+      case 11: return 'FiliÃ¨res';
       case 12: return 'Modules';
       case 14: return 'Demandes inscription';
       case 15: return 'Messages';
       case 16: return 'Mon Profil';
-      case 17: return 'Réclamations';
+      case 17: return 'RÃ©clamations';
       default: return 'Academic Pro';
     }
   }
@@ -345,7 +339,7 @@ class _DPDashboardState extends State<DPDashboard> {
                 ),
                 Consumer<NotificationProvider>(
                   builder: (context, notifProvider, _) => _buildDrawerItem(
-                    17, Icons.report_problem_rounded, 'Réclamations', isPermanent,
+                    17, Icons.report_problem_rounded, 'RÃ©clamations', isPermanent,
                     badgeCount: notifProvider.unreadReclamationsCount,
                   ),
                 ),
@@ -356,7 +350,7 @@ class _DPDashboardState extends State<DPDashboard> {
                   ),
                 ), 
                 const Divider(),
-                _buildDrawerItem(11, Icons.grid_view_rounded, 'Filières', isPermanent),
+                _buildDrawerItem(11, Icons.grid_view_rounded, 'FiliÃ¨res', isPermanent),
                 _buildDrawerItem(12, Icons.book_rounded, 'Modules', isPermanent),
                 const Divider(),
                 _buildDrawerItem(1, Icons.groups_rounded, 'Groupes', isPermanent),
@@ -372,7 +366,7 @@ class _DPDashboardState extends State<DPDashboard> {
                 ),
                 Consumer<NotificationProvider>(
                   builder: (context, notifProvider, _) => _buildDrawerItem(
-                    7, Icons.access_time_rounded, 'Présences', isPermanent,
+                    7, Icons.access_time_rounded, 'PrÃ©sences', isPermanent,
                     badgeCount: notifProvider.pendingPresenceValidationsCount,
                   ),
                 ),
@@ -389,7 +383,7 @@ class _DPDashboardState extends State<DPDashboard> {
             child: ListTile(
               leading: const Icon(Icons.logout_rounded, color: AppTheme.accentRed, size: 24),
               title: Text(
-                'Déconnexion', 
+                'DÃ©connexion', 
                 style: GoogleFonts.poppins(
                   color: AppTheme.accentRed, 
                   fontWeight: FontWeight.w600,
@@ -525,7 +519,7 @@ class _DPDashboardState extends State<DPDashboard> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Text('Aucun examen prévu', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
+                child: Text('Aucun examen prÃ©vu', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
               ),
             )
           else
@@ -597,7 +591,7 @@ class _DPDashboardState extends State<DPDashboard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Activité récente',
+          'ActivitÃ© rÃ©cente',
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -609,7 +603,7 @@ class _DPDashboardState extends State<DPDashboard> {
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text('Aucune activité récente', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
+              child: Text('Aucune activitÃ© rÃ©cente', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
             ),
           )
         else
@@ -617,7 +611,7 @@ class _DPDashboardState extends State<DPDashboard> {
             final date = DateTime.parse(act['timestamp']);
             final isSeance = act['type'] == 'SEANCE';
             return _buildActivityItem(
-              isSeance ? 'Séance validée' : 'Note publiée',
+              isSeance ? 'SÃ©ance validÃ©e' : 'Note publiÃ©e',
               '${act['text']} - ${act['subtext']}',
               DateFormat('dd/MM HH:mm').format(date),
             );
@@ -679,7 +673,7 @@ class _DPDashboardState extends State<DPDashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Bonjour, ${user?.nom ?? 'Directeur Pédagogique'}',
+                'Bonjour, ${user?.nom ?? 'Directeur PÃ©dagogique'}',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
@@ -691,7 +685,7 @@ class _DPDashboardState extends State<DPDashboard> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Voici un aperçu de votre établissement',
+                'Voici un aperÃ§u de votre Ã©tablissement',
                 style: GoogleFonts.poppins(
                   fontSize: ResponsiveLayout.respSize(context, 16, 17, 18),
                   color: const Color(0xFF64748B),
@@ -747,7 +741,7 @@ class _DPDashboardState extends State<DPDashboard> {
           childAspectRatio: aspectRatio,
           children: [
             DashboardSummaryCard(
-              label: 'Filières',
+              label: 'FiliÃ¨res',
               value: '${_stats['filieres'] ?? 0}',
               icon: Icons.grid_view_rounded,
               color: AppTheme.accentOrange,
@@ -829,7 +823,7 @@ class _DPDashboardState extends State<DPDashboard> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    'Vous avez ${notifProvider.pendingSeanceValidationsCount} séances en attente de validation pour cette semaine.',
+                    'Vous avez ${notifProvider.pendingSeanceValidationsCount} sÃ©ances en attente de validation pour cette semaine.',
                     style: GoogleFonts.poppins(
                       color: const Color(0xFF991B1B),
                       fontWeight: FontWeight.w500,
@@ -845,6 +839,7 @@ class _DPDashboardState extends State<DPDashboard> {
     );
   }
 }
+
 
 
 

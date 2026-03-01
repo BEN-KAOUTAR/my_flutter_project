@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:math'; 
@@ -99,7 +99,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
       weekIndex = (weekMonday.difference(monthFirstMonday).inDays / 7).floor() + 1;
     }
     
-    final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    final months = ['Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre'];
     
     return {
       'month': months[weekMonday.month - 1],
@@ -146,7 +146,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
               pw.SizedBox(height: 20),
               _buildPdfTable(emploi),
               pw.SizedBox(height: 20),
-              pw.Text('Ecole: Digital Pole - Généré le ${dateFormat.format(DateTime.now())}', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
+              pw.Text('Ecole: Digital Pole - GÃ©nÃ©rÃ© le ${dateFormat.format(DateTime.now())}', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
             ],
           );
         },
@@ -165,12 +165,12 @@ class _PlanningScreenState extends State<PlanningScreen> {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       final directorId = user?.id;
       
-      // Get all groups
+      
       final groupes = await DatabaseHelper.instance.getAllGroupes(directorId: directorId);
       final Map<int, String> groupeNames = {for (var g in groupes) g.id!: g.nom};
       
-      // We need to decide which week. Using the currently visible one or the current week.
-      // If we have an emploi selected, use its week. Otherwise current week.
+      
+      
       int weekNum = _emplois.isNotEmpty ? _emplois.first.semaineNum : _calculateWeekNumber(DateTime.now());
       
       List<Emploi> batchEmplois = [];
@@ -184,7 +184,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
       if (batchEmplois.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Aucun emploi du temps trouvé pour la semaine $weekNum'), backgroundColor: AppTheme.accentOrange),
+            SnackBar(content: Text('Aucun emploi du temps trouvÃ© pour la semaine $weekNum'), backgroundColor: AppTheme.accentOrange),
           );
         }
       } else {
@@ -281,7 +281,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Générez et gérez les plannings hebdomadaires',
+                      'GÃ©nÃ©rez et gÃ©rez les plannings hebdomadaires',
                       style: GoogleFonts.poppins(
                         fontSize: isMobile ? 12 : 14,
                         color: AppTheme.textSecondary,
@@ -364,14 +364,14 @@ class _PlanningScreenState extends State<PlanningScreen> {
             children: [
               const Icon(Icons.auto_awesome_rounded, color: AppTheme.formateurColor),
               const SizedBox(width: 8),
-              Text('Génération IA', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+              Text('GÃ©nÃ©ration IA', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
             ],
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'L\'IA va générer un emploi du temps équilibré pour ce groupe en fonction des modules affectés.',
+                'L\'IA va gÃ©nÃ©rer un emploi du temps Ã©quilibrÃ© pour ce groupe en fonction des modules affectÃ©s.',
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
               const SizedBox(height: 20),
@@ -413,17 +413,17 @@ class _PlanningScreenState extends State<PlanningScreen> {
                 if (emploi != null) {
                   _loadEmplois();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Emploi du temps généré !'), backgroundColor: AppTheme.accentGreen),
+                    const SnackBar(content: Text('Emploi du temps gÃ©nÃ©rÃ© !'), backgroundColor: AppTheme.accentGreen),
                   );
                 } else {
                   setState(() => _isLoading = false);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Erreur lors de la génération'), backgroundColor: AppTheme.accentRed),
+                    const SnackBar(content: Text('Erreur lors de la gÃ©nÃ©ration'), backgroundColor: AppTheme.accentRed),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(backgroundColor: AppTheme.formateurColor),
-              child: Text('Générer', style: GoogleFonts.poppins(color: Colors.white)),
+              child: Text('GÃ©nÃ©rer', style: GoogleFonts.poppins(color: Colors.white)),
             ),
           ],
         ),
@@ -450,7 +450,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
   Widget _buildNoGroupSelected() {
     return Center(
       child: Text(
-        'Veuillez sélectionner un groupe',
+        'Veuillez sÃ©lectionner un groupe',
         style: GoogleFonts.poppins(color: AppTheme.textSecondary),
       ),
     );
@@ -476,7 +476,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Créez votre premier emploi du temps',
+            'CrÃ©ez votre premier emploi du temps',
             style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 24),
@@ -487,7 +487,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: Text('Créer un emploi', style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('CrÃ©er un emploi', style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -548,7 +548,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
-                                'Publié',
+                                'PubliÃ©',
                                 style: GoogleFonts.poppins(fontSize: 10, color: AppTheme.accentGreen, fontWeight: FontWeight.w600),
                               ),
                             ),
@@ -652,7 +652,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          existingEmploi != null ? 'Modifier l\'emploi du temps' : 'Créer un emploi du temps',
+                          existingEmploi != null ? 'Modifier l\'emploi du temps' : 'CrÃ©er un emploi du temps',
                           style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         IconButton(
@@ -662,7 +662,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                       ],
                     ),
                     Text(
-                      'Configurez les créneaux ou utilisez l\'IA pour générer automatiquement',
+                      'Configurez les crÃ©neaux ou utilisez l\'IA pour gÃ©nÃ©rer automatiquement',
                       style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textSecondary),
                     ),
                     const SizedBox(height: 24),
@@ -752,7 +752,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                         }
                       },
                       icon: const Icon(Icons.auto_awesome, size: 16, color: AppTheme.primaryBlue),
-                      label: Text('Générer avec IA', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 13)),
+                      label: Text('GÃ©nÃ©rer avec IA', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 13)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryBlue.withValues(alpha: 0.1),
                         foregroundColor: AppTheme.primaryBlue,
@@ -830,7 +830,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Un emploi du temps existe déjà pour cette semaine et ce groupe.', style: GoogleFonts.poppins()), 
+                                      content: Text('Un emploi du temps existe dÃ©jÃ  pour cette semaine et ce groupe.', style: GoogleFonts.poppins()), 
                                       backgroundColor: AppTheme.accentRed
                                     ),
                                   );
@@ -1037,7 +1037,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                     enabled: isAvailable,
                     title: Text(mod?.nom ?? 'N/A', style: TextStyle(color: isAvailable ? Colors.black : Colors.grey)),
                     subtitle: Text(
-                      isAvailable ? (form?.nom ?? 'N/A') : '${form?.nom ?? 'N/A'} (Occupé)', 
+                      isAvailable ? (form?.nom ?? 'N/A') : '${form?.nom ?? 'N/A'} (OccupÃ©)', 
                       style: TextStyle(color: isAvailable ? Colors.grey[700] : Colors.red)
                     ),
                     onTap: isAvailable ? () => Navigator.pop(context, aff) : null,
@@ -1127,3 +1127,4 @@ class DashedRectPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+

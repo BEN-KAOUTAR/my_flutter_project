@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +61,7 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
       weekIndex = (weekMonday.difference(monthFirstMonday).inDays / 7).floor() + 1;
     }
     
-    final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    final months = ['Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre'];
     return 'Semaine $weekIndex (${months[weekMonday.month - 1]})';
   }
 
@@ -146,7 +146,7 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Aucune séance à exporter')),
+                const SnackBar(content: Text('Aucune sÃ©ance Ã  exporter')),
               );
             }
           } else {
@@ -156,7 +156,7 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
           }
         },
         icon: const Icon(Icons.picture_as_pdf),
-        label: Text('Télécharger PDF', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        label: Text('TÃ©lÃ©charger PDF', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
         backgroundColor: AppTheme.formateurColor,
       ),
         ),
@@ -273,7 +273,7 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
             Icon(Icons.calendar_today, size: 80, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
             const SizedBox(height: 16),
             Text(
-              'Aucune séance programmée',
+              'Aucune sÃ©ance programmÃ©e',
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -420,4 +420,5 @@ class _EmploiFormateurScreenState extends State<EmploiFormateurScreen> {
     );
   }
 }
+
 

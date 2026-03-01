@@ -1,4 +1,4 @@
-class UserRequest {
+﻿class UserRequest {
   final int? id;
   final String nom;
   final String email;
@@ -53,4 +53,5 @@ class UserRequest {
     );
   }
 }
+
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../models/user.dart';
@@ -94,8 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
        
        await NotificationService().notifyUser(
          userId: updatedUser.id!, 
-         title: 'Profil mis à jour', 
-         message: 'Vos informations ont été modifiées avec succès',
+         title: 'Profil mis Ã  jour', 
+         message: 'Vos informations ont Ã©tÃ© modifiÃ©es avec succÃ¨s',
          type: 'SUCCESS'
        );
        
@@ -112,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
          ScaffoldMessenger.of(context).showSnackBar(
-           const SnackBar(content: Text('Profil mis à jour avec succès'), backgroundColor: AppTheme.accentGreen),
+           const SnackBar(content: Text('Profil mis Ã  jour avec succÃ¨s'), backgroundColor: AppTheme.accentGreen),
          );
        }
     } catch (e) {
@@ -148,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors de la sélection: $e'), backgroundColor: AppTheme.accentRed),
+          SnackBar(content: Text('Erreur lors de la sÃ©lection: $e'), backgroundColor: AppTheme.accentRed),
         );
       }
     }
@@ -253,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           _buildInfoRow('Email', _currentUser.email, icon: Icons.email_outlined),
           const Divider(height: 32),
-          _buildEditableRow('Téléphone', _phoneController, icon: Icons.phone_outlined),
+          _buildEditableRow('TÃ©lÃ©phone', _phoneController, icon: Icons.phone_outlined),
           const Divider(height: 32),
           _buildEditableRow('Mot de passe', _passwordController, icon: Icons.lock_outline, isPassword: true),
           if (_currentUser.role == UserRole.stagiaire && _currentUser.matricule != null) ...[
@@ -333,7 +333,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: AppTheme.textPrimary),
                     )
                   : Text(
-                      isPassword ? (_obscurePassword ? '••••••••' : controller.text) : (controller.text.isEmpty ? 'Non renseigné' : controller.text),
+                      isPassword ? (_obscurePassword ? 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢' : controller.text) : (controller.text.isEmpty ? 'Non renseignÃ©' : controller.text),
                       style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: AppTheme.textPrimary),
                     ),
               if (!_isEditing && isPassword)
@@ -354,3 +354,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

@@ -1,4 +1,4 @@
-class Groupe {
+﻿class Groupe {
   final int? id;
   final String nom;
   final int filiereId;
@@ -55,4 +55,5 @@ class Groupe {
     );
   }
 }
+
 

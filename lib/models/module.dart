@@ -1,4 +1,4 @@
-class Module {
+﻿class Module {
   final int? id;
   final String nom;
   final double masseHoraireTotale;
@@ -67,4 +67,5 @@ class Module {
     );
   }
 }
+
 

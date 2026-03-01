@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/database_helper.dart';
@@ -152,7 +152,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Widget _buildExamsAPublierList() {
     if (_examsAPublier.isEmpty) {
-      return _buildEmptyState('Aucun examen à publier', 'Les examens validés apparaîtront ici', Icons.assignment_turned_in_outlined);
+      return _buildEmptyState('Aucun examen Ã  publier', 'Les examens validÃ©s apparaÃ®tront ici', Icons.assignment_turned_in_outlined);
     }
 
     final isMobile = MediaQuery.of(context).size.width < 950;
@@ -301,7 +301,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
       await DatabaseHelper.instance.updateExamStatus(id, 'PUBLIE');
       
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Examen publié avec succès'), backgroundColor: AppTheme.accentGreen),
+        const SnackBar(content: Text('Examen publiÃ© avec succÃ¨s'), backgroundColor: AppTheme.accentGreen),
       );
       _loadData();
     } catch (e) {
@@ -315,7 +315,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     try {
       await DatabaseHelper.instance.updateExamStatus(id, 'REJETE');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Examen rejeté'), backgroundColor: AppTheme.accentRed),
+        const SnackBar(content: Text('Examen rejetÃ©'), backgroundColor: AppTheme.accentRed),
       );
       _loadData();
     } catch (e) {
@@ -332,7 +332,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Validez les séances et notes des formateurs',
+            'Validez les sÃ©ances et notes des formateurs',
             style: GoogleFonts.poppins(
               fontSize: 14,
               color: AppTheme.textSecondary,
@@ -360,25 +360,25 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
                 childAspectRatio: constraints.maxWidth < 600 ? 1.6 : 2.5,
                 children: [
                 _buildStatCard(
-                  'Notes à valider',
+                  'Notes Ã  valider',
                   '${_notesEnAttente.length}',
                   Icons.schedule_rounded,
                   AppTheme.accentOrange,
                 ),
                 _buildStatCard(
-                  'Notes à publier',
+                  'Notes Ã  publier',
                   '${_notesAPublier.length}',
                   Icons.check_circle_outline_rounded,
                   AppTheme.primaryBlue,
                 ),
                 _buildStatCard(
-                  'Séances à valider',
+                  'SÃ©ances Ã  valider',
                   '${_seancesEnAttente.length}',
                   Icons.psychology_alt_rounded,
                   AppTheme.formateurColor,
                 ),
                 _buildStatCard(
-                  'Présents',
+                  'PrÃ©sents',
                   '${_presencesEnAttente.length}',
                   Icons.how_to_reg_rounded,
                   AppTheme.accentGreen,
@@ -397,7 +397,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
             children: [
               Expanded(
                 child: _buildStatCard(
-                  'Notes à valider',
+                  'Notes Ã  valider',
                   '${_notesEnAttente.length}',
                   Icons.schedule_rounded,
                   AppTheme.accentOrange,
@@ -406,7 +406,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
               const SizedBox(width: 16),
               Expanded(
                 child: _buildStatCard(
-                  'Notes à publier',
+                  'Notes Ã  publier',
                   '${_notesAPublier.length}',
                   Icons.check_circle_outline_rounded,
                   AppTheme.primaryBlue,
@@ -415,7 +415,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
               const SizedBox(width: 16),
               Expanded(
                 child: _buildStatCard(
-                  'Séances à valider',
+                  'SÃ©ances Ã  valider',
                   '${_seancesEnAttente.length}',
                   Icons.psychology_alt_rounded,
                   AppTheme.formateurColor,
@@ -424,7 +424,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
               const SizedBox(width: 16),
               Expanded(
                 child: _buildStatCard(
-                  'Présents',
+                  'PrÃ©sents',
                   '${_presencesEnAttente.length}',
                   Icons.how_to_reg_rounded,
                   AppTheme.accentGreen,
@@ -563,11 +563,11 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
         tabAlignment: TabAlignment.start,
         dividerColor: Colors.transparent,
         tabs: [
-          Tab(text: 'Notes à valider (${_notesEnAttente.length})'),
-          Tab(text: 'Notes à publier (${_notesAPublier.length})'),
+          Tab(text: 'Notes Ã  valider (${_notesEnAttente.length})'),
+          Tab(text: 'Notes Ã  publier (${_notesAPublier.length})'),
           Tab(text: 'Examens (${_examsAPublier.length})'),
-          Tab(text: 'Séances (${_seancesEnAttente.length})'),
-          Tab(text: 'Présences (${_presencesEnAttente.length})'),
+          Tab(text: 'SÃ©ances (${_seancesEnAttente.length})'),
+          Tab(text: 'PrÃ©sences (${_presencesEnAttente.length})'),
         ],
       ),
     );
@@ -575,7 +575,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Widget _buildNotesAttenteTab() {
     if (_notesEnAttente.isEmpty) {
-      return _buildEmptyState('Tout est validé', 'Aucune note en attente de validation', Icons.check_circle_outline_rounded);
+      return _buildEmptyState('Tout est validÃ©', 'Aucune note en attente de validation', Icons.check_circle_outline_rounded);
     }
     
     final isMobile = MediaQuery.of(context).size.width < 950;
@@ -595,7 +595,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Widget _buildNotesAPublierTab() {
     if (_notesAPublier.isEmpty) {
-      return _buildEmptyState('Aucune note à publier', 'Les notes validées apparaîtront ici', Icons.bookmark_added_outlined);
+      return _buildEmptyState('Aucune note Ã  publier', 'Les notes validÃ©es apparaÃ®tront ici', Icons.bookmark_added_outlined);
     }
 
     final isMobile = MediaQuery.of(context).size.width < 950;
@@ -615,7 +615,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Widget _buildSeancesTab() {
     if (_seancesEnAttente.isEmpty) {
-      return _buildEmptyState('Tout est validé', 'Aucune séance en attente de validation', Icons.task_alt_rounded);
+      return _buildEmptyState('Tout est validÃ©', 'Aucune sÃ©ance en attente de validation', Icons.task_alt_rounded);
     }
 
     final isMobile = MediaQuery.of(context).size.width < 950;
@@ -864,7 +864,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Contenu de la séance:',
+                  'Contenu de la sÃ©ance:',
                   style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 6),
@@ -914,7 +914,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
 
   Widget _buildPresencesTab() {
     if (_presencesEnAttente.isEmpty) {
-      return _buildEmptyState('Aucune présence à valider', 'Toutes les fiches de présence sont à jour', Icons.how_to_reg_rounded);
+      return _buildEmptyState('Aucune prÃ©sence Ã  valider', 'Toutes les fiches de prÃ©sence sont Ã  jour', Icons.how_to_reg_rounded);
     }
 
     final isMobile = MediaQuery.of(context).size.width < 950;
@@ -971,7 +971,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
                         style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        'Date: $dateStr${heure != null ? " • $heure" : ""}',
+                        'Date: $dateStr${heure != null ? " â€¢ $heure" : ""}',
                         style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -999,7 +999,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
                   child: OutlinedButton.icon(
                     onPressed: () => _showPresenceDetails(dateStr, groupeId, groupeNom, heure: heure),
                     icon: const Icon(Icons.visibility_outlined, size: 18),
-                    label: Text('Détails', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                    label: Text('DÃ©tails', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppTheme.primaryBlue,
                       side: BorderSide(color: AppTheme.primaryBlue.withValues(alpha: 0.5)),
@@ -1038,7 +1038,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Détails Présence - $groupeNom${heure != null ? " ($heure)" : ""}', 
+        title: Text('DÃ©tails PrÃ©sence - $groupeNom${heure != null ? " ($heure)" : ""}', 
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
         content: SizedBox(
           width: double.maxFinite,
@@ -1091,7 +1091,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
       Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
       
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Fiche de présence validée avec succès'), backgroundColor: AppTheme.accentGreen),
+        const SnackBar(content: Text('Fiche de prÃ©sence validÃ©e avec succÃ¨s'), backgroundColor: AppTheme.accentGreen),
       );
     }
     _loadData();
@@ -1118,8 +1118,8 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
       if (aff != null) {
         await NotificationService().notifyUser(
           userId: aff.formateurId,
-          title: 'Note rejetée',
-          message: 'La note de ${_stagiaireNames[note.stagiaireId]} pour le module ${_moduleNames[note.moduleId]} a été rejetée.',
+          title: 'Note rejetÃ©e',
+          message: 'La note de ${_stagiaireNames[note.stagiaireId]} pour le module ${_moduleNames[note.moduleId]} a Ã©tÃ© rejetÃ©e.',
           type: 'WARNING'
         );
       }
@@ -1130,7 +1130,7 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Note rejetée'), backgroundColor: AppTheme.accentRed),
+        const SnackBar(content: Text('Note rejetÃ©e'), backgroundColor: AppTheme.accentRed),
       );
     }
   }
@@ -1140,8 +1140,8 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     
     await NotificationService().notifyUser(
       userId: note.stagiaireId,
-      title: 'Nouvelle note publiée',
-      message: 'Une note a été publiée pour le module ${_moduleNames[note.moduleId]}',
+      title: 'Nouvelle note publiÃ©e',
+      message: 'Une note a Ã©tÃ© publiÃ©e pour le module ${_moduleNames[note.moduleId]}',
       type: 'INFO'
     );
     
@@ -1168,8 +1168,8 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     if (aff != null) {
       await NotificationService().notifyUser(
         userId: aff.formateurId,
-        title: 'Séance rejetée',
-        message: 'Votre séance du ${seance.date.day}/${seance.date.month}/${seance.date.year} a été rejetée.',
+        title: 'SÃ©ance rejetÃ©e',
+        message: 'Votre sÃ©ance du ${seance.date.day}/${seance.date.month}/${seance.date.year} a Ã©tÃ© rejetÃ©e.',
         type: 'WARNING'
       );
     }
@@ -1181,9 +1181,10 @@ class _ValidationScreenState extends State<ValidationScreen> with SingleTickerPr
     }
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Séance rejetée'), backgroundColor: AppTheme.accentRed),
+        const SnackBar(content: Text('SÃ©ance rejetÃ©e'), backgroundColor: AppTheme.accentRed),
       );
     }
   }
 }
+
 

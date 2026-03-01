@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget mobile;
@@ -43,3 +43,4 @@ class ResponsiveLayout extends StatelessWidget {
     );
   }
 }
+

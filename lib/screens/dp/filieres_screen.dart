@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -111,7 +111,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Définissez les domaines de formation',
+                      'DÃ©finissez les domaines de formation',
                       style: GoogleFonts.poppins(
                         fontSize: isMobile ? 12 : 14,
                         color: AppTheme.textSecondary,
@@ -125,7 +125,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
                 onPressed: () => _showAddEditDialog(),
                 icon: const Icon(Icons.add, size: 20, color: Colors.white),
                 label: Text(
-                  isMobile ? 'Nouvelle' : 'Nouvelle filière',
+                  isMobile ? 'Nouvelle' : 'Nouvelle filiÃ¨re',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.white, fontSize: isMobile ? 12 : 14),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -155,7 +155,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
                       });
                     },
                     decoration: InputDecoration(
-                      hintText: 'Rechercher une filière...',
+                      hintText: 'Rechercher une filiÃ¨re...',
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 14),
                       border: InputBorder.none,
                       icon: const Icon(Icons.search, color: AppTheme.textSecondary, size: 20),
@@ -189,7 +189,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
           Icon(Icons.category_outlined, size: 80, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text(
-            'Aucune filière',
+            'Aucune filiÃ¨re',
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -198,7 +198,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Ajoutez votre première filière',
+            'Ajoutez votre premiÃ¨re filiÃ¨re',
             style: GoogleFonts.poppins(color: AppTheme.textSecondary),
           ),
         ],
@@ -336,7 +336,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    isEdit ? 'Modifier la filière' : 'Nouvelle filière',
+                    isEdit ? 'Modifier la filiÃ¨re' : 'Nouvelle filiÃ¨re',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -352,7 +352,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Nom de la filière *',
+                'Nom de la filiÃ¨re *',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -363,7 +363,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
               TextField(
                 controller: nomController,
                 decoration: InputDecoration(
-                  hintText: 'Ex: Développement Digital',
+                  hintText: 'Ex: DÃ©veloppement Digital',
                   hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
@@ -384,7 +384,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
                 controller: descController,
                 maxLines: 3,
                 decoration: InputDecoration(
-                  hintText: 'Objectifs et contenu de la filière...',
+                  hintText: 'Objectifs et contenu de la filiÃ¨re...',
                   hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                   contentPadding: const EdgeInsets.all(16),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
@@ -437,7 +437,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     child: Text(
-                      isEdit ? 'Modifier' : 'Créer',
+                      isEdit ? 'Modifier' : 'CrÃ©er',
                       style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
@@ -457,7 +457,7 @@ class _FilieresScreenState extends State<FilieresScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text('Supprimer', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
         content: Text(
-          'Voulez-vous vraiment supprimer la filière "${filiere.nom}" ?',
+          'Voulez-vous vraiment supprimer la filiÃ¨re "${filiere.nom}" ?',
           style: GoogleFonts.poppins(),
         ),
         actions: [
@@ -480,4 +480,5 @@ class _FilieresScreenState extends State<FilieresScreen> {
     }
   }
 }
+
 

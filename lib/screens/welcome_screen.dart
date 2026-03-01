@@ -36,7 +36,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
     Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        Navigator.of(context).pushReplacementNamed('/auth-wrapper');
       }
     });
   }
@@ -57,11 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFDF2F4),
-              Color(0xFFF9E0E3),
-              Color(0xFFF4C2C8),
-            ],
+            colors: [Color(0xFFFDF2F4), Color(0xFFF9E0E3), Color(0xFFF4C2C8)],
           ),
         ),
         child: SafeArea(
@@ -96,13 +92,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                   const SizedBox(height: 50),
                   Text(
-                    'welecome to Academic Pro',
+                    'Welecome to Academic Pro',
                     style: GoogleFonts.outfit(
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
-                      color: const Color(
-                        0xFF4A4A4A,
-                      ),
+                      color: const Color(0xFF4A4A4A),
                       letterSpacing: 1.2,
                     ),
                     textAlign: TextAlign.center,

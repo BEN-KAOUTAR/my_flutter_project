@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +84,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Votre bulletin détaillé',
+                  'Votre bulletin dÃ©taillÃ©',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: AppTheme.textSecondary,
@@ -120,7 +120,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Ce document est fourni à titre informatif. Seul le relevé cacheté par la direction est officiel.',
+              'Ce document est fourni Ã  titre informatif. Seul le relevÃ© cachetÃ© par la direction est officiel.',
               style: GoogleFonts.poppins(
                 fontSize: 13,
                 color: const Color(0xFF9A3412),
@@ -153,7 +153,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user?.nom ?? 'Étudiant',
+                    user?.nom ?? 'Ã‰tudiant',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -195,7 +195,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
             children: [
               _buildSimpleStat('Moyenne', _average.toStringAsFixed(2)),
               _buildSimpleStat('Modules', '${_notes.length}'),
-              _buildSimpleStat('Décision', _average >= 10 ? 'Admis' : 'Ajourné'),
+              _buildSimpleStat('DÃ©cision', _average >= 10 ? 'Admis' : 'AjournÃ©'),
             ],
           ),
         ],
@@ -259,7 +259,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
                 ),
                 Expanded(
                   child: Text(
-                    'Résultat',
+                    'RÃ©sultat',
                     textAlign: TextAlign.right,
                     style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textSecondary),
                   ),
@@ -270,13 +270,13 @@ class _ReleveScreenState extends State<ReleveScreen> {
           if (_notes.isEmpty)
              Padding(
                padding: const EdgeInsets.all(32.0),
-               child: Text('Aucune note validée', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
+               child: Text('Aucune note validÃ©e', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
              )
           else
             ..._notes.map((n) => _buildTableRow(
               _getModuleName(n.moduleId),
               n.valeur.toStringAsFixed(2),
-              n.valeur >= 10 ? 'Validé' : 'Non Validé'
+              n.valeur >= 10 ? 'ValidÃ©' : 'Non ValidÃ©'
             )),
           
           const SizedBox(height: 12),
@@ -314,7 +314,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color:  result == 'Validé' ? AppTheme.accentGreen : AppTheme.accentRed,
+                color:  result == 'ValidÃ©' ? AppTheme.accentGreen : AppTheme.accentRed,
               ),
             ),
           ),
@@ -334,13 +334,13 @@ class _ReleveScreenState extends State<ReleveScreen> {
             PdfService.generateNoteReportPdf(user, _notes, _modules);
           } else {
              ScaffoldMessenger.of(context).showSnackBar(
-               const SnackBar(content: Text('Aucune donnée à exporter')),
+               const SnackBar(content: Text('Aucune donnÃ©e Ã  exporter')),
              );
           }
         },
         icon: const Icon(Icons.file_download_outlined, color: Colors.white),
         label: Text(
-          'Télécharger le PDF',
+          'TÃ©lÃ©charger le PDF',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         style: ElevatedButton.styleFrom(
@@ -352,4 +352,5 @@ class _ReleveScreenState extends State<ReleveScreen> {
     );
   }
 }
+
 

@@ -1,13 +1,13 @@
-import '../models/note.dart';
+﻿import '../models/note.dart';
 import '../models/module.dart';
 
 class AnalysisService {
   static Map<String, dynamic> predictPerformance(List<Note> notes, List<Module> modules) {
     if (notes.isEmpty) {
       return {
-        'prediction': 'Données insuffisantes',
+        'prediction': 'DonnÃ©es insuffisantes',
         'score': 0.0,
-        'recommendation': 'Commencez à passer des examens pour obtenir une analyse.',
+        'recommendation': 'Commencez Ã  passer des examens pour obtenir une analyse.',
         'status': 'neutral',
       };
     }
@@ -41,13 +41,13 @@ class AnalysisService {
       prediction = 'Excellente progression';
       score = 0.95;
       recommendation = isImproving 
-          ? 'Performance exceptionnelle ! Vous maîtrisez parfaitement les concepts. Continuez sur cette lancée.'
-          : 'Très haut niveau. Restez vigilant pour maintenir cette excellence.';
+          ? 'Performance exceptionnelle ! Vous maÃ®trisez parfaitement les concepts. Continuez sur cette lancÃ©e.'
+          : 'TrÃ¨s haut niveau. Restez vigilant pour maintenir cette excellence.';
       status = 'success';
     } else if (average >= 13) {
-      prediction = 'Bonne maîtrise';
+      prediction = 'Bonne maÃ®trise';
       score = 0.8;
-      recommendation = 'Solide compréhension des modules. Approfondissez les détails techniques pour atteindre l\'excellence.';
+      recommendation = 'Solide comprÃ©hension des modules. Approfondissez les dÃ©tails techniques pour atteindre l\'excellence.';
       status = 'success';
     } else if (average >= 10) {
       prediction = 'Niveau satisfaisant';
@@ -57,7 +57,7 @@ class AnalysisService {
     } else {
       prediction = 'Besoin de soutien';
       score = 0.3;
-      recommendation = 'Difficultés détectées. Il est fortement conseillé de solliciter des séances de remédiation.';
+      recommendation = 'DifficultÃ©s dÃ©tectÃ©es. Il est fortement conseillÃ© de solliciter des sÃ©ances de remÃ©diation.';
       status = 'danger';
     }
 
@@ -94,8 +94,9 @@ class AnalysisService {
       'success_rate': (successCount / studentsData.length) * 100,
       'warning_rate': (warningCount / studentsData.length) * 100,
       'danger_rate': (dangerCount / studentsData.length) * 100,
-      'overall_status': groupAverage >= 14 ? 'Excellent' : (groupAverage >= 11 ? 'Satisfaisant' : 'À surveiller'),
+      'overall_status': groupAverage >= 14 ? 'Excellent' : (groupAverage >= 11 ? 'Satisfaisant' : 'Ã€ surveiller'),
     };
   }
 }
+
 

@@ -11,7 +11,3 @@ Academic Pro est une plateforme d'excellence pédagogique conçue pour la gestio
 - Flutter (Web, Android, iOS)
 - SQLite (Persistance locale)
 - Provider (Gestion d'état)
-
-## Installation
-1. `flutter pub get`
-2. `flutter run`

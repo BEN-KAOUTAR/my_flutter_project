@@ -1,4 +1,4 @@
-class Filiere {
+﻿class Filiere {
   final int? id;
   final String nom;
   final String description;
@@ -43,4 +43,5 @@ class Filiere {
     );
   }
 }
+
 

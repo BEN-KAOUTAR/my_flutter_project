@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../models/user.dart';
@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_selectedRole == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Veuillez sélectionner un rôle', style: GoogleFonts.poppins()),
+          content: Text('Veuillez sÃ©lectionner un rÃ´le', style: GoogleFonts.poppins()),
           backgroundColor: AppTheme.accentOrange,
           behavior: SnackBarBehavior.floating,
         ),
@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'La plateforme d\'excellence pédagogique',
+                    'La plateforme d\'excellence pÃ©dagogique',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: isTablet ? 16 : 18,
@@ -239,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Text(
-            'Gestion Pédagogique',
+            'Gestion PÃ©dagogique',
             style: GoogleFonts.poppins(
               fontSize: 18,
               color: AppTheme.textSecondary,
@@ -258,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Connectez-vous pour accéder à votre espace',
+          'Connectez-vous pour accÃ©der Ã  votre espace',
           style: GoogleFonts.poppins(
             fontSize: subWelcomeSize,
             color: AppTheme.textSecondary,
@@ -267,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 40),
 
         Text(
-          'Sélectionnez votre rôle',
+          'SÃ©lectionnez votre rÃ´le',
           style: GoogleFonts.poppins(
             fontSize: labelSize,
             fontWeight: FontWeight.w600,
@@ -277,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 16),
         _buildRoleOption(
           role: UserRole.dp,
-          label: 'Directeur Pédagogique',
+          label: 'Directeur PÃ©dagogique',
           sublabel: 'Gestion globale et validation',
           icon: Icons.school_outlined,
           color: const Color(0xFF0EA5E9),
@@ -311,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               onPressed: _showForgotPasswordDialog,
               child: Text(
-                'Mot de passe oublié ?',
+                'Mot de passe oubliÃ© ?',
                 style: GoogleFonts.poppins(
                   color: AppTheme.textSecondary,
                   fontWeight: FontWeight.w500,
@@ -325,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               onPressed: _showDirectorSignupDialog,
               child: Text(
-                'Créer un compte',
+                'CrÃ©er un compte',
                 style: GoogleFonts.poppins(
                   color: AppTheme.primaryBlue,
                   fontWeight: FontWeight.bold,
@@ -481,7 +481,7 @@ class _LoginScreenState extends State<LoginScreen> {
           TextFormField(
             controller: _passwordController,
             decoration: InputDecoration(
-              hintText: '••••••••',
+              hintText: 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢',
               hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400),
               prefixIcon: Icon(Icons.lock_outlined, color: Colors.grey.shade500),
               suffixIcon: IconButton(
@@ -562,7 +562,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _getRoleLabel(UserRole role) {
     switch (role) {
-      case UserRole.dp: return 'Directeur Pédagogique';
+      case UserRole.dp: return 'Directeur PÃ©dagogique';
       case UserRole.formateur: return 'Formateur';
       case UserRole.stagiaire: return 'Stagiaire';
     }
@@ -610,3 +610,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

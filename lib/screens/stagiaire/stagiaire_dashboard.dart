@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -152,13 +152,13 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
       case 0: return 'Academic Pro';
       case 1: return 'Emploi du temps';
       case 2: return 'Mes notes';
-      case 3: return 'Mes présences';
-      case 4: return 'Examens à venir';
-      case 5: return 'Relevé de notes';
+      case 3: return 'Mes prÃ©sences';
+      case 4: return 'Examens Ã  venir';
+      case 5: return 'RelevÃ© de notes';
       case 6: return 'Progression des modules';
       case 7: return 'Messages';
       case 8: return 'Mon Profil';
-      case 9: return 'Réclamations';
+      case 9: return 'RÃ©clamations';
       default: return 'Academic Pro';
     }
   }
@@ -219,7 +219,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
         ),
         const SizedBox(width: 8),
         GestureDetector(
-          onTap: () => setState(() => _currentIndex = 8), // Mon Profil index in Stagiaire
+          onTap: () => setState(() => _currentIndex = 8), 
           child: CircleAvatar(
             radius: 18,
             backgroundColor: Colors.white.withOpacity(0.2),
@@ -315,7 +315,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.how_to_reg_rounded,
-                        label: 'Mes présences',
+                        label: 'Mes prÃ©sences',
                         index: 3,
                         isDark: isPermanent,
                       ),
@@ -334,13 +334,13 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.assignment_outlined,
-                        label: 'Examens à venir',
+                        label: 'Examens Ã  venir',
                         index: 4,
                         isDark: isPermanent,
                       ),
                       _buildSidebarItem(
                         icon: Icons.description_outlined,
-                        label: 'Relevé de notes',
+                        label: 'RelevÃ© de notes',
                         index: 5,
                         isDark: isPermanent,
                       ),
@@ -366,7 +366,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.report_problem_rounded,
-                        label: 'Réclamations',
+                        label: 'RÃ©clamations',
                         index: 9,
                         isDark: isPermanent,
                         badgeCount: notifProvider.unreadReclamationsCount,
@@ -384,7 +384,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
               color: isPermanent ? Colors.white70 : AppTheme.accentRed,
             ),
             title: Text(
-              'Déconnexion',
+              'DÃ©connexion',
               style: GoogleFonts.poppins(
                 color: isPermanent ? Colors.white70 : AppTheme.accentRed,
                 fontWeight: FontWeight.w500,
@@ -549,7 +549,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Bonjour, ${user?.nom.split(' ').first ?? 'Stagiaire'} 👋',
+                        'Bonjour, ${user?.nom.split(' ').first ?? 'Stagiaire'} ðŸ‘‹',
                         style: GoogleFonts.poppins(
                           fontSize: ResponsiveLayout.respSize(context, 28, 34, 40),
                           fontWeight: FontWeight.bold,
@@ -603,7 +603,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                   runSpacing: 12,
                   children: [
                     DashboardSummaryCard(
-                      label: 'Moyenne générale',
+                      label: 'Moyenne gÃ©nÃ©rale',
                       value: _averageNote > 0 ? _averageNote.toStringAsFixed(1) : '-',
                       sublabel: 'sur 20',
                       icon: Icons.military_tech_outlined,
@@ -611,14 +611,14 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       width: cardWidth,
                     ),
                     DashboardSummaryCard(
-                      label: 'Notes publiées',
+                      label: 'Notes publiÃ©es',
                       value: '${validatedNotes.length}',
                       icon: Icons.book_outlined,
                       color: AppTheme.accentGreen,
                       width: cardWidth,
                     ),
                     DashboardSummaryCard(
-                      label: 'Examens à venir',
+                      label: 'Examens Ã  venir',
                       value: '${_upcomingExams.length}',
                       icon: Icons.calendar_today_outlined,
                       color: AppTheme.stagiaireColor,
@@ -690,7 +690,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                 child: Padding(
                   padding: const EdgeInsets.all(48.0),
                   child: Text(
-                    'Aucun examen planifié',
+                    'Aucun examen planifiÃ©',
                     style: GoogleFonts.poppins(color: AppTheme.textSecondary),
                   ),
                 ),
@@ -709,7 +709,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                         child: const Icon(Icons.event, color: AppTheme.stagiaireColor, size: 20),
                       ),
                       title: Text(exam['module_name'] as String, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
-                      subtitle: Text('${date.day}/${date.month} à ${date.hour}:${date.minute.toString().padLeft(2,'0')}', style: GoogleFonts.poppins(fontSize: 12)),
+                      subtitle: Text('${date.day}/${date.month} Ã  ${date.hour}:${date.minute.toString().padLeft(2,'0')}', style: GoogleFonts.poppins(fontSize: 12)),
                    );
                 }).toList(),
               ),
@@ -828,7 +828,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
               ),
               const SizedBox(width: 12),
               Text(
-                'Dernières notes',
+                'DerniÃ¨res notes',
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -836,7 +836,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
           const SizedBox(height: 16),
           if (recentNotes.isEmpty) ...[
              const SizedBox(height: 32),
-             Center(child: Text('Aucune note publiée', style: GoogleFonts.poppins(color: AppTheme.textSecondary))),
+             Center(child: Text('Aucune note publiÃ©e', style: GoogleFonts.poppins(color: AppTheme.textSecondary))),
              const SizedBox(height: 32),
           ] else ...[
             ...recentNotes.map((note) => ListTile(
@@ -923,3 +923,4 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
     );
   }
 }
+

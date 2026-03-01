@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/user.dart';
 import '../../theme/app_theme.dart';
@@ -39,7 +39,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
       if (existingUser != null) {
         if (mounted) {
            ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cet email est déjà utilisé'), backgroundColor: AppTheme.accentOrange),
+            const SnackBar(content: Text('Cet email est dÃ©jÃ  utilisÃ©'), backgroundColor: AppTheme.accentOrange),
           );
         }
         setState(() => _isLoading = false);
@@ -60,7 +60,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Compte Directeur créé avec succès ! Connectez-vous.'),
+            content: Text('Compte Directeur crÃ©Ã© avec succÃ¨s ! Connectez-vous.'),
             backgroundColor: AppTheme.accentGreen,
           ),
         );
@@ -93,7 +93,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Création Compte Directeur',
+                  'CrÃ©ation Compte Directeur',
                   style: GoogleFonts.poppins(
                     fontSize: ResponsiveLayout.respSize(context, 20, 24, 28), 
                     fontWeight: FontWeight.bold, 
@@ -103,7 +103,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Espace réservé à la direction pédagogique.',
+                  'Espace rÃ©servÃ© Ã  la direction pÃ©dagogique.',
                   style: GoogleFonts.poppins(
                     fontSize: ResponsiveLayout.respSize(context, 13, 14, 15), 
                     color: AppTheme.textSecondary
@@ -138,7 +138,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                 TextFormField(
                   controller: _phoneController,
                   decoration: InputDecoration(
-                    labelText: 'Téléphone (ex: 06... ou +212...)',
+                    labelText: 'TÃ©lÃ©phone (ex: 06... ou +212...)',
                     prefixIcon: const Icon(Icons.phone_outlined),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                   ),
@@ -162,7 +162,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                   obscureText: true,
-                  validator: (val) => val == null || val.length < 6 ? 'Min 6 caractères' : null,
+                  validator: (val) => val == null || val.length < 6 ? 'Min 6 caractÃ¨res' : null,
                 ),
                 
                 const SizedBox(height: 32),
@@ -194,7 +194,7 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
                         child: _isLoading
                             ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                             : Text(
-                                'Créer',
+                                'CrÃ©er',
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold, 
                                   color: Colors.white,
@@ -213,3 +213,4 @@ class _DirectorSignupDialogState extends State<DirectorSignupDialog> {
     );
   }
 }
+

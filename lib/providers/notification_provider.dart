@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../data/database_helper.dart';
 import '../models/user.dart';
 
@@ -87,3 +87,4 @@ class NotificationProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+

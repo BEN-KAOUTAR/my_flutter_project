@@ -1,4 +1,4 @@
-enum UserRole {
+﻿enum UserRole {
   dp,
   formateur,
   stagiaire,
@@ -8,7 +8,7 @@ extension UserRoleExtension on UserRole {
   String get displayName {
     switch (this) {
       case UserRole.dp:
-        return 'Directeur Pédagogique';
+        return 'Directeur PÃ©dagogique';
       case UserRole.formateur:
         return 'Formateur';
       case UserRole.stagiaire:
@@ -174,3 +174,4 @@ class User {
     );
   }
 }
+

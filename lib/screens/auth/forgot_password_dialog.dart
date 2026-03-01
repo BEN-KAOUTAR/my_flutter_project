@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/responsive_layout.dart';
@@ -33,7 +33,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Si cet email est associé à un compte, vous recevrez des instructions pour réinitialiser votre mot de passe.',
+            'Si cet email est associÃ© Ã  un compte, vous recevrez des instructions pour rÃ©initialiser votre mot de passe.',
             style: GoogleFonts.poppins(),
           ),
           backgroundColor: AppTheme.accentGreen,
@@ -62,7 +62,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                    Text(
-                    'Mot de passe oublié',
+                    'Mot de passe oubliÃ©',
                     style: GoogleFonts.poppins(
                       fontSize: ResponsiveLayout.respSize(context, 20, 24, 28),
                       fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Entrez votre adresse email pour recevoir un lien de réinitialisation.',
+                'Entrez votre adresse email pour recevoir un lien de rÃ©initialisation.',
                 style: GoogleFonts.poppins(
                   fontSize: ResponsiveLayout.respSize(context, 14, 15, 16),
                   color: AppTheme.textSecondary,
@@ -140,3 +140,4 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
     );
   }
 }
+

@@ -1,4 +1,4 @@
-
+﻿
 class Reclamation {
   final int? id;
   final int userId;
@@ -78,4 +78,5 @@ class Reclamation {
     );
   }
 }
+
 

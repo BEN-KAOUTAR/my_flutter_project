@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
@@ -148,14 +148,14 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
   String _getScreenTitle(int index) {
     switch (index) {
       case 0: return 'Academic Pro';
-      case 1: return 'Mes séances';
+      case 1: return 'Mes sÃ©ances';
       case 2: return 'Emploi du temps';
       case 3: return 'Gestion des notes';
       case 4: return 'Messages';
       case 5: return 'Mon Profil';
-      case 6: return 'Réclamations';
+      case 6: return 'RÃ©clamations';
       case 7: return 'Planification Examens';
-      case 8: return 'Suivi de présence';
+      case 8: return 'Suivi de prÃ©sence';
       default: return 'Academic Pro';
     }
   }
@@ -230,7 +230,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
         ),
         const SizedBox(width: 8),
         GestureDetector(
-          onTap: () => setState(() => _currentIndex = 5), // Mon Profil index in Formateur
+          onTap: () => setState(() => _currentIndex = 5), 
           child: CircleAvatar(
             radius: 18,
             backgroundColor: Colors.white.withOpacity(0.2),
@@ -326,7 +326,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.history_rounded,
-                        label: 'Mes séances',
+                        label: 'Mes sÃ©ances',
                         index: 1,
                         isDark: isPermanent,
                       ),
@@ -350,7 +350,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.checklist_rtl_rounded,
-                        label: 'Suivi de présence',
+                        label: 'Suivi de prÃ©sence',
                         index: 8,
                         isDark: isPermanent,
                       ),
@@ -370,7 +370,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.report_problem_rounded,
-                        label: 'Réclamations',
+                        label: 'RÃ©clamations',
                         index: 6,
                         isDark: isPermanent,
                         badgeCount: notifProvider.unreadReclamationsCount,
@@ -387,7 +387,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
             child: ListTile(
               leading: const Icon(Icons.logout_rounded, color: AppTheme.accentRed, size: 24),
               title: Text(
-                'Déconnexion', 
+                'DÃ©connexion', 
                 style: GoogleFonts.poppins(
                   color: AppTheme.accentRed, 
                   fontWeight: FontWeight.w600,
@@ -543,7 +543,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Bonjour, ${user?.nom.split(' ').first ?? 'Formateur'} 👋',
+                        'Bonjour, ${user?.nom.split(' ').first ?? 'Formateur'} ðŸ‘‹',
                         style: GoogleFonts.poppins(
                           fontSize: ResponsiveLayout.respSize(context, 28, 34, 40),
                           fontWeight: FontWeight.bold,
@@ -599,14 +599,14 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                   runSpacing: 12,
                   children: [
                     DashboardSummaryCard(
-                      label: 'Modules affectés',
+                      label: 'Modules affectÃ©s',
                       value: '${_affectationsWithProgress.length}',
                       icon: Icons.book_outlined,
                       color: AppTheme.primaryBlue,
                       width: cardWidth,
                     ),
                     DashboardSummaryCard(
-                      label: 'Heures effectuées',
+                      label: 'Heures effectuÃ©es',
                       value: '${_totalHeures.toInt()}h',
                       sublabel: 'sur 910h',
                       icon: Icons.timer_outlined,
@@ -650,7 +650,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       Icon(Icons.inbox, size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
                       const SizedBox(height: 12),
                       Text(
-                        'Aucun module affecté',
+                        'Aucun module affectÃ©',
                         style: GoogleFonts.poppins(color: AppTheme.textSecondary),
                       ),
                     ],
@@ -676,7 +676,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Examens à venir',
+              'Examens Ã  venir',
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -699,7 +699,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                   Icon(Icons.event_note_rounded, color: AppTheme.textSecondary.withValues(alpha: 0.3), size: 48),
                   const SizedBox(height: 12),
                   Text(
-                    'Aucun examen programmé',
+                    'Aucun examen programmÃ©',
                     style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                   ),
                 ],
@@ -885,3 +885,4 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     );
   }
 }
+

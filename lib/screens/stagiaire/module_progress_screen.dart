@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../data/database_helper.dart';
@@ -233,7 +233,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Aucun module assigné',
+            'Aucun module assignÃ©',
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -241,7 +241,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
             ),
           ),
           Text(
-            'Vos modules apparaîtront ici dès qu\'ils seront assignés',
+            'Vos modules apparaÃ®tront ici dÃ¨s qu\'ils seront assignÃ©s',
             style: GoogleFonts.poppins(
               fontSize: 13,
               color: AppTheme.textSecondary,
@@ -346,7 +346,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStatChip(
-                label: 'Complété',
+                label: 'ComplÃ©tÃ©',
                 value: '${completedHours.toStringAsFixed(0)}h',
                 color: progressColor,
               ),
@@ -398,3 +398,4 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
     );
   }
 }
+

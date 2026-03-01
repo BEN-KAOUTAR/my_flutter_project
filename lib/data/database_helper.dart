@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -673,7 +673,7 @@ class DatabaseHelper {
 
   Future<void> _seedData(Database db) async {
     await db.insert('users', {
-      'nom': 'Directeur Pédagogique',
+      'nom': 'Directeur PÃ©dagogique',
       'email': 'dp@digitalpole.ma',
       'password': 'dp123456',
       'role': 'DP',
@@ -849,7 +849,7 @@ class DatabaseHelper {
       whereArgs: [filiere.nom, filiere.directorId],
     );
     if (existing.isNotEmpty) {
-      throw Exception('Une filière avec ce nom existe déjà.');
+      throw Exception('Une filiÃ¨re avec ce nom existe dÃ©jÃ .');
     }
     final id = await db.insert('filieres', filiere.toMap()..remove('id'));
     notifyDataChanged();
@@ -949,7 +949,7 @@ class DatabaseHelper {
       whereArgs: [groupe.nom, groupe.filiereId, groupe.annee, groupe.anneeScolaire],
     );
     if (existing.isNotEmpty) {
-      throw Exception('Un groupe avec ce nom existe déjà dans cette filière.');
+      throw Exception('Un groupe avec ce nom existe dÃ©jÃ  dans cette filiÃ¨re.');
     }
     final result = await db.insert('groupes', groupe.toMap());
     notifyDataChanged();
@@ -1015,7 +1015,7 @@ class DatabaseHelper {
       whereArgs: [module.nom, module.filiereId, module.annee, module.semestre],
     );
     if (existing.isNotEmpty) {
-      throw Exception('Un module avec ce nom existe déjà dans cette filière.');
+      throw Exception('Un module avec ce nom existe dÃ©jÃ  dans cette filiÃ¨re.');
     }
     final result = await db.insert('modules', module.toMap());
     notifyDataChanged();
@@ -1091,7 +1091,7 @@ class DatabaseHelper {
       ],
     );
     if (existing.isNotEmpty) {
-      throw Exception('Cette affectation existe déjà.');
+      throw Exception('Cette affectation existe dÃ©jÃ .');
     }
 
  
@@ -1099,7 +1099,7 @@ class DatabaseHelper {
     final module = await getModuleById(affectation.moduleId);
     if (formateur != null && module != null) {
       if ((formateur.totalHeuresAffectees + module.masseHoraireTotale) > 910) {
-        throw Exception('Le formateur ${formateur.nom} dépasserait la limit annuelle de 910h (${formateur.totalHeuresAffectees + module.masseHoraireTotale}h prévues).');
+        throw Exception('Le formateur ${formateur.nom} dÃ©passerait la limit annuelle de 910h (${formateur.totalHeuresAffectees + module.masseHoraireTotale}h prÃ©vues).');
       }
     }
 
@@ -1138,8 +1138,8 @@ class DatabaseHelper {
         if (newFormateur != null && newModule != null) {
           if ((newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale) > 910) {
             throw Exception(
-              'Le formateur ${newFormateur.nom} dépasserait la limite annuelle de 910h '
-              '(${newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale}h prévues).'
+              'Le formateur ${newFormateur.nom} dÃ©passerait la limite annuelle de 910h '
+              '(${newFormateur.totalHeuresAffectees + newModule.masseHoraireTotale}h prÃ©vues).'
             );
           }
         }
@@ -1170,8 +1170,8 @@ class DatabaseHelper {
           if (formateur != null) {
             if ((formateur.totalHeuresAffectees + hoursDifference) > 910) {
               throw Exception(
-                'Le formateur ${formateur.nom} dépasserait la limite annuelle de 910h '
-                '(${formateur.totalHeuresAffectees + hoursDifference}h prévues).'
+                'Le formateur ${formateur.nom} dÃ©passerait la limite annuelle de 910h '
+                '(${formateur.totalHeuresAffectees + hoursDifference}h prÃ©vues).'
               );
             }
           }
@@ -1418,7 +1418,7 @@ class DatabaseHelper {
     if (stagiaire?.directorId != null) {
       await createNotification(NotificationModel(
         userId: stagiaire!.directorId!,
-        title: 'Note à valider',
+        title: 'Note Ã  valider',
         message: 'Le formateur a soumis une note pour ${stagiaire.nom} (Module: ${module?.nom ?? "N/A"})',
         type: 'VALIDATION',
         timestamp: DateTime.now(),
@@ -1487,7 +1487,7 @@ class DatabaseHelper {
     final db = await database;
     final result = await db.update(
       'notes',
-      {'publiee': 1, 'statut': 'Publié'},
+      {'publiee': 1, 'statut': 'PubliÃ©'},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -1504,7 +1504,7 @@ class DatabaseHelper {
         await createNotification(NotificationModel(
           userId: stagiaireId,
           title: 'Nouvelle note disponible',
-          message: 'Une nouvelle note a été publiée pour le module $moduleName.',
+          message: 'Une nouvelle note a Ã©tÃ© publiÃ©e pour le module $moduleName.',
           type: 'NOTE',
           timestamp: DateTime.now(),
         ));
@@ -1582,7 +1582,7 @@ class DatabaseHelper {
       if (s.id != null) {
         await createNotification(NotificationModel(
           userId: s.id!,
-          title: 'Emploi du temps mis à jour',
+          title: 'Emploi du temps mis Ã  jour',
           message: 'L\'emploi du temps de la semaine ${emploi.semaineNum} pour $groupName est disponible.',
           type: 'INFO',
           timestamp: DateTime.now(),
@@ -1595,8 +1595,8 @@ class DatabaseHelper {
       if (fId != 0) {
         await createNotification(NotificationModel(
           userId: fId,
-          title: 'Planning mis à jour',
-          message: 'Votre planning pour la semaine ${emploi.semaineNum} a été mis à jour pour le groupe $groupName.',
+          title: 'Planning mis Ã  jour',
+          message: 'Votre planning pour la semaine ${emploi.semaineNum} a Ã©tÃ© mis Ã  jour pour le groupe $groupName.',
           type: 'INFO',
           timestamp: DateTime.now(),
         ));
@@ -1715,7 +1715,7 @@ class DatabaseHelper {
       ${directorId != null ? 'JOIN filieres f ON m.filiere_id = f.id' : ''}
       WHERE $seanceWhere
       UNION ALL
-      SELECT 'NOTE' as type, n.date_examen as timestamp, m.nom as text, 'Note publiée' as subtext
+      SELECT 'NOTE' as type, n.date_examen as timestamp, m.nom as text, 'Note publiÃ©e' as subtext
       FROM notes n
       JOIN modules m ON n.module_id = m.id
       ${directorId != null ? 'JOIN filieres f ON m.filiere_id = f.id' : ''}
@@ -1990,7 +1990,7 @@ class DatabaseHelper {
       await createNotification(NotificationModel(
         userId: message.receiverId!,
         title: 'Nouveau message',
-        message: 'Vous avez reçu un message de ${sender?.nom ?? "quelqu\'un"}',
+        message: 'Vous avez reÃ§u un message de ${sender?.nom ?? "quelqu\'un"}',
         type: 'MESSAGE',
         timestamp: DateTime.now(),
       ));
@@ -2415,7 +2415,7 @@ class DatabaseHelper {
     await createNotification(NotificationModel(
       userId: request.directorId,
       title: 'Nouvelle demande d\'inscription',
-      message: 'Une nouvelle demande d\'inscription a été reçue de ${request.nom}',
+      message: 'Une nouvelle demande d\'inscription a Ã©tÃ© reÃ§ue de ${request.nom}',
       type: 'ACCOUNT',
       timestamp: DateTime.now(),
     ));
@@ -2533,8 +2533,8 @@ class DatabaseHelper {
     for (var dp in dps) {
       await createNotification(NotificationModel(
         userId: dp.id!,
-        title: 'Nouvelle réclamation',
-        message: 'Une nouvelle réclamation a été soumise par ${rec.userId}',
+        title: 'Nouvelle rÃ©clamation',
+        message: 'Une nouvelle rÃ©clamation a Ã©tÃ© soumise par ${rec.userId}',
         type: 'RECLAMATION',
         timestamp: DateTime.now(),
       ));
@@ -2598,8 +2598,8 @@ class DatabaseHelper {
       if (rec != null) {
         await createNotification(NotificationModel(
           userId: rec.userId,
-          title: 'Réclamation résolue',
-          message: 'Votre réclamation concernant "${rec.subject}" a été traitée.',
+          title: 'RÃ©clamation rÃ©solue',
+          message: 'Votre rÃ©clamation concernant "${rec.subject}" a Ã©tÃ© traitÃ©e.',
           type: 'RECLAMATION',
           timestamp: DateTime.now(),
         ));
@@ -2723,7 +2723,7 @@ class DatabaseHelper {
         'date': date,
         'heure_debut': heureDebut,
         'duree': duration,
-        'contenu': 'Séance validée via présence',
+        'contenu': 'SÃ©ance validÃ©e via prÃ©sence',
         'statut': 'VALIDE'
       });
     } else {
@@ -2770,8 +2770,8 @@ class DatabaseHelper {
           final groupe = await getGroupeById(groupeId);
           await createNotification(NotificationModel(
             userId: formateurId,
-            title: 'Présence validée',
-            message: 'La présence du ${date}${heure != null ? " ($heure)" : ""} pour le groupe ${groupe?.nom ?? ""} a été validée par le DP.',
+            title: 'PrÃ©sence validÃ©e',
+            message: 'La prÃ©sence du ${date}${heure != null ? " ($heure)" : ""} pour le groupe ${groupe?.nom ?? ""} a Ã©tÃ© validÃ©e par le DP.',
             type: 'INFO',
             timestamp: DateTime.now(),
           ));
@@ -2946,5 +2946,6 @@ class DatabaseHelper {
     notifyDataChanged();
   }
 }
+
 
 

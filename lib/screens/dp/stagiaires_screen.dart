@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -69,7 +69,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
   }
 
   String _getGroupeName(int? groupeId) {
-    if (groupeId == null) return 'Non affecté';
+    if (groupeId == null) return 'Non affectÃ©';
     final groupe = _groupes.where((g) => g.id == groupeId).firstOrNull;
     return groupe?.nom ?? 'N/A';
   }
@@ -312,7 +312,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
             children: [
               _buildInfoItem(Icons.groups_rounded, 'Groupe', _getGroupeName(stagiaire.groupeId)),
               const SizedBox(width: 32),
-              _buildInfoItem(Icons.phone_outlined, 'Téléphone', (stagiaire.phone != null && stagiaire.phone!.isNotEmpty) ? stagiaire.phone! : 'Non renseigné'),
+              _buildInfoItem(Icons.phone_outlined, 'TÃ©lÃ©phone', (stagiaire.phone != null && stagiaire.phone!.isNotEmpty) ? stagiaire.phone! : 'Non renseignÃ©'),
               const SizedBox(width: 32),
               _buildInfoItem(Icons.calendar_today_rounded, 'Inscription', stagiaire.anneeScolaire ?? 'Sept 2023'),
             ],
@@ -490,7 +490,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                                 enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
                               ),
                               items: [
-                                DropdownMenuItem(value: null, child: Text('Non affecté', style: GoogleFonts.poppins(fontSize: 14))),
+                                DropdownMenuItem(value: null, child: Text('Non affectÃ©', style: GoogleFonts.poppins(fontSize: 14))),
                                 ..._groupes.map((g) => DropdownMenuItem(
                                   value: g.id,
                                   child: Text(g.nom, style: GoogleFonts.poppins(fontSize: 14)),
@@ -511,7 +511,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Téléphone',
+                              'TÃ©lÃ©phone',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -588,7 +588,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Année scolaire *',
+                              'AnnÃ©e scolaire *',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -628,7 +628,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                     controller: passwordController,
                     obscureText: obscurePassword,
                     decoration: InputDecoration(
-                      hintText: '••••••••',
+                      hintText: 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢',
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
@@ -656,7 +656,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                       if (nomController.text.trim().isEmpty || emailController.text.trim().isEmpty || anneeScolaireController.text.trim().isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Veuillez remplir tous les champs obligatoires (incluant l\'année scolaire)', style: GoogleFonts.poppins()),
+                            content: Text('Veuillez remplir tous les champs obligatoires (incluant l\'annÃ©e scolaire)', style: GoogleFonts.poppins()),
                             backgroundColor: AppTheme.accentRed,
                           ),
                         );
@@ -684,7 +684,7 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
                             final phoneRegex = RegExp(r'^(0|\+212)\d{9}$');
                             if (!phoneRegex.hasMatch(phone.replaceAll(' ', ''))) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Format de téléphone invalide (Ex: 06... ou +212...)', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
+                                SnackBar(content: Text('Format de tÃ©lÃ©phone invalide (Ex: 06... ou +212...)', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
                               );
                               return;
                             }
@@ -788,4 +788,5 @@ class _StagiairesScreenState extends State<StagiairesScreen> {
     }
   }
 }
+
 

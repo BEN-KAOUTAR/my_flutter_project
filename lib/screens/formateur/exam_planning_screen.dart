@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -124,7 +124,7 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
           Icon(Icons.event_note_outlined, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text(
-            'Aucun examen programmé',
+            'Aucun examen programmÃ©',
             style: GoogleFonts.poppins(fontSize: 18, color: AppTheme.textSecondary),
           ),
         ],
@@ -252,7 +252,7 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
                       if (date != null) setModalState(() => selectedDate = date);
                     },
                     child: InputDecorator(
-                      decoration: const InputDecoration(labelText: 'Date prévue'),
+                      decoration: const InputDecoration(labelText: 'Date prÃ©vue'),
                       child: Text(DateFormat('dd MMMM yyyy').format(selectedDate)),
                     ),
                   ),
@@ -351,3 +351,4 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
     }
   }
 }
+

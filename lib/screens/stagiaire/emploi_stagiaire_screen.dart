@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +60,7 @@ class _EmploiStagiaireScreenState extends State<EmploiStagiaireScreen> {
       weekIndex = (weekMonday.difference(monthFirstMonday).inDays / 7).floor() + 1;
     }
     
-    final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    final months = ['Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre'];
     return 'Semaine $weekIndex (${months[weekMonday.month - 1]})';
   }
 
@@ -124,7 +124,7 @@ class _EmploiStagiaireScreenState extends State<EmploiStagiaireScreen> {
           }
         },
         icon: const Icon(Icons.picture_as_pdf),
-        label: Text('Télécharger PDF', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        label: Text('TÃ©lÃ©charger PDF', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
         backgroundColor: AppTheme.stagiaireColor,
       ),
     );
@@ -362,4 +362,5 @@ class _EmploiStagiaireScreenState extends State<EmploiStagiaireScreen> {
     );
   }
 }
+
 

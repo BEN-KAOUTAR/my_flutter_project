@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/database_helper.dart';
@@ -399,7 +399,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                       ],
                     ),
                     Text(
-                      'Attribuez un module à un formateur pour un groupe spécifique',
+                      'Attribuez un module Ã  un formateur pour un groupe spÃ©cifique',
                       style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary),
                     ),
                     const SizedBox(height: 32),
@@ -409,7 +409,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                     DropdownButtonFormField<int>(
                       value: selectedFormateurId,
                       decoration: InputDecoration(
-                        hintText: 'Sélectionner un formateur',
+                        hintText: 'SÃ©lectionner un formateur',
                         hintStyle: GoogleFonts.poppins(fontSize: 14),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -427,7 +427,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                     DropdownButtonFormField<int>(
                       value: selectedModuleId,
                       decoration: InputDecoration(
-                        hintText: 'Sélectionner un module',
+                        hintText: 'SÃ©lectionner un module',
                         hintStyle: GoogleFonts.poppins(fontSize: 14),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -445,7 +445,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                     DropdownButtonFormField<int>(
                       value: selectedGroupeId,
                       decoration: InputDecoration(
-                        hintText: 'Sélectionner un groupe',
+                        hintText: 'SÃ©lectionner un groupe',
                         hintStyle: GoogleFonts.poppins(fontSize: 14),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -459,7 +459,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                     
                     
                     const SizedBox(height: 24),
-                    Text('Année scolaire', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
+                    Text('AnnÃ©e scolaire', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
                     const SizedBox(height: 8),
                     TextFormField(
                       initialValue: anneeScolaire,
@@ -531,7 +531,7 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
                           child: Text(
-                            isEdit ? 'Modifier' : 'Créer',
+                            isEdit ? 'Modifier' : 'CrÃ©er',
                             style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         ),
@@ -574,3 +574,4 @@ class _AffectationsScreenState extends State<AffectationsScreen> {
     }
   }
 }
+

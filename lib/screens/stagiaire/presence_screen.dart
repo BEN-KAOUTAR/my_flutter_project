@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -261,7 +261,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
     if (status == null) return 'Inconnu';
     switch (status.toUpperCase()) {
       case 'PRESENT':
-        return 'Présent';
+        return 'PrÃ©sent';
       case 'ABSENT':
         return 'Absent';
       case 'RETARD':
@@ -307,7 +307,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Consultez votre historique de présence',
+          'Consultez votre historique de prÃ©sence',
           style: GoogleFonts.poppins(
             fontSize: 16,
             color: AppTheme.textSecondary,
@@ -322,7 +322,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
       children: [
         Expanded(
           child: _buildStatCard(
-            'Présences',
+            'PrÃ©sences',
             '$_totalPresences',
             Icons.check_circle_outline_rounded,
             AppTheme.accentGreen,
@@ -455,8 +455,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
           children: [
             Text(
               _selectedDay != null 
-                  ? 'Présences du ${DateFormat('dd/MM/yyyy').format(_selectedDay!)}'
-                  : 'Historique récent',
+                  ? 'PrÃ©sences du ${DateFormat('dd/MM/yyyy').format(_selectedDay!)}'
+                  : 'Historique rÃ©cent',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -552,7 +552,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
                   ),
                 ),
                 Text(
-                  '$dayOfWeek • $moduleName',
+                  '$dayOfWeek â€¢ $moduleName',
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     color: AppTheme.textSecondary,
@@ -585,7 +585,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '$dateFormatted • $timeSlot',
+                      '$dateFormatted â€¢ $timeSlot',
                       style: GoogleFonts.poppins(
                         fontSize: 11,
                         color: AppTheme.textSecondary,
@@ -635,8 +635,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
           const SizedBox(height: 16),
           Text(
             _selectedDay != null 
-                ? 'Aucune présence ce jour' 
-                : 'Aucun historique de présence',
+                ? 'Aucune prÃ©sence ce jour' 
+                : 'Aucun historique de prÃ©sence',
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -646,8 +646,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
           const SizedBox(height: 4),
           Text(
             _selectedDay != null
-                ? 'Sélectionnez une autre date'
-                : 'Vos présences apparaîtront ici',
+                ? 'SÃ©lectionnez une autre date'
+                : 'Vos prÃ©sences apparaÃ®tront ici',
             style: GoogleFonts.poppins(
               fontSize: 13,
               color: AppTheme.textSecondary,
@@ -659,3 +659,4 @@ class _PresenceScreenState extends State<PresenceScreen> {
     );
   }
 }
+

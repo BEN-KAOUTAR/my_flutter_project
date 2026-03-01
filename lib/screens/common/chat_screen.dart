@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -253,7 +253,7 @@ class _ChatScreenState extends State<ChatScreen> {
       senderId: _currentUserId,
       receiverId: widget.otherUser?.id,
       groupId: widget.groupId,
-      content: text.isEmpty ? 'Fichier partagé' : text,
+      content: text.isEmpty ? 'Fichier partagÃ©' : text,
       timestamp: DateTime.now(),
       attachmentType: attachmentType,
       attachmentUrl: attachmentUrl,
@@ -330,7 +330,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 : _messages.isEmpty
                     ? Center(
                         child: Text(
-                          'Dites bonjour ! 👋',
+                          'Dites bonjour ! ðŸ‘‹',
                           style: GoogleFonts.poppins(color: AppTheme.textSecondary),
                         ),
                       )
@@ -426,9 +426,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
             if (msg.attachmentType != null) ...[
               _buildAttachment(msg, isMe),
-              if (msg.content.isNotEmpty && msg.content != 'Fichier partagé') const SizedBox(height: 8),
+              if (msg.content.isNotEmpty && msg.content != 'Fichier partagÃ©') const SizedBox(height: 8),
             ],
-            if (msg.content.isNotEmpty && msg.content != 'Fichier partagé')
+            if (msg.content.isNotEmpty && msg.content != 'Fichier partagÃ©')
               Text(
                 msg.content,
                 style: GoogleFonts.poppins(
@@ -667,7 +667,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    _selectedImage != null ? 'Image sélectionnée' : 
+                    _selectedImage != null ? 'Image sÃ©lectionnÃ©e' : 
                     _selectedFileBytes != null ? _selectedFileName! :
                     _selectedPDF != null ? _selectedPDF!.path.split('/').last : 
                     _selectedLink!,
@@ -747,4 +747,5 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
+
 

@@ -1,4 +1,4 @@
-class Affectation {
+﻿class Affectation {
   final int? id;
   final int formateurId;
   final int moduleId;
@@ -49,4 +49,5 @@ class Affectation {
     );
   }
 }
+
 
