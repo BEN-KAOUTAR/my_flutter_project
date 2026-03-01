@@ -125,7 +125,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'GÃ©rez les unitÃ©s de formation',
+                      'Gérez les unités de formation',
                       style: GoogleFonts.poppins(
                         fontSize: isMobile ? 12 : 14,
                         color: AppTheme.textSecondary,
@@ -344,7 +344,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'AnnÃ©e ${module.annee} â€¢ Semestre ${module.semestre}',
+                      'Année ${module.annee} • Semestre ${module.semestre}',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -1032,3 +1032,4 @@ class _ModulesScreenState extends State<ModulesScreen> {
     }
   }
 }
+

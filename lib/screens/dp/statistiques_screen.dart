@@ -75,7 +75,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Aucune donnÃ©e de progression disponible', style: GoogleFonts.poppins())),
+          SnackBar(content: Text('Aucune donnée de progression disponible', style: GoogleFonts.poppins())),
         );
       }
     }
@@ -177,12 +177,12 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<int>(
                   value: _selectedFiliereId,
-                  hint: Text('Toutes les filiÃ¨res', style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textPrimary)),
+                  hint: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textPrimary)),
                   icon: Icon(Icons.arrow_drop_down_rounded, color: AppTheme.textSecondary),
                   items: [
                     DropdownMenuItem<int>(
                       value: null, 
-                      child: Text('Toutes les filiÃ¨res', style: GoogleFonts.poppins(fontSize: 13))
+                      child: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 13))
                     ),
                     ..._filieres.map((f) => DropdownMenuItem(
                       value: f.id, 
@@ -245,7 +245,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
           childAspectRatio: aspectRatio,
           children: [
             DashboardSummaryCard(
-              label: 'Taux de rÃ©ussite',
+              label: 'Taux de réussite',
               value: '${(_stats['tauxReussite'] * 100).toInt()}%',
               icon: Icons.trending_up_rounded,
               color: AppTheme.accentOrange,
@@ -266,7 +266,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
               width: double.infinity,
             ),
             DashboardSummaryCard(
-              label: 'Heures validÃ©es',
+              label: 'Heures validées',
               value: '${_stats['heuresValidees'].toInt()}h',
               icon: Icons.access_time_filled_rounded,
               color: const Color(0xFF06B6D4),
@@ -291,7 +291,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
             children: [
               const Icon(Icons.chrome_reader_mode_outlined, size: 20, color: Color(0xFF06B6D4)),
               const SizedBox(width: 12),
-              Text('RÃ©partition par filiÃ¨re', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text('Répartition par filière', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
             ],
           ),
           const SizedBox(height: 32),
@@ -586,5 +586,6 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
     );
   }
 }
+
 
 

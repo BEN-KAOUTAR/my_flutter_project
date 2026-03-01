@@ -71,7 +71,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Consultez votre calendrier d\'examens et vos rÃ©sultats',
+                  'Consultez votre calendrier d\'examens et vos résultats',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: AppTheme.textSecondary,
@@ -87,9 +87,9 @@ class _ExamensScreenState extends State<ExamensScreen> {
             else
               Column(
                 children: [
-                  _buildExamList('Examens Ã  venir', _upcomingExams, true),
+                  _buildExamList('Examens à venir', _upcomingExams, true),
                   const SizedBox(height: 32),
-                  _buildExamList('Examens passÃ©s', _pastExams, false),
+                  _buildExamList('Examens passés', _pastExams, false),
                 ],
               ),
           ],
@@ -106,7 +106,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
           Icon(Icons.event_busy, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text(
-            'Aucun examen programmÃ©',
+            'Aucun examen programmé',
             style: GoogleFonts.poppins(fontSize: 18, color: AppTheme.textSecondary),
           ),
         ],
@@ -119,7 +119,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
       children: [
         Expanded(
           child: _buildStatCard(
-            'Ã€ venir',
+            'À venir',
             '${_upcomingExams.length}',
             Icons.event_available_rounded,
             AppTheme.primaryBlue,
@@ -128,7 +128,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: _buildStatCard(
-            'PassÃ©s',
+            'Passés',
             '${_pastExams.length}',
             Icons.history_rounded,
             AppTheme.textSecondary,
@@ -224,7 +224,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
                 exam['module_name'] ?? 'N/A', 
                 exam['type'] ?? 'Examen', 
                 formattedDate, 
-                'TerminÃ©'
+                'Terminé'
               );
             }
           },
@@ -277,7 +277,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  'PlanifiÃ©',
+                  'Planifié',
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -320,7 +320,7 @@ class _ExamensScreenState extends State<ExamensScreen> {
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  '$type â€¢ $date',
+                  '$type • $date',
                   style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary),
                 ),
               ],
@@ -355,5 +355,6 @@ class _ExamensScreenState extends State<ExamensScreen> {
     );
   }
 }
+
 
 

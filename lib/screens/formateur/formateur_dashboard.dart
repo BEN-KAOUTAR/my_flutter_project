@@ -148,14 +148,14 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
   String _getScreenTitle(int index) {
     switch (index) {
       case 0: return 'Academic Pro';
-      case 1: return 'Mes sÃ©ances';
+      case 1: return 'Mes séances';
       case 2: return 'Emploi du temps';
       case 3: return 'Gestion des notes';
       case 4: return 'Messages';
       case 5: return 'Mon Profil';
-      case 6: return 'RÃ©clamations';
+      case 6: return 'Réclamations';
       case 7: return 'Planification Examens';
-      case 8: return 'Suivi de prÃ©sence';
+      case 8: return 'Suivi de présence';
       default: return 'Academic Pro';
     }
   }
@@ -326,7 +326,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.history_rounded,
-                        label: 'Mes sÃ©ances',
+                        label: 'Mes séances',
                         index: 1,
                         isDark: isPermanent,
                       ),
@@ -350,7 +350,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.checklist_rtl_rounded,
-                        label: 'Suivi de prÃ©sence',
+                        label: 'Suivi de présence',
                         index: 8,
                         isDark: isPermanent,
                       ),
@@ -370,7 +370,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.report_problem_rounded,
-                        label: 'RÃ©clamations',
+                        label: 'Réclamations',
                         index: 6,
                         isDark: isPermanent,
                         badgeCount: notifProvider.unreadReclamationsCount,
@@ -387,7 +387,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
             child: ListTile(
               leading: const Icon(Icons.logout_rounded, color: AppTheme.accentRed, size: 24),
               title: Text(
-                'DÃ©connexion', 
+                'Déconnexion', 
                 style: GoogleFonts.poppins(
                   color: AppTheme.accentRed, 
                   fontWeight: FontWeight.w600,
@@ -599,14 +599,14 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                   runSpacing: 12,
                   children: [
                     DashboardSummaryCard(
-                      label: 'Modules affectÃ©s',
+                      label: 'Modules affectés',
                       value: '${_affectationsWithProgress.length}',
                       icon: Icons.book_outlined,
                       color: AppTheme.primaryBlue,
                       width: cardWidth,
                     ),
                     DashboardSummaryCard(
-                      label: 'Heures effectuÃ©es',
+                      label: 'Heures effectuées',
                       value: '${_totalHeures.toInt()}h',
                       sublabel: 'sur 910h',
                       icon: Icons.timer_outlined,
@@ -650,7 +650,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                       Icon(Icons.inbox, size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
                       const SizedBox(height: 12),
                       Text(
-                        'Aucun module affectÃ©',
+                        'Aucun module affecté',
                         style: GoogleFonts.poppins(color: AppTheme.textSecondary),
                       ),
                     ],
@@ -676,7 +676,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Examens Ã  venir',
+              'Examens à venir',
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -699,7 +699,7 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
                   Icon(Icons.event_note_rounded, color: AppTheme.textSecondary.withValues(alpha: 0.3), size: 48),
                   const SizedBox(height: 12),
                   Text(
-                    'Aucun examen programmÃ©',
+                    'Aucun examen programmé',
                     style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                   ),
                 ],
@@ -885,4 +885,5 @@ class _FormateurDashboardState extends State<FormateurDashboard> {
     );
   }
 }
+
 

@@ -123,7 +123,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Organisez vos promotions par filiÃ¨re',
+                      'Organisez vos promotions par filière',
                       style: GoogleFonts.poppins(
                         fontSize: isMobile ? 12 : 14,
                         color: AppTheme.textSecondary,
@@ -197,12 +197,12 @@ class _GroupesScreenState extends State<GroupesScreen> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int?>(
                     value: _selectedFiliereId,
-                    hint: Text('Toutes les filiÃ¨res', style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary)),
+                    hint: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary)),
                     icon: const Icon(Icons.filter_list_rounded, color: AppTheme.textSecondary, size: 20),
                     items: [
                       DropdownMenuItem(
                         value: null,
-                        child: Text('Toutes les filiÃ¨res', style: GoogleFonts.poppins(fontSize: 14)),
+                        child: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 14)),
                       ),
                       ..._filieres.map((f) => DropdownMenuItem(
                         value: f.id,
@@ -298,7 +298,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                       ],
                     ),
                     Text(
-                      'AnnÃ©e scolaire ${groupe.anneeScolaire}',
+                      'Année scolaire ${groupe.anneeScolaire}',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -335,7 +335,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  '${groupe.annee}${groupe.annee == 1 ? 'Ã¨re' : 'Ã¨me'} annÃ©e',
+                  '${groupe.annee}${groupe.annee == 1 ? 'ère' : 'ème'} année',
                   style: GoogleFonts.poppins(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
@@ -350,7 +350,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'CapacitÃ© du groupe',
+                'Capacité du groupe',
                 style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppTheme.textPrimary),
               ),
               Text(
@@ -458,7 +458,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'AnnÃ©e scolaire *',
+                    'Année scolaire *',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -487,7 +487,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'FiliÃ¨re *',
+                              'Filière *',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -517,7 +517,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'AnnÃ©e d\'Ã©tude *',
+                              'Année d\'étude *',
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -533,9 +533,9 @@ class _GroupesScreenState extends State<GroupesScreen> {
                                 enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
                               ),
                               items: [
-                                DropdownMenuItem(value: 1, child: Text('1Ã¨re annÃ©e', style: GoogleFonts.poppins(fontSize: 14))),
-                                DropdownMenuItem(value: 2, child: Text('2Ã¨me annÃ©e', style: GoogleFonts.poppins(fontSize: 14))),
-                                DropdownMenuItem(value: 3, child: Text('3Ã¨me annÃ©e', style: GoogleFonts.poppins(fontSize: 14))),
+                                DropdownMenuItem(value: 1, child: Text('1ère année', style: GoogleFonts.poppins(fontSize: 14))),
+                                DropdownMenuItem(value: 2, child: Text('2ème année', style: GoogleFonts.poppins(fontSize: 14))),
+                                DropdownMenuItem(value: 3, child: Text('3ème année', style: GoogleFonts.poppins(fontSize: 14))),
                               ],
                               onChanged: (value) => selectedAnnee = value ?? 1,
                             ),
@@ -596,7 +596,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
                         child: Text(
-                          isEdit ? 'Modifier' : 'CrÃ©er',
+                          isEdit ? 'Modifier' : 'Créer',
                           style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
@@ -666,7 +666,7 @@ class _GroupesScreenState extends State<GroupesScreen> {
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Text(
-              'Toutes les filiÃ¨res',
+              'Toutes les filières',
               style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500, color: AppTheme.textPrimary),
             ),
           ),
@@ -695,5 +695,6 @@ class _GroupesScreenState extends State<GroupesScreen> {
     });
   }
 }
+
 
 

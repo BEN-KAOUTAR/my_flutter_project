@@ -23,7 +23,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
   List<Module> _modules = [];
   bool _isLoading = true;
   double _average = 0;
-  
+
   @override
   void initState() {
     super.initState();
@@ -37,13 +37,17 @@ class _ReleveScreenState extends State<ReleveScreen> {
 
     if (user != null) {
       try {
-        final notes = await DatabaseHelper.instance.getNotesByStagiaire(user.id!);
+        final notes = await DatabaseHelper.instance.getNotesByStagiaire(
+          user.id!,
+        );
         final modules = await DatabaseHelper.instance.getAllModules();
-        
+
         final validatedExams = notes.where((n) => n.validee).toList();
         double avg = 0;
         if (validatedExams.isNotEmpty) {
-           avg = validatedExams.map((n) => n.valeur).reduce((a, b) => a + b) / validatedExams.length;
+          avg =
+              validatedExams.map((n) => n.valeur).reduce((a, b) => a + b) /
+              validatedExams.length;
         }
 
         if (mounted) {
@@ -66,7 +70,13 @@ class _ReleveScreenState extends State<ReleveScreen> {
   }
 
   String _getModuleName(int id) {
-    return _modules.firstWhere((m) => m.id == id, orElse: () => Module(nom: 'Inconnu', masseHoraireTotale: 0, filiereId: 0)).nom;
+    return _modules
+        .firstWhere(
+          (m) => m.id == id,
+          orElse: () =>
+              Module(nom: 'Inconnu', masseHoraireTotale: 0, filiereId: 0),
+        )
+        .nom;
   }
 
   @override
@@ -84,7 +94,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Votre bulletin dÃ©taillÃ©',
+                  'Votre bulletin détaillé',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: AppTheme.textSecondary,
@@ -120,7 +130,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Ce document est fourni Ã  titre informatif. Seul le relevÃ© cachetÃ© par la direction est officiel.',
+              'Ce document est fourni à titre informatif. Seul le relevé cacheté par la direction est officiel.',
               style: GoogleFonts.poppins(
                 fontSize: 13,
                 color: const Color(0xFF9A3412),
@@ -153,7 +163,7 @@ class _ReleveScreenState extends State<ReleveScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user?.nom ?? 'Ã‰tudiant',
+                    user?.nom ?? 'Étudiant',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -171,19 +181,39 @@ class _ReleveScreenState extends State<ReleveScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppTheme.primaryBlue.withValues(alpha: 0.1),
-                backgroundImage: user?.photoUrl != null && user!.photoUrl!.isNotEmpty
+                backgroundImage:
+                    user?.photoUrl != null && user!.photoUrl!.isNotEmpty
                     ? (user.photoUrl!.startsWith('http')
-                        ? NetworkImage(user.photoUrl!) as ImageProvider
-                        : (kIsWeb 
-                            ? (user.photoUrl!.startsWith('data:image') 
-                                ? MemoryImage(base64Decode(user.photoUrl!.split(',').last)) as ImageProvider
-                                : const AssetImage('assets/images/placeholder.png') as ImageProvider)
-                            : FileImage(File(user.photoUrl!.replaceFirst('file://', ''))) as ImageProvider))
+                          ? NetworkImage(user.photoUrl!) as ImageProvider
+                          : (kIsWeb
+                                ? (user.photoUrl!.startsWith('data:image')
+                                      ? MemoryImage(
+                                              base64Decode(
+                                                user.photoUrl!.split(',').last,
+                                              ),
+                                            )
+                                            as ImageProvider
+                                      : const AssetImage(
+                                              'assets/images/placeholder.png',
+                                            )
+                                            as ImageProvider)
+                                : FileImage(
+                                        File(
+                                          user.photoUrl!.replaceFirst(
+                                            'file://',
+                                            '',
+                                          ),
+                                        ),
+                                      )
+                                      as ImageProvider))
                     : null,
                 child: user?.photoUrl == null || user!.photoUrl!.isEmpty
                     ? Text(
                         (user?.nom ?? 'S')[0],
-                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryBlue,
+                        ),
                       )
                     : null,
               ),
@@ -195,7 +225,10 @@ class _ReleveScreenState extends State<ReleveScreen> {
             children: [
               _buildSimpleStat('Moyenne', _average.toStringAsFixed(2)),
               _buildSimpleStat('Modules', '${_notes.length}'),
-              _buildSimpleStat('DÃ©cision', _average >= 10 ? 'Admis' : 'AjournÃ©'),
+              _buildSimpleStat(
+                'Décision',
+                _average >= 10 ? 'Admis' : 'Ajourné',
+              ),
             ],
           ),
         ],
@@ -247,38 +280,55 @@ class _ReleveScreenState extends State<ReleveScreen> {
                   flex: 3,
                   child: Text(
                     'Module',
-                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textSecondary),
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ),
                 Expanded(
                   child: Text(
                     'Note/20',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textSecondary),
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    'RÃ©sultat',
+                    'Résultat',
                     textAlign: TextAlign.right,
-                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textSecondary),
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           if (_notes.isEmpty)
-             Padding(
-               padding: const EdgeInsets.all(32.0),
-               child: Text('Aucune note validÃ©e', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
-             )
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Text(
+                'Aucune note validée',
+                style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+              ),
+            )
           else
-            ..._notes.map((n) => _buildTableRow(
-              _getModuleName(n.moduleId),
-              n.valeur.toStringAsFixed(2),
-              n.valeur >= 10 ? 'ValidÃ©' : 'Non ValidÃ©'
-            )),
-          
+            ..._notes.map(
+              (n) => _buildTableRow(
+                _getModuleName(n.moduleId),
+                n.valeur.toStringAsFixed(2),
+                n.valeur >= 10 ? 'Validé' : 'Non Validé',
+              ),
+            ),
+
           const SizedBox(height: 12),
         ],
       ),
@@ -297,14 +347,20 @@ class _ReleveScreenState extends State<ReleveScreen> {
             flex: 3,
             child: Text(
               module,
-              style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           Expanded(
             child: Text(
               note,
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Expanded(
@@ -314,7 +370,9 @@ class _ReleveScreenState extends State<ReleveScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color:  result == 'ValidÃ©' ? AppTheme.accentGreen : AppTheme.accentRed,
+                color: result == 'Validé'
+                    ? AppTheme.accentGreen
+                    : AppTheme.accentRed,
               ),
             ),
           ),
@@ -333,24 +391,27 @@ class _ReleveScreenState extends State<ReleveScreen> {
           if (user != null && _notes.isNotEmpty) {
             PdfService.generateNoteReportPdf(user, _notes, _modules);
           } else {
-             ScaffoldMessenger.of(context).showSnackBar(
-               const SnackBar(content: Text('Aucune donnÃ©e Ã  exporter')),
-             );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Aucune donnée à exporter')),
+            );
           }
         },
         icon: const Icon(Icons.file_download_outlined, color: Colors.white),
         label: Text(
-          'TÃ©lÃ©charger le PDF',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
+          'Télécharger le PDF',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.primaryBlue,
           padding: const EdgeInsets.symmetric(vertical: 18),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
   }
 }
-
-

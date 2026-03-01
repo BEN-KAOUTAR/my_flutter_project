@@ -52,15 +52,15 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
   Future<void> _submitRequest() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('SÃ©lectionnez un rÃ´le')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sélectionnez un rôle')));
       return;
     }
     if (_selectedDirector == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('SÃ©lectionnez un directeur')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sélectionnez un directeur')));
       return;
     }
     if (_selectedRole == 'STAGIAIRE' && _selectedGroupe == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('SÃ©lectionnez un groupe')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sélectionnez un groupe')));
       return;
     }
 
@@ -84,7 +84,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Demande envoyÃ©e Ã  ${_selectedDirector!.nom}'),
+            content: Text('Demande envoyée à ${_selectedDirector!.nom}'),
             backgroundColor: AppTheme.accentGreen,
           ),
         );
@@ -117,7 +117,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Demande de CrÃ©ation de Compte',
+                  'Demande de Création de Compte',
                   style: GoogleFonts.poppins(
                     fontSize: ResponsiveLayout.respSize(context, 20, 24, 28), 
                     fontWeight: FontWeight.bold
@@ -126,7 +126,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Envoyez une demande au Directeur PÃ©dagogique pour crÃ©er votre compte.',
+                  'Envoyez une demande au Directeur Pédagogique pour créer votre compte.',
                   style: GoogleFonts.poppins(
                     fontSize: ResponsiveLayout.respSize(context, 13, 14, 15), 
                     color: AppTheme.textSecondary
@@ -136,7 +136,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                 const SizedBox(height: 24),
                 
                 DropdownButtonFormField<User>(
-                  decoration: const InputDecoration(labelText: 'Directeur PÃ©dagogique'),
+                  decoration: const InputDecoration(labelText: 'Directeur Pédagogique'),
                   value: _selectedDirector,
                   items: _directors.map((dp) => DropdownMenuItem(value: dp, child: Text(dp.nom))).toList(),
                   onChanged: (val) {
@@ -150,7 +150,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                 const SizedBox(height: 16),
 
                 DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: 'Votre RÃ´le'),
+                  decoration: const InputDecoration(labelText: 'Votre Rôle'),
                   value: _selectedRole,
                   items: const [
                     DropdownMenuItem(value: 'STAGIAIRE', child: Text('Stagiaire')),
@@ -163,7 +163,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
 
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Nom & PrÃ©nom', prefixIcon: Icon(Icons.person_outline)),
+                  decoration: const InputDecoration(labelText: 'Nom & Prénom', prefixIcon: Icon(Icons.person_outline)),
                   validator: (val) => val!.isEmpty ? 'Requis' : null,
                 ),
                 const SizedBox(height: 16),
@@ -180,7 +180,7 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'TÃ©lÃ©phone (ex: 06... ou +2126...)', prefixIcon: Icon(Icons.phone_outlined)),
+                  decoration: const InputDecoration(labelText: 'Téléphone (ex: 06... ou +2126...)', prefixIcon: Icon(Icons.phone_outlined)),
                   keyboardType: TextInputType.phone,
                   validator: (val) {
                     if (val == null || val.isEmpty) return 'Requis';
@@ -253,5 +253,6 @@ class _AccountRequestDialogState extends State<AccountRequestDialog> {
     );
   }
 }
+
 
 

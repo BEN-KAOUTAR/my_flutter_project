@@ -115,7 +115,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'GÃ©rez votre Ã©quipe pÃ©dagogique',
+                      'Gérez votre équipe pédagogique',
                       style: GoogleFonts.poppins(
                         fontSize: isMobile ? 12 : 14,
                         color: AppTheme.textSecondary,
@@ -202,7 +202,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                       ),
                       DropdownMenuItem(
                         value: 'worked_hrs',
-                        child: Text('Heures affectÃ©es', style: GoogleFonts.poppins(fontSize: 14)),
+                        child: Text('Heures affectées', style: GoogleFonts.poppins(fontSize: 14)),
                       ),
                     ],
                     onChanged: (value) => setState(() => _sortBy = value!),
@@ -322,7 +322,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                        _launchPhone(formateur.phone!);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Aucun numÃ©ro de tÃ©lÃ©phone renseignÃ©')),
+                        const SnackBar(content: Text('Aucun numéro de téléphone renseigné')),
                       );
                     }
                   }),
@@ -471,7 +471,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Email acadÃ©mique *',
+                    'Email académique *',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -492,7 +492,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'TÃ©lÃ©phone',
+                    'Téléphone',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -525,7 +525,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                     controller: passwordController,
                     obscureText: obscurePassword,
                     decoration: InputDecoration(
-                      hintText: 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢',
+                      hintText: '••••••••',
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
@@ -541,7 +541,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'SpÃ©cialitÃ©',
+                    'Spécialité',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -552,7 +552,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                   TextField(
                     controller: specialiteController,
                     decoration: InputDecoration(
-                      hintText: 'Ex: DÃ©veloppement Web',
+                      hintText: 'Ex: Développement Web',
                       hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
@@ -591,7 +591,7 @@ class _FormateursScreenState extends State<FormateursScreen> {
                             final phoneRegex = RegExp(r'^(0|\+212)\d{9}$');
                             if (!phoneRegex.hasMatch(phone.replaceAll(' ', ''))) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Format de tÃ©lÃ©phone invalide (Ex: 06... ou +212...)', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
+                                SnackBar(content: Text('Format de téléphone invalide (Ex: 06... ou +212...)', style: GoogleFonts.poppins()), backgroundColor: AppTheme.accentRed),
                               );
                               return;
                             }
@@ -706,4 +706,5 @@ class _FormateursScreenState extends State<FormateursScreen> {
     }
   }
 }
+
 

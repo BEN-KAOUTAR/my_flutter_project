@@ -92,7 +92,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
           child: FloatingActionButton.extended(
             onPressed: () => _showAddSeanceDialog(),
             icon: const Icon(Icons.add_rounded, color: Colors.white),
-            label: Text('Nouvelle sÃ©ance', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)),
+            label: Text('Nouvelle séance', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)),
             backgroundColor: AppTheme.formateurColor,
           ),
         ),
@@ -112,7 +112,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
                Text(
-                 'GÃ©rez vos interventions et le contenu abordÃ©',
+                 'Gérez vos interventions et le contenu abordé',
                  style: GoogleFonts.poppins(
                    fontSize: 14,
                    color: AppTheme.textSecondary,
@@ -175,7 +175,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Aucune sÃ©ance enregistrÃ©e',
+            'Aucune séance enregistrée',
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -184,7 +184,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Commencez par ajouter votre premiÃ¨re sÃ©ance',
+            'Commencez par ajouter votre première séance',
             style: GoogleFonts.poppins(color: AppTheme.textSecondary),
           ),
         ],
@@ -233,7 +233,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
                         ),
                       ),
                       Text(
-                        '${dateFormat.format(seance.date)}${seance.heureDebut != null ? ' Ã  ${seance.heureDebut}' : ''}',
+                        '${dateFormat.format(seance.date)}${seance.heureDebut != null ? ' à ${seance.heureDebut}' : ''}',
                         style: GoogleFonts.poppins(
                           fontSize: 13,
                           color: AppTheme.textSecondary,
@@ -320,7 +320,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        isValidated ? 'VALIDÃ‰E' : 'EN ATTENTE',
+                        isValidated ? 'VALIDÉE' : 'EN ATTENTE',
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -359,8 +359,8 @@ class _SeancesScreenState extends State<SeancesScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Supprimer la sÃ©ance ?', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
-        content: Text('Cette action est irrÃ©versible.', style: GoogleFonts.poppins()),
+        title: Text('Supprimer la séance ?', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        content: Text('Cette action est irréversible.', style: GoogleFonts.poppins()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -432,7 +432,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        isEditing ? 'Modifier la sÃ©ance' : 'Nouvelle sÃ©ance',
+                        isEditing ? 'Modifier la séance' : 'Nouvelle séance',
                         style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       IconButton(
@@ -472,7 +472,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
                     },
                     child: InputDecorator(
                       decoration: const InputDecoration(
-                        labelText: 'Date de la sÃ©ance',
+                        labelText: 'Date de la séance',
                         prefixIcon: Icon(Icons.calendar_today_rounded),
                       ),
                       child: Text(DateFormat('dd MMMM yyyy').format(selectedDate)),
@@ -491,15 +491,15 @@ class _SeancesScreenState extends State<SeancesScreen> {
                     },
                     child: InputDecorator(
                       decoration: const InputDecoration(
-                        labelText: 'Heure de dÃ©but',
+                        labelText: 'Heure de début',
                         prefixIcon: Icon(Icons.access_time_rounded),
                       ),
-                      child: Text(selectedTime?.format(context) ?? 'SÃ©lectionner l\'heure'),
+                      child: Text(selectedTime?.format(context) ?? 'Sélectionner l\'heure'),
                     ),
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'DurÃ©e de la sÃ©ance: ${duree.toInt()}h',
+                    'Durée de la séance: ${duree.toInt()}h',
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
                   ),
                   Slider(
@@ -515,8 +515,8 @@ class _SeancesScreenState extends State<SeancesScreen> {
                     controller: contenuController,
                     maxLines: 4,
                     decoration: const InputDecoration(
-                      labelText: 'Contenu abordÃ©',
-                      hintText: 'DÃ©crivez les chapitres ou exercices traitÃ©s...',
+                      labelText: 'Contenu abordé',
+                      hintText: 'Décrivez les chapitres ou exercices traités...',
                       prefixIcon: Icon(Icons.description_rounded),
                       alignLabelWithHint: true,
                     ),
@@ -563,7 +563,7 @@ class _SeancesScreenState extends State<SeancesScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: Text(
-                      isEditing ? 'Mettre Ã  jour' : 'Enregistrer la sÃ©ance',
+                      isEditing ? 'Mettre à jour' : 'Enregistrer la séance',
                       style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)
                     ),
                   ),
@@ -576,5 +576,6 @@ class _SeancesScreenState extends State<SeancesScreen> {
     );
   }
 }
+
 
 

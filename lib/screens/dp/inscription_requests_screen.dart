@@ -71,7 +71,7 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
         Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(accept ? 'Demande acceptÃ©e' : 'Demande refusÃ©e'),
+            content: Text(accept ? 'Demande acceptée' : 'Demande refusée'),
             backgroundColor: accept ? AppTheme.accentGreen : AppTheme.accentRed,
           ),
         );
@@ -184,7 +184,7 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
                 children: [
                   Icon(Icons.group_outlined, size: 16, color: AppTheme.textSecondary),
                   const SizedBox(width: 4),
-                  Text('${req.groupe} - AnnÃ©e ${req.annee}', style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textPrimary)),
+                  Text('${req.groupe} - Année ${req.annee}', style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textPrimary)),
                 ],
               ),
             ],
@@ -222,5 +222,6 @@ class _InscriptionRequestsScreenState extends State<InscriptionRequestsScreen> {
     );
   }
 }
+
 
 

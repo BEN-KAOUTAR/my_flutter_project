@@ -51,7 +51,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors de la sÃ©lection du fichier: $e'), backgroundColor: AppTheme.accentRed),
+          SnackBar(content: Text('Erreur lors de la sélection du fichier: $e'), backgroundColor: AppTheme.accentRed),
         );
       }
     }
@@ -81,7 +81,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
       if (mounted) {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('RÃ©clamation envoyÃ©e avec succÃ¨s'), backgroundColor: AppTheme.accentGreen),
+          const SnackBar(content: Text('Réclamation envoyée avec succès'), backgroundColor: AppTheme.accentGreen),
         );
       }
     } catch (e) {
@@ -112,7 +112,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Nouvelle rÃ©clamation',
+                    'Nouvelle réclamation',
                     style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
@@ -131,7 +131,7 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'NOTE', child: Text('ProblÃ¨me de note')),
+                  DropdownMenuItem(value: 'NOTE', child: Text('Problème de note')),
                   DropdownMenuItem(value: 'ABSENCE', child: Text('Justification d\'absence')),
                   DropdownMenuItem(value: 'AUTRE', child: Text('Autre demande')),
                 ],
@@ -226,5 +226,6 @@ class _CreateReclamationDialogState extends State<CreateReclamationDialog> {
     );
   }
 }
+
 
 

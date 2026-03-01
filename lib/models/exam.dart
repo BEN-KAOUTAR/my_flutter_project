@@ -7,11 +7,11 @@
 
   String get displayName {
     switch (this) {
-      case ExamStatus.planifie: return 'PlanifiÃ©';
-      case ExamStatus.publie: return 'PubliÃ©';
-      case ExamStatus.realise: return 'RÃ©alisÃ©';
-      case ExamStatus.annule: return 'AnnulÃ©';
-      case ExamStatus.rejete: return 'RejetÃ©';
+      case ExamStatus.planifie: return 'Planifié';
+      case ExamStatus.publie: return 'Publié';
+      case ExamStatus.realise: return 'Réalisé';
+      case ExamStatus.annule: return 'Annulé';
+      case ExamStatus.rejete: return 'Rejeté';
     }
   }
 }
@@ -58,4 +58,5 @@ class Exam {
     );
   }
 }
+
 

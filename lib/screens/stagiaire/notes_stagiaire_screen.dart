@@ -81,7 +81,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Vos rÃ©sultats et Ã©valuations',
+                  'Vos résultats et évaluations',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: AppTheme.textSecondary,
@@ -102,7 +102,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
                     _buildAverageCard(),
                     const SizedBox(height: 32),
                     Text(
-                      'DÃ©tail des notes',
+                      'Détail des notes',
                       style: GoogleFonts.poppins(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
           Icon(Icons.assignment_turned_in_outlined, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text(
-            'Aucune note publiÃ©e',
+            'Aucune note publiée',
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -148,7 +148,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
             ),
           ),
           Text(
-            'Vos rÃ©sultats apparaÃ®tront ici dÃ¨s validation',
+            'Vos résultats apparaîtront ici dès validation',
             style: GoogleFonts.poppins(
               fontSize: 13,
               color: AppTheme.textSecondary,
@@ -179,7 +179,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'MOYENNE GÃ‰NÃ‰RALE',
+                  'MOYENNE GÉNÉRALE',
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -216,7 +216,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      '${_notes.length} modules validÃ©s',
+                      '${_notes.length} modules validés',
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -297,7 +297,7 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'â€¢',
+                          '•',
                           style: TextStyle(color: AppTheme.textSecondary),
                         ),
                         const SizedBox(width: 8),
@@ -345,5 +345,6 @@ class _NotesStagiaireScreenState extends State<NotesStagiaireScreen> {
     );
   }
 }
+
 
 

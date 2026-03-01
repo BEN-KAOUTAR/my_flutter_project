@@ -2,31 +2,39 @@
 import '../models/module.dart';
 
 class AnalysisService {
-  static Map<String, dynamic> predictPerformance(List<Note> notes, List<Module> modules) {
+  static Map<String, dynamic> predictPerformance(
+    List<Note> notes,
+    List<Module> modules,
+  ) {
     if (notes.isEmpty) {
       return {
-        'prediction': 'DonnÃ©es insuffisantes',
+        'prediction': 'Données insuffisantes',
         'score': 0.0,
-        'recommendation': 'Commencez Ã  passer des examens pour obtenir une analyse.',
+        'recommendation':
+            'Commencez à passer des examens pour obtenir une analyse.',
         'status': 'neutral',
       };
     }
 
     final validatedNotes = notes.where((n) => n.validee).toList();
     if (validatedNotes.isEmpty) {
-       return {
+      return {
         'prediction': 'En attente de validation',
         'score': 0.1,
-        'recommendation': 'Vos notes sont en cours de validation par l\'administration.',
+        'recommendation':
+            'Vos notes sont en cours de validation par l\'administration.',
         'status': 'neutral',
       };
     }
 
-    final average = validatedNotes.map((n) => n.valeur).reduce((a, b) => a + b) / validatedNotes.length;
-    
+    final average =
+        validatedNotes.map((n) => n.valeur).reduce((a, b) => a + b) /
+        validatedNotes.length;
+
     bool isImproving = false;
     if (validatedNotes.length >= 2) {
-      final sortedNotes = List<Note>.from(validatedNotes)..sort((a, b) => b.dateExamen.compareTo(a.dateExamen));
+      final sortedNotes = List<Note>.from(validatedNotes)
+        ..sort((a, b) => b.dateExamen.compareTo(a.dateExamen));
       if (sortedNotes[0].valeur >= sortedNotes[1].valeur) {
         isImproving = true;
       }
@@ -40,24 +48,27 @@ class AnalysisService {
     if (average >= 16) {
       prediction = 'Excellente progression';
       score = 0.95;
-      recommendation = isImproving 
-          ? 'Performance exceptionnelle ! Vous maÃ®trisez parfaitement les concepts. Continuez sur cette lancÃ©e.'
-          : 'TrÃ¨s haut niveau. Restez vigilant pour maintenir cette excellence.';
+      recommendation = isImproving
+          ? 'Performance exceptionnelle ! Vous maîtrisez parfaitement les concepts. Continuez sur cette lancée.'
+          : 'Très haut niveau. Restez vigilant pour maintenir cette excellence.';
       status = 'success';
     } else if (average >= 13) {
-      prediction = 'Bonne maÃ®trise';
+      prediction = 'Bonne maîtrise';
       score = 0.8;
-      recommendation = 'Solide comprÃ©hension des modules. Approfondissez les dÃ©tails techniques pour atteindre l\'excellence.';
+      recommendation =
+          'Solide compréhension des modules. Approfondissez les détails techniques pour atteindre l\'excellence.';
       status = 'success';
     } else if (average >= 10) {
       prediction = 'Niveau satisfaisant';
       score = 0.6;
-      recommendation = 'Moyenne atteinte mais des lacunes persistent. Identifiez les modules faibles pour les renforcer.';
+      recommendation =
+          'Moyenne atteinte mais des lacunes persistent. Identifiez les modules faibles pour les renforcer.';
       status = 'warning';
     } else {
       prediction = 'Besoin de soutien';
       score = 0.3;
-      recommendation = 'DifficultÃ©s dÃ©tectÃ©es. Il est fortement conseillÃ© de solliciter des sÃ©ances de remÃ©diation.';
+      recommendation =
+          'Difficultés détectées. Il est fortement conseillé de solliciter des séances de remédiation.';
       status = 'danger';
     }
 
@@ -71,7 +82,9 @@ class AnalysisService {
     };
   }
 
-  static Map<String, dynamic> analyzeGroupPerformance(List<Map<String, dynamic>> studentsData) {
+  static Map<String, dynamic> analyzeGroupPerformance(
+    List<Map<String, dynamic>> studentsData,
+  ) {
     if (studentsData.isEmpty) return {'status': 'no_data'};
 
     double totalAverage = 0;
@@ -82,21 +95,24 @@ class AnalysisService {
     for (var student in studentsData) {
       final avg = (student['average'] as num).toDouble();
       totalAverage += avg;
-      if (avg >= 12) successCount++;
-      else if (avg >= 10) warningCount++;
-      else dangerCount++;
+      if (avg >= 12)
+        successCount++;
+      else if (avg >= 10)
+        warningCount++;
+      else
+        dangerCount++;
     }
 
     final groupAverage = totalAverage / studentsData.length;
-    
+
     return {
       'group_average': groupAverage,
       'success_rate': (successCount / studentsData.length) * 100,
       'warning_rate': (warningCount / studentsData.length) * 100,
       'danger_rate': (dangerCount / studentsData.length) * 100,
-      'overall_status': groupAverage >= 14 ? 'Excellent' : (groupAverage >= 11 ? 'Satisfaisant' : 'Ã€ surveiller'),
+      'overall_status': groupAverage >= 14
+          ? 'Excellent'
+          : (groupAverage >= 11 ? 'Satisfaisant' : 'À surveiller'),
     };
   }
 }
-
-

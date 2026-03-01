@@ -124,7 +124,7 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
           Icon(Icons.event_note_outlined, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text(
-            'Aucun examen programmÃ©',
+            'Aucun examen programmé',
             style: GoogleFonts.poppins(fontSize: 18, color: AppTheme.textSecondary),
           ),
         ],
@@ -252,7 +252,7 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
                       if (date != null) setModalState(() => selectedDate = date);
                     },
                     child: InputDecorator(
-                      decoration: const InputDecoration(labelText: 'Date prÃ©vue'),
+                      decoration: const InputDecoration(labelText: 'Date prévue'),
                       child: Text(DateFormat('dd MMMM yyyy').format(selectedDate)),
                     ),
                   ),
@@ -351,4 +351,5 @@ class _ExamPlanningScreenState extends State<ExamPlanningScreen> {
     }
   }
 }
+
 

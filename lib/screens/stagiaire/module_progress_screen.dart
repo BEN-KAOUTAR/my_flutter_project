@@ -233,7 +233,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Aucun module assignÃ©',
+            'Aucun module assigné',
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -241,7 +241,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
             ),
           ),
           Text(
-            'Vos modules apparaÃ®tront ici dÃ¨s qu\'ils seront assignÃ©s',
+            'Vos modules apparaîtront ici dès qu\'ils seront assignés',
             style: GoogleFonts.poppins(
               fontSize: 13,
               color: AppTheme.textSecondary,
@@ -346,7 +346,7 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStatChip(
-                label: 'ComplÃ©tÃ©',
+                label: 'Complété',
                 value: '${completedHours.toStringAsFixed(0)}h',
                 color: progressColor,
               ),
@@ -398,4 +398,5 @@ class _ModuleProgressScreenState extends State<ModuleProgressScreen> {
     );
   }
 }
+
 

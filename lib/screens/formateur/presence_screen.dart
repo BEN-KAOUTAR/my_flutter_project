@@ -144,7 +144,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erreur lors du chargement des donnÃ©es. Veuillez rÃ©essayer.')),
+          const SnackBar(content: Text('Erreur lors du chargement des données. Veuillez réessayer.')),
         );
       }
     }
@@ -213,7 +213,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
     if (_selectedGroupeId == null) return;
     if (_isValidated) {
        ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cette fiche de prÃ©sence a Ã©tÃ© validÃ©e par le DP et ne peut plus Ãªtre modifiÃ©e.')),
+        const SnackBar(content: Text('Cette fiche de présence a été validée par le DP et ne peut plus être modifiée.')),
       );
       return;
     }
@@ -251,7 +251,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
     setState(() => _isLoading = false);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PrÃ©sence enregistrÃ©e avec succÃ¨s')),
+        const SnackBar(content: Text('Présence enregistrée avec succès')),
       );
     }
   }
@@ -268,7 +268,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Marquez la prÃ©sence de vos groupes',
+                'Marquez la présence de vos groupes',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: AppTheme.textSecondary,
@@ -282,7 +282,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _groupes.isEmpty
-                  ? Center(child: Text('Aucun groupe assignÃ©', style: GoogleFonts.poppins(color: AppTheme.textSecondary)))
+                  ? Center(child: Text('Aucun groupe assigné', style: GoogleFonts.poppins(color: AppTheme.textSecondary)))
                   : _selectedDate.weekday == DateTime.sunday
                       ? Center(
                           child: Column(
@@ -291,7 +291,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
                               Icon(Icons.event_busy_rounded, size: 60, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
                               const SizedBox(height: 16),
                               Text(
-                                'Aucune sÃ©ance le dimanche',
+                                'Aucune séance le dimanche',
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   color: AppTheme.textSecondary,
@@ -401,7 +401,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
               const Icon(Icons.event_note_rounded, color: AppTheme.primaryBlue),
               const SizedBox(width: 12),
               Text(
-                'Vos sÃ©ances d\'aujourd\'hui',
+                'Vos séances d\'aujourd\'hui',
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -447,11 +447,11 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
           Icon(Icons.calendar_today_rounded, size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text(
-            'Aucune sÃ©ance programmÃ©e',
+            'Aucune séance programmée',
             style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
           ),
           Text(
-            'VÃ©rifiez l\'emploi du temps pour cette date.',
+            'Vérifiez l\'emploi du temps pour cette date.',
             style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary),
           ),
         ],
@@ -500,7 +500,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
                     ),
                   ),
                   Text(
-                    '$groupeNom â€¢ ${creneau.salle}',
+                    '$groupeNom • ${creneau.salle}',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: AppTheme.textPrimary,
@@ -591,7 +591,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
                       color: AppTheme.accentGreen.withValues(alpha: 0.1),
                       child: Center(
                         child: Text(
-                          'ðŸ”’ ValidÃ© par le Directeur PÃ©dagogique',
+                          'ðŸ”’ Validé par le Directeur Pédagogique',
                           style: GoogleFonts.poppins(color: AppTheme.accentGreen, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                       ),
@@ -652,7 +652,7 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: Text(
-                          _isValidated ? 'VerrouillÃ©' : 'Enregistrer',
+                          _isValidated ? 'Verrouillé' : 'Enregistrer',
                           style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold)
                         ),
                       ),
@@ -686,4 +686,5 @@ class _PresenceFormateurScreenState extends State<PresenceFormateurScreen> {
     );
   }
 }
+
 

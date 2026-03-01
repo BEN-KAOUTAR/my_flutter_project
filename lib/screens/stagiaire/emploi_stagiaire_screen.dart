@@ -60,7 +60,7 @@ class _EmploiStagiaireScreenState extends State<EmploiStagiaireScreen> {
       weekIndex = (weekMonday.difference(monthFirstMonday).inDays / 7).floor() + 1;
     }
     
-    final months = ['Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre'];
+    final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
     return 'Semaine $weekIndex (${months[weekMonday.month - 1]})';
   }
 
@@ -124,7 +124,7 @@ class _EmploiStagiaireScreenState extends State<EmploiStagiaireScreen> {
           }
         },
         icon: const Icon(Icons.picture_as_pdf),
-        label: Text('TÃ©lÃ©charger PDF', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        label: Text('Télécharger PDF', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
         backgroundColor: AppTheme.stagiaireColor,
       ),
     );
@@ -362,5 +362,6 @@ class _EmploiStagiaireScreenState extends State<EmploiStagiaireScreen> {
     );
   }
 }
+
 
 

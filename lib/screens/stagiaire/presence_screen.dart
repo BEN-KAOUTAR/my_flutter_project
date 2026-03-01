@@ -9,7 +9,6 @@ import '../../theme/app_theme.dart';
 import '../../models/emploi.dart';
 import 'dart:convert';
 
-
 class PresenceScreen extends StatefulWidget {
   const PresenceScreen({super.key});
 
@@ -44,15 +43,18 @@ class _PresenceScreenState extends State<PresenceScreen> {
     if (user != null) {
       try {
         final db = await DatabaseHelper.instance.database;
-        
-        final statsResult = await db.rawQuery('''
+
+        final statsResult = await db.rawQuery(
+          '''
           SELECT 
             COUNT(CASE WHEN statut = 'PRESENT' THEN 1 END) as presences,
             COUNT(CASE WHEN statut = 'ABSENT' THEN 1 END) as absences,
             COUNT(CASE WHEN statut = 'RETARD' THEN 1 END) as retards
           FROM presences
           WHERE stagiaire_id = ? AND date(date) <= date(?) AND valide_par_dp = 1
-        ''', [user.id, DateTime.now().toIso8601String().split('T')[0]]);
+        ''',
+          [user.id, DateTime.now().toIso8601String().split('T')[0]],
+        );
 
         if (statsResult.isNotEmpty) {
           _totalPresences = (statsResult.first['presences'] as int?) ?? 0;
@@ -60,7 +62,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
           _totalRetards = (statsResult.first['retards'] as int?) ?? 0;
         }
 
-        final historyResult = await db.rawQuery('''
+        final historyResult = await db.rawQuery(
+          '''
           SELECT 
             p.date,
             p.statut,
@@ -71,23 +74,26 @@ class _PresenceScreenState extends State<PresenceScreen> {
           LEFT JOIN groupes g ON p.groupe_id = g.id
           WHERE p.stagiaire_id = ? AND date(p.date) <= date(?) AND p.valide_par_dp = 1
           ORDER BY p.date DESC, p.heure ASC
-        ''', [user.id, DateTime.now().toIso8601String().split('T')[0]]);
+        ''',
+          [user.id, DateTime.now().toIso8601String().split('T')[0]],
+        );
 
         List<Map<String, dynamic>> enrichedHistory = [];
         Map<DateTime, List<Map<String, dynamic>>> presenceMap = {};
-        
+
         for (var record in historyResult) {
           final presenceDate = DateTime.parse(record['date'] as String);
           final dateOnlyStr = record['date'] as String;
           final groupeId = record['groupe_id'] as int?;
           final recordedHeure = record['heure'] as String?;
-          
+
           String? formateurName;
           String? moduleName;
           String? timeSlot = recordedHeure;
-          
+
           if (groupeId != null) {
-            final seances = await db.rawQuery('''
+            final seances = await db.rawQuery(
+              '''
               SELECT 
                 m.nom as module_nom,
                 u.nom as formateur_nom
@@ -97,45 +103,67 @@ class _PresenceScreenState extends State<PresenceScreen> {
               LEFT JOIN users u ON a.formateur_id = u.id
               WHERE a.groupe_id = ? AND s.date LIKE ?
               LIMIT 1
-            ''', [groupeId, '$dateOnlyStr%']);
+            ''',
+              [groupeId, '$dateOnlyStr%'],
+            );
 
             if (seances.isNotEmpty) {
               formateurName = seances.first['formateur_nom'] as String?;
               moduleName = seances.first['module_nom'] as String?;
             } else {
-              final days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+              final days = [
+                'Lundi',
+                'Mardi',
+                'Mercredi',
+                'Jeudi',
+                'Vendredi',
+                'Samedi',
+                'Dimanche',
+              ];
               final dayName = days[presenceDate.weekday - 1];
-              
-              final emploisResult = await db.query('emplois', where: 'groupe_id = ?', whereArgs: [groupeId], limit: 1);
-              
+
+              final emploisResult = await db.query(
+                'emplois',
+                where: 'groupe_id = ?',
+                whereArgs: [groupeId],
+                limit: 1,
+              );
+
               if (emploisResult.isNotEmpty) {
                 try {
-                   final employment = Emploi.fromMap(emploisResult.first);
-                   Creneau? matchingCreneau;
-                   
-                   if (recordedHeure != null) {
-                     matchingCreneau = employment.creneaux.where((c) => 
-                       c.jour.toLowerCase() == dayName.toLowerCase() && 
-                       '${c.heureDebut} - ${c.heureFin}' == recordedHeure
-                     ).firstOrNull;
-                   }
+                  final employment = Emploi.fromMap(emploisResult.first);
+                  Creneau? matchingCreneau;
 
-                   matchingCreneau ??= employment.creneaux.where((c) => 
-                     c.jour.toLowerCase() == dayName.toLowerCase()
-                   ).firstOrNull;
-                   
-                   if (matchingCreneau != null) {
-                     moduleName = matchingCreneau.moduleName;
-                     formateurName = matchingCreneau.formateurName;
-                     timeSlot ??= '${matchingCreneau.heureDebut} - ${matchingCreneau.heureFin}';
-                   }
+                  if (recordedHeure != null) {
+                    matchingCreneau = employment.creneaux
+                        .where(
+                          (c) =>
+                              c.jour.toLowerCase() == dayName.toLowerCase() &&
+                              '${c.heureDebut} - ${c.heureFin}' ==
+                                  recordedHeure,
+                        )
+                        .firstOrNull;
+                  }
+
+                  matchingCreneau ??= employment.creneaux
+                      .where(
+                        (c) => c.jour.toLowerCase() == dayName.toLowerCase(),
+                      )
+                      .firstOrNull;
+
+                  if (matchingCreneau != null) {
+                    moduleName = matchingCreneau.moduleName;
+                    formateurName = matchingCreneau.formateurName;
+                    timeSlot ??=
+                        '${matchingCreneau.heureDebut} - ${matchingCreneau.heureFin}';
+                  }
                 } catch (e) {
-                   debugPrint('Error parsing emploi: $e');
+                  debugPrint('Error parsing emploi: $e');
                 }
               }
             }
           }
-          
+
           final enrichedRecord = {
             'date': record['date'],
             'statut': record['statut'],
@@ -144,10 +172,14 @@ class _PresenceScreenState extends State<PresenceScreen> {
             'formateur_nom': formateurName ?? 'Formateur',
             'time_slot': timeSlot ?? '--:--',
           };
-          
+
           enrichedHistory.add(enrichedRecord);
-          
-          final dateKey = DateTime(presenceDate.year, presenceDate.month, presenceDate.day);
+
+          final dateKey = DateTime(
+            presenceDate.year,
+            presenceDate.month,
+            presenceDate.day,
+          );
           if (!presenceMap.containsKey(dateKey)) {
             presenceMap[dateKey] = [];
           }
@@ -261,7 +293,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
     if (status == null) return 'Inconnu';
     switch (status.toUpperCase()) {
       case 'PRESENT':
-        return 'PrÃ©sent';
+        return 'Présent';
       case 'ABSENT':
         return 'Absent';
       case 'RETARD':
@@ -307,7 +339,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Consultez votre historique de prÃ©sence',
+          'Consultez votre historique de présence',
           style: GoogleFonts.poppins(
             fontSize: 16,
             color: AppTheme.textSecondary,
@@ -322,7 +354,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
       children: [
         Expanded(
           child: _buildStatCard(
-            'PrÃ©sences',
+            'Présences',
             '$_totalPresences',
             Icons.check_circle_outline_rounded,
             AppTheme.accentGreen,
@@ -350,7 +382,12 @@ class _PresenceScreenState extends State<PresenceScreen> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -420,7 +457,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
         },
         calendarStyle: CalendarStyle(
           todayDecoration: BoxDecoration(
-            color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+            color: AppTheme.primaryBlue.withOpacity(0.3),
             shape: BoxShape.circle,
           ),
           selectedDecoration: BoxDecoration(
@@ -454,9 +491,9 @@ class _PresenceScreenState extends State<PresenceScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              _selectedDay != null 
-                  ? 'PrÃ©sences du ${DateFormat('dd/MM/yyyy').format(_selectedDay!)}'
-                  : 'Historique rÃ©cent',
+              _selectedDay != null
+                  ? 'Présences du ${DateFormat('dd/MM/yyyy').format(_selectedDay!)}'
+                  : 'Historique récent',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -504,7 +541,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
     final moduleName = record['module_nom'] as String? ?? 'Module';
     final formateurName = record['formateur_nom'] as String? ?? 'Formateur';
     final timeSlot = record['time_slot'] as String? ?? '08:30 - 10:30';
-    
+
     final color = _getStatusColor(status);
     final icon = _getStatusIcon(status);
     final statusLabel = _getStatusLabel(status);
@@ -517,7 +554,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -529,14 +566,10 @@ class _PresenceScreenState extends State<PresenceScreen> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
+              color: color.withOpacity(0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 24,
-            ),
+            child: Icon(icon, color: color, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -552,7 +585,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
                   ),
                 ),
                 Text(
-                  '$dayOfWeek â€¢ $moduleName',
+                  '$dayOfWeek • $moduleName',
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     color: AppTheme.textSecondary,
@@ -585,7 +618,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '$dateFormatted â€¢ $timeSlot',
+                      '$dateFormatted • $timeSlot',
                       style: GoogleFonts.poppins(
                         fontSize: 11,
                         color: AppTheme.textSecondary,
@@ -599,7 +632,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
+              color: color.withOpacity(0.12),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -630,13 +663,13 @@ class _PresenceScreenState extends State<PresenceScreen> {
           Icon(
             Icons.event_busy_rounded,
             size: 64,
-            color: AppTheme.textSecondary.withValues(alpha: 0.3),
+            color: AppTheme.textSecondary.withOpacity(0.3),
           ),
           const SizedBox(height: 16),
           Text(
-            _selectedDay != null 
-                ? 'Aucune prÃ©sence ce jour' 
-                : 'Aucun historique de prÃ©sence',
+            _selectedDay != null
+                ? 'Aucune présence ce jour'
+                : 'Aucun historique de présence',
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -646,8 +679,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
           const SizedBox(height: 4),
           Text(
             _selectedDay != null
-                ? 'SÃ©lectionnez une autre date'
-                : 'Vos prÃ©sences apparaÃ®tront ici',
+                ? 'Sélectionnez une autre date'
+                : 'Vos présences apparaîtront ici',
             style: GoogleFonts.poppins(
               fontSize: 13,
               color: AppTheme.textSecondary,

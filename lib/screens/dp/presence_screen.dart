@@ -102,7 +102,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Consultez les taux de prÃ©sence des stagiaires',
+                'Consultez les taux de présence des stagiaires',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: AppTheme.textSecondary,
@@ -250,7 +250,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
           childAspectRatio: aspectRatio,
           children: [
             DashboardSummaryCard(
-              label: 'PrÃ©sences',
+              label: 'Présences',
               value: totalPresences.toString(),
               icon: Icons.check_circle_outline_rounded,
               color: AppTheme.accentGreen,
@@ -310,7 +310,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
                   ? Padding(
                       padding: const EdgeInsets.all(32.0),
                       child: Center(
-                        child: Text('Aucun rÃ©sultat trouvÃ©', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
+                        child: Text('Aucun résultat trouvé', style: GoogleFonts.poppins(color: AppTheme.textSecondary)),
                       ),
                     )
                   : ListView.separated(
@@ -335,10 +335,10 @@ class _PresenceScreenState extends State<PresenceScreen> {
         children: [
           Expanded(flex: 3, child: Text('Stagiaire', style: _headerStyle)),
           Expanded(flex: 2, child: Text('Groupe', style: _headerStyle)),
-          Expanded(flex: 2, child: Text('PrÃ©sences', style: _headerStyle, textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text('Présences', style: _headerStyle, textAlign: TextAlign.center)),
           Expanded(flex: 2, child: Text('Absences', style: _headerStyle, textAlign: TextAlign.center)),
           Expanded(flex: 2, child: Text('Retards', style: _headerStyle, textAlign: TextAlign.center)),
-          Expanded(flex: 3, child: Text('Taux de prÃ©sence', style: _headerStyle)),
+          Expanded(flex: 3, child: Text('Taux de présence', style: _headerStyle)),
         ],
       ),
     );
@@ -445,5 +445,6 @@ class _PresenceScreenState extends State<PresenceScreen> {
         color: AppTheme.textSecondary,
       );
 }
+
 
 

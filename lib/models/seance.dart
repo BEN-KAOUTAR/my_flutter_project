@@ -21,9 +21,9 @@ extension SeanceStatusExtension on SeanceStatus {
       case SeanceStatus.enAttente:
         return 'En attente';
       case SeanceStatus.valide:
-        return 'ValidÃ©e';
+        return 'Validée';
       case SeanceStatus.rejetee:
-        return 'RejetÃ©e';
+        return 'Rejetée';
     }
   }
 
@@ -102,5 +102,6 @@ class Seance {
     );
   }
 }
+
 
 

@@ -16,7 +16,7 @@ extension NoteTypeExtension on NoteType {
   String get displayName {
     switch (this) {
       case NoteType.cc:
-        return 'ContrÃ´le Continu';
+        return 'Contrôle Continu';
       case NoteType.efm:
         return 'Examen de Fin de Module';
     }
@@ -138,5 +138,6 @@ class Note {
     );
   }
 }
+
 
 

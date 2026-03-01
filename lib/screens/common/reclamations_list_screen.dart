@@ -87,16 +87,16 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
     );
     
       final statusMessage = status == 'TRAITEE' 
-        ? 'Votre rÃ©clamation "${reclamation.subject}" a Ã©tÃ© traitÃ©e.' 
-        : 'Votre rÃ©clamation "${reclamation.subject}" a Ã©tÃ© rejetÃ©e.';
+        ? 'Votre réclamation "${reclamation.subject}" a été traitée.' 
+        : 'Votre réclamation "${reclamation.subject}" a été rejetée.';
       
       final fullMessage = response != null && response.isNotEmpty
-          ? '$statusMessage\nRÃ©ponse: $response'
+          ? '$statusMessage\nRéponse: $response'
           : statusMessage;
 
       await NotificationService().notifyUser(
       userId: reclamation.userId,
-      title: 'Mise Ã  jour RÃ©clamation',
+      title: 'Mise à jour Réclamation',
       message: fullMessage,
       type: status == 'TRAITEE' ? 'SUCCESS' : 'WARNING'
     );
@@ -120,7 +120,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
       await PdfService.generateFormalReclamationPdf(
         fromName: sender.nom,
         fromEmail: sender.email,
-        toName: 'Directeur PÃ©dagogique',
+        toName: 'Directeur Pédagogique',
         subject: reclamation.subject,
         date: dateStr,
         content: reclamation.message,
@@ -128,7 +128,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors du tÃ©lÃ©chargement: $e'), backgroundColor: AppTheme.accentRed),
+          SnackBar(content: Text('Erreur lors du téléchargement: $e'), backgroundColor: AppTheme.accentRed),
         );
       }
     } finally {
@@ -165,7 +165,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                         _loadData();
                       }
                     },
-                    label: const Text('Nouvelle rÃ©clamation'),
+                    label: const Text('Nouvelle réclamation'),
                     icon: const Icon(Icons.add),
                     backgroundColor: AppTheme.primaryBlue,
                   ),
@@ -182,7 +182,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
           Icon(Icons.assignment_turned_in_outlined, size: 64, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
-            'Aucune rÃ©clamation trouvÃ©e',
+            'Aucune réclamation trouvée',
             style: GoogleFonts.poppins(fontSize: 18, color: AppTheme.textSecondary),
           ),
         ],
@@ -313,7 +313,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                               } catch (e) {
                                 if (mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Impossible d\'ouvrir la piÃ¨ce jointe: $e')),
+                                    SnackBar(content: Text('Impossible d\'ouvrir la pièce jointe: $e')),
                                   );
                                 }
                               }
@@ -363,7 +363,7 @@ class _ReclamationsListScreenState extends State<ReclamationsListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'RÃ©ponse:',
+                      'Réponse:',
                       style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
                     ),
                     const SizedBox(height: 4),
@@ -464,12 +464,12 @@ class _ResponseDialogState extends State<_ResponseDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('RÃ©pondre Ã  la rÃ©clamation'),
+      title: Text('Répondre à la réclamation'),
       content: TextField(
         controller: _controller,
         decoration: InputDecoration(
-          labelText: 'Message de rÃ©ponse',
-          hintText: 'Expliquez la dÃ©cision...',
+          labelText: 'Message de réponse',
+          hintText: 'Expliquez la décision...',
           border: OutlineInputBorder(),
         ),
         maxLines: 3,
@@ -491,5 +491,6 @@ class _ResponseDialogState extends State<_ResponseDialog> {
     );
   }
 }
+
 
 

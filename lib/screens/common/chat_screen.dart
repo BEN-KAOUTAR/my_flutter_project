@@ -253,7 +253,7 @@ class _ChatScreenState extends State<ChatScreen> {
       senderId: _currentUserId,
       receiverId: widget.otherUser?.id,
       groupId: widget.groupId,
-      content: text.isEmpty ? 'Fichier partagÃ©' : text,
+      content: text.isEmpty ? 'Fichier partagé' : text,
       timestamp: DateTime.now(),
       attachmentType: attachmentType,
       attachmentUrl: attachmentUrl,
@@ -426,9 +426,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
             if (msg.attachmentType != null) ...[
               _buildAttachment(msg, isMe),
-              if (msg.content.isNotEmpty && msg.content != 'Fichier partagÃ©') const SizedBox(height: 8),
+              if (msg.content.isNotEmpty && msg.content != 'Fichier partagé') const SizedBox(height: 8),
             ],
-            if (msg.content.isNotEmpty && msg.content != 'Fichier partagÃ©')
+            if (msg.content.isNotEmpty && msg.content != 'Fichier partagé')
               Text(
                 msg.content,
                 style: GoogleFonts.poppins(
@@ -667,7 +667,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    _selectedImage != null ? 'Image sÃ©lectionnÃ©e' : 
+                    _selectedImage != null ? 'Image sélectionnée' : 
                     _selectedFileBytes != null ? _selectedFileName! :
                     _selectedPDF != null ? _selectedPDF!.path.split('/').last : 
                     _selectedLink!,
@@ -747,5 +747,6 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
+
 
 

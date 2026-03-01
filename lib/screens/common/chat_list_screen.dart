@@ -148,7 +148,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
                     child: Text(
-                      'Messages rÃ©cents',
+                      'Messages récents',
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -287,7 +287,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textSecondary),
           ),
           Text(
-            'Commencez Ã  discuter avec vos contacts',
+            'Commencez à discuter avec vos contacts',
             style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary),
           ),
         ],
@@ -401,4 +401,5 @@ class _ChatListScreenState extends State<ChatListScreen> {
     }
   }
 }
+
 

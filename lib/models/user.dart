@@ -8,7 +8,7 @@ extension UserRoleExtension on UserRole {
   String get displayName {
     switch (this) {
       case UserRole.dp:
-        return 'Directeur PÃ©dagogique';
+        return 'Directeur Pédagogique';
       case UserRole.formateur:
         return 'Formateur';
       case UserRole.stagiaire:
@@ -174,4 +174,5 @@ class User {
     );
   }
 }
+
 

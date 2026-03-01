@@ -55,14 +55,22 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
       _loadData(showLoading: false);
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       if (mounted && user != null) {
-        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+        Provider.of<NotificationProvider>(
+          context,
+          listen: false,
+        ).refreshCounts(user);
       }
     });
 
-    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (
+      timer,
+    ) {
       final user = Provider.of<AuthService>(context, listen: false).currentUser;
       if (mounted && user != null) {
-        Provider.of<NotificationProvider>(context, listen: false).refreshCounts(user);
+        Provider.of<NotificationProvider>(
+          context,
+          listen: false,
+        ).refreshCounts(user);
       }
       if (mounted && _currentIndex == 0 && !_isLoading) {
         _loadData(showLoading: false);
@@ -110,17 +118,24 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
 
     if (user != null) {
       final notes = await DatabaseHelper.instance.getNotesByStagiaire(user.id!);
-      
+
       List<Map<String, dynamic>> exams = [];
       if (user.groupeId != null) {
-        await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(1, user.groupeId!);
-        exams = await DatabaseHelper.instance.getUpcomingExamsForGroup(user.groupeId!);
+        await DatabaseHelper.instance.getEmploiBySemaineAndGroupe(
+          1,
+          user.groupeId!,
+        );
+        exams = await DatabaseHelper.instance.getUpcomingExamsForGroup(
+          user.groupeId!,
+        );
       }
 
       final validatedNotes = notes.where((n) => n.validee).toList();
       double average = 0;
       if (validatedNotes.isNotEmpty) {
-        average = validatedNotes.map((n) => n.valeur).reduce((a, b) => a + b) / validatedNotes.length;
+        average =
+            validatedNotes.map((n) => n.valeur).reduce((a, b) => a + b) /
+            validatedNotes.length;
       }
 
       if (mounted) {
@@ -137,7 +152,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
   @override
   Widget build(BuildContext context) {
     final showSidebar = !ResponsiveLayout.isMobile(context);
-    
+
     return DashboardLayout(
       appBar: _buildAppBar(),
       drawer: showSidebar ? null : _buildDrawer(),
@@ -149,17 +164,28 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
 
   String _getScreenTitle(int index) {
     switch (index) {
-      case 0: return 'Academic Pro';
-      case 1: return 'Emploi du temps';
-      case 2: return 'Mes notes';
-      case 3: return 'Mes prÃ©sences';
-      case 4: return 'Examens Ã  venir';
-      case 5: return 'RelevÃ© de notes';
-      case 6: return 'Progression des modules';
-      case 7: return 'Messages';
-      case 8: return 'Mon Profil';
-      case 9: return 'RÃ©clamations';
-      default: return 'Academic Pro';
+      case 0:
+        return 'Academic Pro';
+      case 1:
+        return 'Emploi du temps';
+      case 2:
+        return 'Mes notes';
+      case 3:
+        return 'Mes présences';
+      case 4:
+        return 'Examens à venir';
+      case 5:
+        return 'Relevé de notes';
+      case 6:
+        return 'Progression des modules';
+      case 7:
+        return 'Messages';
+      case 8:
+        return 'Mon Profil';
+      case 9:
+        return 'Réclamations';
+      default:
+        return 'Academic Pro';
     }
   }
 
@@ -168,11 +194,11 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
     final user = Provider.of<AuthService>(context).currentUser;
     final isHome = _currentIndex == 0;
     final isDesktop = ResponsiveLayout.isDesktop(context);
-    
+
     if (isLargeScreen) {
       return null;
     }
-    
+
     return AppBar(
       backgroundColor: AppTheme.stagiaireColor,
       elevation: 0,
@@ -182,23 +208,27 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
       leading: isDesktop && isHome
           ? null
           : !isHome
-              ? IconButton(
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 28),
-                  onPressed: () => setState(() => _currentIndex = 0),
-                )
-              : Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(Icons.menu_rounded, color: Colors.white),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                  ),
-                ),
+          ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+              onPressed: () => setState(() => _currentIndex = 0),
+            )
+          : Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+            ),
       title: Text(
         isHome ? 'Academic Pro' : _getScreenTitle(_currentIndex),
         style: GoogleFonts.poppins(
-          fontWeight: FontWeight.bold, 
+          fontWeight: FontWeight.bold,
           color: Colors.white,
           fontSize: 18,
-        )
+        ),
       ),
       actions: [
         Consumer<NotificationProvider>(
@@ -206,12 +236,21 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
             icon: Badge(
               label: Text(notificationProvider.totalCount.toString()),
               isLabelVisible: notificationProvider.totalCount > 0,
-              child: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28),
+              child: const Icon(
+                Icons.notifications_none_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
-                  .then((_) {
-                final user = Provider.of<AuthService>(context, listen: false).currentUser;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+              ).then((_) {
+                final user = Provider.of<AuthService>(
+                  context,
+                  listen: false,
+                ).currentUser;
                 notificationProvider.refreshCounts(user);
               });
             },
@@ -219,13 +258,15 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
         ),
         const SizedBox(width: 8),
         GestureDetector(
-          onTap: () => setState(() => _currentIndex = 8), 
+          onTap: () => setState(() => _currentIndex = 8),
           child: CircleAvatar(
             radius: 18,
             backgroundColor: Colors.white.withOpacity(0.2),
-            backgroundImage: kIsWeb 
-               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-               : (_profileImage != null ? FileImage(_profileImage!) : null),
+            backgroundImage: kIsWeb
+                ? (_profileImageBytes != null
+                      ? MemoryImage(_profileImageBytes!)
+                      : null)
+                : (_profileImage != null ? FileImage(_profileImage!) : null),
             child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
                 ? Text(
                     (user?.nom ?? 'S')[0].toUpperCase(),
@@ -257,16 +298,26 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
             padding: const EdgeInsets.all(24),
             child: Row(
               children: [
-                  CircleAvatar(
+                CircleAvatar(
                   radius: 24,
                   backgroundColor: AppTheme.primaryBlue,
-                  backgroundImage: kIsWeb 
-                     ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-                     : (_profileImage != null ? FileImage(_profileImage!) : null),
-                  child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
+                  backgroundImage: kIsWeb
+                      ? (_profileImageBytes != null
+                            ? MemoryImage(_profileImageBytes!)
+                            : null)
+                      : (_profileImage != null
+                            ? FileImage(_profileImage!)
+                            : null),
+                  child:
+                      (kIsWeb
+                          ? _profileImageBytes == null
+                          : _profileImage == null)
                       ? Text(
                           (user?.nom ?? 'A')[0],
-                          style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       : null,
                 ),
@@ -315,7 +366,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.how_to_reg_rounded,
-                        label: 'Mes prÃ©sences',
+                        label: 'Mes présences',
                         index: 3,
                         isDark: isPermanent,
                       ),
@@ -334,13 +385,13 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.assignment_outlined,
-                        label: 'Examens Ã  venir',
+                        label: 'Examens à venir',
                         index: 4,
                         isDark: isPermanent,
                       ),
                       _buildSidebarItem(
                         icon: Icons.description_outlined,
-                        label: 'RelevÃ© de notes',
+                        label: 'Relevé de notes',
                         index: 5,
                         isDark: isPermanent,
                       ),
@@ -352,12 +403,12 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       ),
                       const Divider(),
                       _buildSidebarItem(
-                         icon: Icons.chat_bubble_outline_rounded,
-                         label: 'Messages',
-                         index: 7,
-                         isDark: isPermanent,
-                         badgeCount: notifProvider.unreadMessageCount,
-                       ),
+                        icon: Icons.chat_bubble_outline_rounded,
+                        label: 'Messages',
+                        index: 7,
+                        isDark: isPermanent,
+                        badgeCount: notifProvider.unreadMessageCount,
+                      ),
                       _buildSidebarItem(
                         icon: Icons.person_outline_rounded,
                         label: 'Mon Profil',
@@ -366,7 +417,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       ),
                       _buildSidebarItem(
                         icon: Icons.report_problem_rounded,
-                        label: 'RÃ©clamations',
+                        label: 'Réclamations',
                         index: 9,
                         isDark: isPermanent,
                         badgeCount: notifProvider.unreadReclamationsCount,
@@ -377,14 +428,14 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
               ],
             ),
           ),
-          
+
           ListTile(
             leading: Icon(
               Icons.logout_rounded,
               color: isPermanent ? Colors.white70 : AppTheme.accentRed,
             ),
             title: Text(
-              'DÃ©connexion',
+              'Déconnexion',
               style: GoogleFonts.poppins(
                 color: isPermanent ? Colors.white70 : AppTheme.accentRed,
                 fontWeight: FontWeight.w500,
@@ -419,13 +470,19 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
           CircleAvatar(
             radius: 28,
             backgroundColor: Colors.white,
-            backgroundImage: kIsWeb 
-               ? (_profileImageBytes != null ? MemoryImage(_profileImageBytes!) : null)
-               : (_profileImage != null ? FileImage(_profileImage!) : null),
+            backgroundImage: kIsWeb
+                ? (_profileImageBytes != null
+                      ? MemoryImage(_profileImageBytes!)
+                      : null)
+                : (_profileImage != null ? FileImage(_profileImage!) : null),
             child: (kIsWeb ? _profileImageBytes == null : _profileImage == null)
                 ? Text(
                     user?.nom.substring(0, 1).toUpperCase() ?? 'A',
-                    style: GoogleFonts.poppins(color: AppTheme.stagiaireColor, fontSize: 20, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.poppins(
+                      color: AppTheme.stagiaireColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   )
                 : null,
           ),
@@ -527,7 +584,7 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
     final user = authService.currentUser;
     final validatedNotes = _notes.where((n) => n.validee).toList();
     final recentNotes = validatedNotes.take(3).toList();
-    
+
     final analysis = AnalysisService.predictPerformance(_notes, []);
     final statusColor = _getStatusColor(analysis['status']);
     final isDesktop = ResponsiveLayout.isDesktop(context);
@@ -549,9 +606,14 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Bonjour, ${user?.nom.split(' ').first ?? 'Stagiaire'} ðŸ‘‹',
+                        'Bonjour, ${user?.nom.split(' ').first ?? 'Stagiaire'} 👋',
                         style: GoogleFonts.poppins(
-                          fontSize: ResponsiveLayout.respSize(context, 28, 34, 40),
+                          fontSize: ResponsiveLayout.respSize(
+                            context,
+                            28,
+                            34,
+                            40,
+                          ),
                           fontWeight: FontWeight.bold,
                           color: AppTheme.textPrimary,
                         ),
@@ -559,7 +621,12 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       Text(
                         'Bienvenue dans votre espace stagiaire',
                         style: GoogleFonts.poppins(
-                          fontSize: ResponsiveLayout.respSize(context, 16, 17, 18),
+                          fontSize: ResponsiveLayout.respSize(
+                            context,
+                            16,
+                            17,
+                            18,
+                          ),
                           color: AppTheme.textSecondary,
                         ),
                       ),
@@ -572,12 +639,23 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                       icon: Badge(
                         label: Text(notifProvider.totalCount.toString()),
                         isLabelVisible: notifProvider.totalCount > 0,
-                        child: const Icon(Icons.notifications_none_rounded, color: AppTheme.primaryBlue, size: 36),
+                        child: const Icon(
+                          Icons.notifications_none_rounded,
+                          color: AppTheme.primaryBlue,
+                          size: 36,
+                        ),
                       ),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))
-                            .then((_) {
-                          final user = Provider.of<AuthService>(context, listen: false).currentUser;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const NotificationsScreen(),
+                          ),
+                        ).then((_) {
+                          final user = Provider.of<AuthService>(
+                            context,
+                            listen: false,
+                          ).currentUser;
                           notifProvider.refreshCounts(user);
                         });
                       },
@@ -591,34 +669,36 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
               builder: (context, constraints) {
                 final double availableWidth = constraints.maxWidth;
                 double cardWidth;
-                
+
                 if (availableWidth > 1100) {
                   cardWidth = (availableWidth - 24) / 3;
                 } else {
                   cardWidth = (availableWidth - 12) / 2;
                 }
-                
+
                 return Wrap(
                   spacing: 12,
                   runSpacing: 12,
                   children: [
                     DashboardSummaryCard(
-                      label: 'Moyenne gÃ©nÃ©rale',
-                      value: _averageNote > 0 ? _averageNote.toStringAsFixed(1) : '-',
+                      label: 'Moyenne générale',
+                      value: _averageNote > 0
+                          ? _averageNote.toStringAsFixed(1)
+                          : '-',
                       sublabel: 'sur 20',
                       icon: Icons.military_tech_outlined,
                       color: AppTheme.stagiaireColor,
                       width: cardWidth,
                     ),
                     DashboardSummaryCard(
-                      label: 'Notes publiÃ©es',
+                      label: 'Notes publiées',
                       value: '${validatedNotes.length}',
                       icon: Icons.book_outlined,
                       color: AppTheme.accentGreen,
                       width: cardWidth,
                     ),
                     DashboardSummaryCard(
-                      label: 'Examens Ã  venir',
+                      label: 'Examens à venir',
                       value: '${_upcomingExams.length}',
                       icon: Icons.calendar_today_outlined,
                       color: AppTheme.stagiaireColor,
@@ -637,15 +717,9 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: _buildUpcomingExamsCard(),
-                  ),
+                  Expanded(flex: 1, child: _buildUpcomingExamsCard()),
                   const SizedBox(width: 24),
-                  Expanded(
-                    flex: 1,
-                    child: _buildRecentNotesCard(recentNotes),
-                  ),
+                  Expanded(flex: 1, child: _buildRecentNotesCard(recentNotes)),
                 ],
               )
             else
@@ -675,44 +749,66 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                   color: AppTheme.stagiaireColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.calendar_month_outlined, color: AppTheme.stagiaireColor, size: 20),
+                child: const Icon(
+                  Icons.calendar_month_outlined,
+                  color: AppTheme.stagiaireColor,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
                 'Prochains examens',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          _upcomingExams.isEmpty 
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(48.0),
-                  child: Text(
-                    'Aucun examen planifiÃ©',
-                    style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+          _upcomingExams.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(48.0),
+                    child: Text(
+                      'Aucun examen planifié',
+                      style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+                    ),
                   ),
-                ),
-              )
-            : Column(
-                children: _upcomingExams.take(3).map((exam) {
-                   final date = DateTime.parse(exam['date'] as String);
-                   return ListTile(
+                )
+              : Column(
+                  children: _upcomingExams.take(3).map((exam) {
+                    final date = DateTime.parse(exam['date'] as String);
+                    return ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppTheme.stagiaireColor.withValues(alpha: 0.05),
+                          color: AppTheme.stagiaireColor.withValues(
+                            alpha: 0.05,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.event, color: AppTheme.stagiaireColor, size: 20),
+                        child: const Icon(
+                          Icons.event,
+                          color: AppTheme.stagiaireColor,
+                          size: 20,
+                        ),
                       ),
-                      title: Text(exam['module_name'] as String, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
-                      subtitle: Text('${date.day}/${date.month} Ã  ${date.hour}:${date.minute.toString().padLeft(2,'0')}', style: GoogleFonts.poppins(fontSize: 12)),
-                   );
-                }).toList(),
-              ),
+                      title: Text(
+                        exam['module_name'] as String,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${date.day}/${date.month} à ${date.hour}:${date.minute.toString().padLeft(2, '0')}',
+                        style: GoogleFonts.poppins(fontSize: 12),
+                      ),
+                    );
+                  }).toList(),
+                ),
         ],
       ),
     );
@@ -746,8 +842,12 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
               const Spacer(),
               if (analysis['trend'] != null)
                 Icon(
-                  analysis['trend'] == 'up' ? Icons.trending_up : Icons.trending_down,
-                  color: analysis['trend'] == 'up' ? AppTheme.accentGreen : AppTheme.accentRed,
+                  analysis['trend'] == 'up'
+                      ? Icons.trending_up
+                      : Icons.trending_down,
+                  color: analysis['trend'] == 'up'
+                      ? AppTheme.accentGreen
+                      : AppTheme.accentRed,
                   size: 20,
                 ),
             ],
@@ -824,34 +924,63 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
                   color: AppTheme.accentOrange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.military_tech_outlined, color: AppTheme.accentOrange, size: 20),
+                child: const Icon(
+                  Icons.military_tech_outlined,
+                  color: AppTheme.accentOrange,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
-                'DerniÃ¨res notes',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+                'Dernières notes',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 16),
           if (recentNotes.isEmpty) ...[
-             const SizedBox(height: 32),
-             Center(child: Text('Aucune note publiÃ©e', style: GoogleFonts.poppins(color: AppTheme.textSecondary))),
-             const SizedBox(height: 32),
+            const SizedBox(height: 32),
+            Center(
+              child: Text(
+                'Aucune note publiée',
+                style: GoogleFonts.poppins(color: AppTheme.textSecondary),
+              ),
+            ),
+            const SizedBox(height: 32),
           ] else ...[
-            ...recentNotes.map((note) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Container(
-                 padding: const EdgeInsets.all(8),
-                 decoration: BoxDecoration(
-                   color: AppTheme.accentOrange.withValues(alpha: 0.05),
-                   borderRadius: BorderRadius.circular(8),
-                 ),
-                 child: Text('${note.valeur}', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppTheme.accentOrange)),
-               ),
-               title: Text('Note: ${note.valeur}/20', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
-               subtitle: Text(note.type.toString().split('.').last, style: GoogleFonts.poppins(fontSize: 12)),
-            )),
+            ...recentNotes.map(
+              (note) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentOrange.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '${note.valeur}',
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.accentOrange,
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'Note: ${note.valeur}/20',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                subtitle: Text(
+                  note.type.toString().split('.').last,
+                  style: GoogleFonts.poppins(fontSize: 12),
+                ),
+              ),
+            ),
           ],
 
           TextButton(
@@ -863,9 +992,19 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Voir tout', style: GoogleFonts.poppins(color: AppTheme.primaryBlue, fontWeight: FontWeight.w600)),
+                Text(
+                  'Voir tout',
+                  style: GoogleFonts.poppins(
+                    color: AppTheme.primaryBlue,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(width: 4),
-                const Icon(Icons.arrow_forward_rounded, size: 16, color: AppTheme.primaryBlue),
+                const Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 16,
+                  color: AppTheme.primaryBlue,
+                ),
               ],
             ),
           ),
@@ -876,10 +1015,14 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
 
   Color _getStatusColor(String? status) {
     switch (status) {
-      case 'success': return AppTheme.accentGreen;
-      case 'warning': return AppTheme.accentOrange;
-      case 'danger': return AppTheme.accentRed;
-      default: return AppTheme.primaryBlue;
+      case 'success':
+        return AppTheme.accentGreen;
+      case 'warning':
+        return AppTheme.accentOrange;
+      case 'danger':
+        return AppTheme.accentRed;
+      default:
+        return AppTheme.primaryBlue;
     }
   }
 
@@ -923,4 +1066,3 @@ class _StagiaireDashboardState extends State<StagiaireDashboard> {
     );
   }
 }
-
