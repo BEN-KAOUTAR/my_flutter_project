@@ -15,12 +15,13 @@ import 'models/user.dart';
 import 'data/database_helper.dart';
 
 import 'providers/notification_provider.dart';
+import 'screens/welcome_screen.dart';
 
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     await initializeDateFormatting('fr_FR', null);
-    
+
     if (kIsWeb) {
       databaseFactory = databaseFactoryFfiWeb;
     } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -32,21 +33,20 @@ void main() async {
   }
 
   final authService = AuthService();
-  
-  
+
   try {
     await authService.checkSession();
   } catch (e) {
     debugPrint('Session check error during startup: $e');
   }
 
-  // Fix any existing negative hours in the database
+
   try {
     await DatabaseHelper.instance.fixNegativeHours();
   } catch (e) {
     debugPrint('Error fixing negative hours: $e');
   }
-  
+
   runApp(
     MultiProvider(
       providers: [
@@ -67,14 +67,17 @@ class AcademicProApp extends StatelessWidget {
       title: 'Academic Pro',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: Consumer<AuthService>(
-        builder: (context, authService, child) {
-          if (authService.isLoggedIn) {
-            return _getDashboardForRole(authService.currentUser?.role);
-          }
-          return const LoginScreen();
-        },
-      ),
+      home: const WelcomeScreen(),
+      routes: {
+        '/login': (context) => Consumer<AuthService>(
+          builder: (context, authService, child) {
+            if (authService.isLoggedIn) {
+              return _getDashboardForRole(authService.currentUser?.role);
+            }
+            return const LoginScreen();
+          },
+        ),
+      },
     );
   }
 
@@ -91,4 +94,3 @@ class AcademicProApp extends StatelessWidget {
     }
   }
 }
-

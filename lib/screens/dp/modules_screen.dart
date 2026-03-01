@@ -33,7 +33,7 @@ class _ModulesScreenState extends State<ModulesScreen> {
   void initState() {
     super.initState();
     _loadData();
-    
+
     _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && !_isLoading) {
         _loadData(showLoading: false);
@@ -53,8 +53,12 @@ class _ModulesScreenState extends State<ModulesScreen> {
     final user = Provider.of<AuthService>(context, listen: false).currentUser;
     final directorId = user?.id;
 
-    final modules = await DatabaseHelper.instance.getAllModules(directorId: directorId);
-    final filieres = await DatabaseHelper.instance.getAllFilieres(directorId: directorId);
+    final modules = await DatabaseHelper.instance.getAllModules(
+      directorId: directorId,
+    );
+    final filieres = await DatabaseHelper.instance.getAllFilieres(
+      directorId: directorId,
+    );
     setState(() {
       _modules = modules;
       _filieres = filieres;
@@ -64,8 +68,10 @@ class _ModulesScreenState extends State<ModulesScreen> {
 
   List<Module> get _filteredModules {
     return _modules.where((m) {
-      final matchesFiliere = _selectedFiliereId == null || m.filiereId == _selectedFiliereId;
-      final matchesSearch = _searchQuery.isEmpty || 
+      final matchesFiliere =
+          _selectedFiliereId == null || m.filiereId == _selectedFiliereId;
+      final matchesSearch =
+          _searchQuery.isEmpty ||
           m.nom.toLowerCase().startsWith(_searchQuery.toLowerCase());
       return matchesFiliere && matchesSearch;
     }).toList();
@@ -87,12 +93,16 @@ class _ModulesScreenState extends State<ModulesScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredModules.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                        itemCount: _filteredModules.length,
-                        itemBuilder: (context, index) => _buildModuleCard(_filteredModules[index]),
-                      ),
+                ? _buildEmptyState()
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    itemCount: _filteredModules.length,
+                    itemBuilder: (context, index) =>
+                        _buildModuleCard(_filteredModules[index]),
+                  ),
           ),
         ),
       ],
@@ -130,12 +140,21 @@ class _ModulesScreenState extends State<ModulesScreen> {
                 icon: const Icon(Icons.add, size: 20, color: Colors.white),
                 label: Text(
                   isMobile ? 'Nouveau' : 'Nouveau module',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.white, fontSize: isMobile ? 12 : 14),
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: isMobile ? 12 : 14,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryBlue,
-                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 20, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 12 : 20,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
             ],
@@ -160,20 +179,27 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     },
                     decoration: InputDecoration(
                       hintText: 'Rechercher un module...',
-                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 14),
+                      hintStyle: GoogleFonts.poppins(
+                        color: AppTheme.textSecondary,
+                        fontSize: 14,
+                      ),
                       border: InputBorder.none,
-                      icon: const Icon(Icons.search, color: AppTheme.textSecondary, size: 20),
-                      suffixIcon: _searchQuery.isNotEmpty 
-                        ? IconButton(
-                            icon: const Icon(Icons.clear, size: 18),
-                            onPressed: () {
-                              setState(() {
-                                _searchController.clear();
-                                _searchQuery = '';
-                              });
-                            },
-                          )
-                        : null,
+                      icon: const Icon(
+                        Icons.search,
+                        color: AppTheme.textSecondary,
+                        size: 20,
+                      ),
+                      suffixIcon: _searchQuery.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, size: 18),
+                              onPressed: () {
+                                setState(() {
+                                  _searchController.clear();
+                                  _searchQuery = '';
+                                });
+                              },
+                            )
+                          : null,
                     ),
                   ),
                 ),
@@ -189,19 +215,38 @@ class _ModulesScreenState extends State<ModulesScreen> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int?>(
                     value: _selectedFiliereId,
-                    hint: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textSecondary)),
-                    icon: const Icon(Icons.filter_list_rounded, color: AppTheme.textSecondary, size: 20),
+                    hint: Text(
+                      'Toutes les filières',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.filter_list_rounded,
+                      color: AppTheme.textSecondary,
+                      size: 20,
+                    ),
                     items: [
                       DropdownMenuItem(
                         value: null,
-                        child: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 14)),
+                        child: Text(
+                          'Toutes les filières',
+                          style: GoogleFonts.poppins(fontSize: 14),
+                        ),
                       ),
-                      ..._filieres.map((f) => DropdownMenuItem(
-                        value: f.id,
-                        child: Text(f.nom, style: GoogleFonts.poppins(fontSize: 14)),
-                      )),
+                      ..._filieres.map(
+                        (f) => DropdownMenuItem(
+                          value: f.id,
+                          child: Text(
+                            f.nom,
+                            style: GoogleFonts.poppins(fontSize: 14),
+                          ),
+                        ),
+                      ),
                     ],
-                    onChanged: (value) => setState(() => _selectedFiliereId = value),
+                    onChanged: (value) =>
+                        setState(() => _selectedFiliereId = value),
                   ),
                 ),
               ),
@@ -217,7 +262,11 @@ class _ModulesScreenState extends State<ModulesScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.book_outlined, size: 80, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
+          Icon(
+            Icons.book_outlined,
+            size: 80,
+            color: AppTheme.textSecondary.withValues(alpha: 0.5),
+          ),
           const SizedBox(height: 16),
           Text(
             'Aucun module',
@@ -249,7 +298,11 @@ class _ModulesScreenState extends State<ModulesScreen> {
                   color: AppTheme.accentOrange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.book_rounded, color: AppTheme.accentOrange, size: 24),
+                child: const Icon(
+                  Icons.book_rounded,
+                  color: AppTheme.accentOrange,
+                  size: 24,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -270,7 +323,10 @@ class _ModulesScreenState extends State<ModulesScreen> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
@@ -302,9 +358,17 @@ class _ModulesScreenState extends State<ModulesScreen> {
           const SizedBox(height: 20),
           Row(
             children: [
-              _buildInfoChip(Icons.access_time_rounded, '${module.masseHoraireTotale.toInt()}h', 'Volume h.'),
+              _buildInfoChip(
+                Icons.access_time_rounded,
+                '${module.masseHoraireTotale.toInt()}h',
+                'Volume h.',
+              ),
               const SizedBox(width: 24),
-              _buildInfoChip(Icons.star_outline_rounded, 'Coeff ${module.coefficient}', 'Coefficient'),
+              _buildInfoChip(
+                Icons.star_outline_rounded,
+                'Coeff ${module.coefficient}',
+                'Coefficient',
+              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -316,15 +380,25 @@ class _ModulesScreenState extends State<ModulesScreen> {
               TextButton.icon(
                 onPressed: () => _showAddEditDialog(module: module),
                 icon: const Icon(Icons.edit_outlined, size: 18),
-                label: Text('Modifier', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
-                style: TextButton.styleFrom(foregroundColor: AppTheme.textSecondary),
+                label: Text(
+                  'Modifier',
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppTheme.textSecondary,
+                ),
               ),
               const SizedBox(width: 8),
               TextButton.icon(
                 onPressed: () => _confirmDelete(module),
                 icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                label: Text('Supprimer', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
-                style: TextButton.styleFrom(foregroundColor: AppTheme.accentRed),
+                label: Text(
+                  'Supprimer',
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppTheme.accentRed,
+                ),
               ),
             ],
           ),
@@ -364,7 +438,6 @@ class _ModulesScreenState extends State<ModulesScreen> {
     );
   }
 
-
   void _showFilterSheet() {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -380,7 +453,11 @@ class _ModulesScreenState extends State<ModulesScreen> {
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 8,
-      constraints: const BoxConstraints(minWidth: 250, maxWidth: 250, maxHeight: 400),
+      constraints: const BoxConstraints(
+        minWidth: 250,
+        maxWidth: 250,
+        maxHeight: 400,
+      ),
       items: [
         PopupMenuItem<int?>(
           value: null,
@@ -394,26 +471,40 @@ class _ModulesScreenState extends State<ModulesScreen> {
             ),
             child: Text(
               'Toutes les filières',
-              style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500, color: AppTheme.textPrimary),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textPrimary,
+              ),
             ),
           ),
         ),
-        ..._filieres.map((filiere) => PopupMenuItem<int?>(
-          value: filiere.id,
-          padding: EdgeInsets.zero,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(bottom: BorderSide(color: AppTheme.border.withValues(alpha: 0.3), width: 0.5)),
-            ),
-            child: Text(
-              filiere.nom,
-              style: GoogleFonts.poppins(fontSize: 14, color: AppTheme.textPrimary),
+        ..._filieres.map(
+          (filiere) => PopupMenuItem<int?>(
+            value: filiere.id,
+            padding: EdgeInsets.zero,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppTheme.border.withValues(alpha: 0.3),
+                    width: 0.5,
+                  ),
+                ),
+              ),
+              child: Text(
+                filiere.nom,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
             ),
           ),
-        )),
+        ),
       ],
     ).then((value) {
       if (value != null || value == null) {
@@ -440,7 +531,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Container(
             width: 500,
             padding: const EdgeInsets.all(32),
@@ -481,10 +574,22 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     controller: nomController,
                     decoration: InputDecoration(
                       hintText: 'Ex: Programmation Web',
-                      hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                      hintStyle: GoogleFonts.poppins(
+                        color: AppTheme.textSecondary,
+                        fontSize: 13,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: AppTheme.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: AppTheme.border),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -506,14 +611,36 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             DropdownButtonFormField<int>(
                               value: selectedFiliereId,
                               decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
                               ),
-                              items: _filieres.map((f) => DropdownMenuItem(
-                                value: f.id,
-                                child: Text(f.nom, style: GoogleFonts.poppins(fontSize: 14)),
-                              )).toList(),
+                              items: _filieres
+                                  .map(
+                                    (f) => DropdownMenuItem(
+                                      value: f.id,
+                                      child: Text(
+                                        f.nom,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                               onChanged: (value) => selectedFiliereId = value,
                             ),
                           ],
@@ -536,14 +663,45 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             DropdownButtonFormField<int>(
                               value: selectedAnnee,
                               decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
                               ),
                               items: [
-                                DropdownMenuItem(value: 1, child: Text('1ère année', style: GoogleFonts.poppins(fontSize: 14))),
-                                DropdownMenuItem(value: 2, child: Text('2ème année', style: GoogleFonts.poppins(fontSize: 14))),
-                                DropdownMenuItem(value: 3, child: Text('3ème année', style: GoogleFonts.poppins(fontSize: 14))),
+                                DropdownMenuItem(
+                                  value: 1,
+                                  child: Text(
+                                    '1ère année',
+                                    style: GoogleFonts.poppins(fontSize: 14),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: 2,
+                                  child: Text(
+                                    '2ème année',
+                                    style: GoogleFonts.poppins(fontSize: 14),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: 3,
+                                  child: Text(
+                                    '3ème année',
+                                    style: GoogleFonts.poppins(fontSize: 14),
+                                  ),
+                                ),
                               ],
                               onChanged: (value) => selectedAnnee = value ?? 1,
                             ),
@@ -571,15 +729,38 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             DropdownButtonFormField<int>(
                               value: selectedSemestre,
                               decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
                               ),
-                              items: [1, 2, 3].map((s) => DropdownMenuItem(
-                                value: s,
-                                child: Text('Semestre $s', style: GoogleFonts.poppins(fontSize: 14)),
-                              )).toList(),
-                              onChanged: (value) => selectedSemestre = value ?? 1,
+                              items: [1, 2]
+                                  .map(
+                                    (s) => DropdownMenuItem(
+                                      value: s,
+                                      child: Text(
+                                        'Semestre $s',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) =>
+                                  selectedSemestre = value ?? 1,
                             ),
                           ],
                         ),
@@ -601,14 +782,32 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             TextField(
                               controller: heuresController,
                               keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               decoration: InputDecoration(
-                                hintText: 'Ex: 60',
+                                hintText: 'Ex: 120 (max)',
                                 suffixText: 'h',
-                                hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                                hintStyle: GoogleFonts.poppins(
+                                  color: AppTheme.textSecondary,
+                                  fontSize: 13,
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.border,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -632,13 +831,27 @@ class _ModulesScreenState extends State<ModulesScreen> {
                       TextField(
                         controller: coeffController,
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         decoration: InputDecoration(
                           hintText: 'Entre 1 et 5',
-                          hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                          hintStyle: GoogleFonts.poppins(
+                            color: AppTheme.textSecondary,
+                            fontSize: 13,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: AppTheme.border),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: AppTheme.border),
+                          ),
                         ),
                       ),
                     ],
@@ -651,25 +864,47 @@ class _ModulesScreenState extends State<ModulesScreen> {
                         onPressed: () => Navigator.pop(context),
                         child: Text(
                           'Annuler',
-                          style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontWeight: FontWeight.w600),
+                          style: GoogleFonts.poppins(
+                            color: AppTheme.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       ElevatedButton(
                         onPressed: () async {
-                          if (nomController.text.trim().isEmpty || 
+                          if (nomController.text.trim().isEmpty ||
                               heuresController.text.trim().isEmpty ||
                               coeffController.text.trim().isEmpty ||
                               selectedFiliereId == null) {
                             return;
                           }
 
-                          final heures = int.tryParse(heuresController.text) ?? 0;
+                          final heures =
+                              int.tryParse(heuresController.text) ?? 0;
                           if (heures == 0) {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('La masse horaire doit être supérieure à 0', style: GoogleFonts.poppins()),
+                                  content: Text(
+                                    'La masse horaire doit être supérieure à 0',
+                                    style: GoogleFonts.poppins(),
+                                  ),
+                                  backgroundColor: AppTheme.accentRed,
+                                ),
+                              );
+                            }
+                            return;
+                          }
+
+                          if (heures > 120) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'La masse horaire ne peut pas dépasser 120 h',
+                                    style: GoogleFonts.poppins(),
+                                  ),
                                   backgroundColor: AppTheme.accentRed,
                                 ),
                               );
@@ -682,32 +917,40 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Le coefficient doit être compris entre 1 et 5', style: GoogleFonts.poppins()),
+                                  content: Text(
+                                    'Le coefficient doit être compris entre 1 et 5',
+                                    style: GoogleFonts.poppins(),
+                                  ),
                                   backgroundColor: AppTheme.accentRed,
                                 ),
                               );
                             }
                             return;
                           }
-                          
+
                           final newModule = Module(
                             id: module?.id,
                             nom: nomController.text.trim(),
-                            masseHoraireTotale: double.tryParse(heuresController.text) ?? 0,
+                            masseHoraireTotale:
+                                double.tryParse(heuresController.text) ?? 0,
                             filiereId: selectedFiliereId!,
                             coefficient: coeff,
                             annee: selectedAnnee,
                             semestre: selectedSemestre,
                             photoUrl: currentPhotoUrl,
                           );
-                          
+
                           try {
                             if (isEdit) {
-                              await DatabaseHelper.instance.updateModule(newModule);
+                              await DatabaseHelper.instance.updateModule(
+                                newModule,
+                              );
                             } else {
-                              await DatabaseHelper.instance.insertModule(newModule);
+                              await DatabaseHelper.instance.insertModule(
+                                newModule,
+                              );
                             }
-                            
+
                             if (context.mounted) {
                               Navigator.pop(context);
                               _loadData();
@@ -716,7 +959,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(e.toString().replaceAll('Exception: ', '')),
+                                  content: Text(
+                                    e.toString().replaceAll('Exception: ', ''),
+                                  ),
                                   backgroundColor: AppTheme.accentRed,
                                 ),
                               );
@@ -725,12 +970,20 @@ class _ModulesScreenState extends State<ModulesScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryBlue,
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 14,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                         child: Text(
                           isEdit ? 'Modifier' : 'Créer',
-                          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -749,8 +1002,14 @@ class _ModulesScreenState extends State<ModulesScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Supprimer', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
-        content: Text('Voulez-vous vraiment supprimer ce module ?', style: GoogleFonts.poppins()),
+        title: Text(
+          'Supprimer',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
+        content: Text(
+          'Voulez-vous vraiment supprimer ce module ?',
+          style: GoogleFonts.poppins(),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -758,7 +1017,9 @@ class _ModulesScreenState extends State<ModulesScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentRed),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.accentRed,
+            ),
             child: Text('Supprimer', style: GoogleFonts.poppins()),
           ),
         ],
@@ -771,4 +1032,3 @@ class _ModulesScreenState extends State<ModulesScreen> {
     }
   }
 }
-
