@@ -412,7 +412,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                     onPressed: _generateBatchPdf,
                     icon: const Icon(
                       Icons.picture_as_pdf_rounded,
-                      size: 22,
+                      size: 30,
                       color: Colors.white,
                     ),
                     label: Text(
@@ -420,7 +420,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
-                        fontSize: isMobile ? 14 : 15,
+                        fontSize: isMobile ? 16: 17,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
