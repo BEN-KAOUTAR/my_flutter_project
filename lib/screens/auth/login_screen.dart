@@ -61,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordController.text,
     );
 
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (success && mounted) {
@@ -315,28 +316,32 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextButton(
-              onPressed: _showForgotPasswordDialog,
-              child: Text(
-                'Mot de passe oublié ?',
-                style: GoogleFonts.poppins(
-                  color: AppTheme.textSecondary,
-                  fontWeight: FontWeight.w500,
-                  fontSize: ResponsiveLayout.respSize(context, 16, 17, 18),
+            Flexible(
+              child: TextButton(
+                onPressed: _showForgotPasswordDialog,
+                child: Text(
+                  'Mot de passe oublié ?',
+                  style: GoogleFonts.poppins(
+                    color: AppTheme.textSecondary,
+                    fontWeight: FontWeight.w500,
+                    fontSize: ResponsiveLayout.respSize(context, 14, 16, 17),
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
-            const SizedBox(width: 8),
             Container(width: 1, height: 20, color: Colors.grey.shade300),
-            const SizedBox(width: 8),
-            TextButton(
-              onPressed: _showDirectorSignupDialog,
-              child: Text(
-                'Créer un compte',
-                style: GoogleFonts.poppins(
-                  color: AppTheme.primaryBlue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: ResponsiveLayout.respSize(context, 16, 17, 18),
+            Flexible(
+              child: TextButton(
+                onPressed: _showDirectorSignupDialog,
+                child: Text(
+                  'Créer un compte',
+                  style: GoogleFonts.poppins(
+                    color: AppTheme.primaryBlue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: ResponsiveLayout.respSize(context, 14, 16, 17),
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),

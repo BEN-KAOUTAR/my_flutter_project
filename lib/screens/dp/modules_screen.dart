@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -535,8 +535,8 @@ class _ModulesScreenState extends State<ModulesScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Container(
-            width: 500,
-            padding: const EdgeInsets.all(32),
+            constraints: const BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -545,12 +545,14 @@ class _ModulesScreenState extends State<ModulesScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        isEdit ? 'Modifier le module' : 'Nouveau module',
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimary,
+                      Expanded(
+                        child: Text(
+                          isEdit ? 'Modifier le module' : 'Nouveau module',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary,
+                          ),
                         ),
                       ),
                       IconButton(
@@ -593,227 +595,262 @@ class _ModulesScreenState extends State<ModulesScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Filière *',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final bool isSmall = constraints.maxWidth < 400;
+                      
+                      final filiereField = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Filière *',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          DropdownButtonFormField<int>(
+                            value: selectedFiliereId,
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            DropdownButtonFormField<int>(
-                              value: selectedFiliereId,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 14,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                              ),
-                              items: _filieres
-                                  .map(
-                                    (f) => DropdownMenuItem(
-                                      value: f.id,
-                                      child: Text(
-                                        f.nom,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                        ),
+                            items: _filieres
+                                .map(
+                                  (f) => DropdownMenuItem(
+                                    value: f.id,
+                                    child: Text(
+                                      f.nom,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
                                       ),
                                     ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) => selectedFiliereId = value,
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) => selectedFiliereId = value,
+                          ),
+                        ],
+                      );
+
+                      final anneeField = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Année *',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
+                          const SizedBox(height: 8),
+                          DropdownButtonFormField<int>(
+                            value: selectedAnnee,
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
+                              ),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                value: 1,
+                                child: Text(
+                                  '1ère année',
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 2,
+                                child: Text(
+                                  '2ème année',
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 3,
+                                child: Text(
+                                  '3ème année',
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                              ),
+                            ],
+                            onChanged: (value) => selectedAnnee = value ?? 1,
+                          ),
+                        ],
+                      );
+
+                      if (isSmall) {
+                        return Column(
                           children: [
-                            Text(
-                              'Année *',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            DropdownButtonFormField<int>(
-                              value: selectedAnnee,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 14,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                              ),
-                              items: [
-                                DropdownMenuItem(
-                                  value: 1,
-                                  child: Text(
-                                    '1ère année',
-                                    style: GoogleFonts.poppins(fontSize: 14),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: 2,
-                                  child: Text(
-                                    '2ème année',
-                                    style: GoogleFonts.poppins(fontSize: 14),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: 3,
-                                  child: Text(
-                                    '3ème année',
-                                    style: GoogleFonts.poppins(fontSize: 14),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (value) => selectedAnnee = value ?? 1,
-                            ),
+                            filiereField,
+                            const SizedBox(height: 16),
+                            anneeField,
                           ],
-                        ),
-                      ),
-                    ],
+                        );
+                      } else {
+                        return Row(
+                          children: [
+                            Expanded(child: filiereField),
+                            const SizedBox(width: 16),
+                            Expanded(child: anneeField),
+                          ],
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Semestre *',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final bool isSmall = constraints.maxWidth < 400;
+                      
+                      final semestreField = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Semestre *',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          DropdownButtonFormField<int>(
+                            value: selectedSemestre,
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            DropdownButtonFormField<int>(
-                              value: selectedSemestre,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 14,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                              ),
-                              items: [1, 2]
-                                  .map(
-                                    (s) => DropdownMenuItem(
-                                      value: s,
-                                      child: Text(
-                                        'Semestre $s',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                        ),
+                            items: [1, 2]
+                                .map(
+                                  (s) => DropdownMenuItem(
+                                    value: s,
+                                    child: Text(
+                                      'Semestre $s',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
                                       ),
                                     ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) =>
-                                  selectedSemestre = value ?? 1,
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) =>
+                                selectedSemestre = value ?? 1,
+                          ),
+                        ],
+                      );
+
+                      final hoursField = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Masse horaire *',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: heuresController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            decoration: InputDecoration(
+                              hintText: 'Ex: 120 (max)',
+                              suffixText: 'h',
+                              hintStyle: GoogleFonts.poppins(
+                                color: AppTheme.textSecondary,
+                                fontSize: 13,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: AppTheme.border,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+
+                      if (isSmall) {
+                        return Column(
                           children: [
-                            Text(
-                              'Masse horaire *',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: heuresController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              decoration: InputDecoration(
-                                hintText: 'Ex: 120 (max)',
-                                suffixText: 'h',
-                                hintStyle: GoogleFonts.poppins(
-                                  color: AppTheme.textSecondary,
-                                  fontSize: 13,
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 14,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: AppTheme.border,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            semestreField,
+                            const SizedBox(height: 16),
+                            hoursField,
                           ],
-                        ),
-                      ),
-                    ],
+                        );
+                      } else {
+                        return Row(
+                          children: [
+                            Expanded(child: semestreField),
+                            const SizedBox(width: 16),
+                            Expanded(child: hoursField),
+                          ],
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
                   Column(

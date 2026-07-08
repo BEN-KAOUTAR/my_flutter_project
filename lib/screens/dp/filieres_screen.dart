@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -328,122 +328,124 @@ class _FilieresScreenState extends State<FilieresScreen> {
         child: Container(
           width: 450,
           padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    isEdit ? 'Modifier la filière' : 'Nouvelle filière',
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      isEdit ? 'Modifier la filière' : 'Nouvelle filière',
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                    padding: EdgeInsets.zero,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Nom de la filière *',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: nomController,
-                decoration: InputDecoration(
-                  hintText: 'Ex: Développement Digital',
-                  hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Description',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: descController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: 'Objectifs et contenu de la filière...',
-                  hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
-                  contentPadding: const EdgeInsets.all(16),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
-                ),
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('Annuler', style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (nomController.text.trim().isEmpty) return;
-                      final user = Provider.of<AuthService>(context, listen: false).currentUser;
-                      final newFiliere = Filiere(
-                        id: filiere?.id,
-                        nom: nomController.text.trim(),
-                        description: descController.text.trim(),
-                        directorId: user?.id,
-                      );
-                      try {
-                        if (isEdit) {
-                          await DatabaseHelper.instance.updateFiliere(newFiliere);
-                        } else {
-                          await DatabaseHelper.instance.insertFiliere(newFiliere);
-                        }
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                          _loadFilieres();
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(e.toString().replaceAll('Exception: ', '')),
-                              backgroundColor: AppTheme.accentRed,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryBlue,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                      padding: EdgeInsets.zero,
                     ),
-                    child: Text(
-                      isEdit ? 'Modifier' : 'Créer',
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Nom de la filière *',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: nomController,
+                  decoration: InputDecoration(
+                    hintText: 'Ex: Développement Digital',
+                    hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Description',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: descController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: 'Objectifs et contenu de la filière...',
+                    hintStyle: GoogleFonts.poppins(color: AppTheme.textSecondary, fontSize: 13),
+                    contentPadding: const EdgeInsets.all(16),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppTheme.border)),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('Annuler', style: GoogleFonts.poppins(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (nomController.text.trim().isEmpty) return;
+                        final user = Provider.of<AuthService>(context, listen: false).currentUser;
+                        final newFiliere = Filiere(
+                          id: filiere?.id,
+                          nom: nomController.text.trim(),
+                          description: descController.text.trim(),
+                          directorId: user?.id,
+                        );
+                        try {
+                          if (isEdit) {
+                            await DatabaseHelper.instance.updateFiliere(newFiliere);
+                          } else {
+                            await DatabaseHelper.instance.insertFiliere(newFiliere);
+                          }
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            _loadFilieres();
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString().replaceAll('Exception: ', '')),
+                                backgroundColor: AppTheme.accentRed,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryBlue,
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: Text(
+                        isEdit ? 'Modifier' : 'Créer',
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

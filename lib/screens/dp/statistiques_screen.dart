@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -165,33 +165,36 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(
-              height: 60,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppTheme.border.withValues(alpha: 0.5)),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<int>(
-                  value: _selectedFiliereId,
-                  hint: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textPrimary)),
-                  icon: Icon(Icons.arrow_drop_down_rounded, color: AppTheme.textSecondary),
-                  items: [
-                    DropdownMenuItem<int>(
-                      value: null,
-                      child: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 13))
-                    ),
-                    ..._filieres.map((f) => DropdownMenuItem(
-                      value: f.id,
-                      child: Text(f.nom, style: GoogleFonts.poppins(fontSize: 13))
-                    )),
-                  ],
-                  onChanged: (val) {
-                    setState(() => _selectedFiliereId = val);
-                    _loadData();
-                  },
+            Flexible(
+              child: Container(
+                height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppTheme.border.withValues(alpha: 0.5)),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: _selectedFiliereId,
+                    hint: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textPrimary)),
+                    icon: Icon(Icons.arrow_drop_down_rounded, color: AppTheme.textSecondary),
+                    isExpanded: true,
+                    items: [
+                      DropdownMenuItem<int>(
+                        value: null,
+                        child: Text('Toutes les filières', style: GoogleFonts.poppins(fontSize: 13))
+                      ),
+                      ..._filieres.map((f) => DropdownMenuItem(
+                        value: f.id,
+                        child: Text(f.nom, style: GoogleFonts.poppins(fontSize: 13))
+                      )),
+                    ],
+                    onChanged: (val) {
+                      setState(() => _selectedFiliereId = val);
+                      _loadData();
+                    },
+                  ),
                 ),
               ),
             ),
@@ -217,6 +220,7 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
     );
   }
 
+
   Widget _buildTopCards() {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -229,10 +233,10 @@ class _StatistiquesScreenState extends State<StatistiquesScreen> {
           aspectRatio = 2.0;
         } else if (width > 700) {
           crossAxisCount = 2;
-          aspectRatio = 2.2;
+          aspectRatio = 2.0;
         } else {
           crossAxisCount = 1;
-          aspectRatio = 2.8;
+          aspectRatio = 2.6;
         }
 
         return GridView.count(

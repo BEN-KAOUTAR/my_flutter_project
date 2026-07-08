@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/database_helper.dart';
@@ -471,11 +471,12 @@ Widget _buildExamsAPublierList() {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(14),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -485,7 +486,7 @@ Widget _buildExamsAPublierList() {
                           color.withValues(alpha: 0.8),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
                           color: color.withValues(alpha: 0.3),
@@ -494,26 +495,31 @@ Widget _buildExamsAPublierList() {
                         ),
                       ],
                     ),
-                    child: Icon(icon, color: Colors.white, size: 24),
+                    child: Icon(icon, color: Colors.white, size: 22),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          value,
-                          style: GoogleFonts.poppins(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimary,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            value,
+                            style: GoogleFonts.poppins(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimary,
+                              height: 1.2,
+                            ),
                           ),
                         ),
                         Text(
                           title,
                           style: GoogleFonts.poppins(
-                            fontSize: 12,
+                            fontSize: 11,
                             color: AppTheme.textSecondary,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.3,

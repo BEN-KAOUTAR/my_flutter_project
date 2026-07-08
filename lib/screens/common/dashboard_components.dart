@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/responsive_layout.dart';
@@ -25,14 +25,21 @@ class DashboardLayout extends StatelessWidget {
       backgroundColor: AppTheme.background,
       appBar: appBar,
       drawer: drawer,
-      body: Row(
+      body: Column(
         children: [
-          if (showSidebar && sideBar != null)
-            SizedBox(
-              width: ResponsiveLayout.respSize(context, 250, 280, 300),
-              child: sideBar!,
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (showSidebar && sideBar != null)
+                  SizedBox(
+                    width: ResponsiveLayout.respSize(context, 250, 280, 300),
+                    child: sideBar!,
+                  ),
+                Expanded(child: body),
+              ],
             ),
-          Expanded(child: body),
+          ),
         ],
       ),
     );
@@ -173,18 +180,19 @@ class DashboardSummaryCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(ResponsiveLayout.respSize(context, 16, 20, 24)),
+              padding: const EdgeInsets.all(14),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [color, color.withValues(alpha: 0.8)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
                           color: color.withValues(alpha: 0.3),
@@ -193,28 +201,31 @@ class DashboardSummaryCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Icon(icon, color: Colors.white, size: 24),
+                    child: Icon(icon, color: Colors.white, size: 22),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          value,
-                          style: GoogleFonts.poppins(
-                            fontSize: ResponsiveLayout.respSize(context, 20, 24, 28),
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimary,
-                            height: 1.1,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            value,
+                            style: GoogleFonts.poppins(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimary,
+                              height: 1.2,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 2),
                         Text(
                           label,
                           style: GoogleFonts.poppins(
-                            fontSize: ResponsiveLayout.respSize(context, 11, 12, 13),
+                            fontSize: 11,
                             color: AppTheme.textSecondary,
                             fontWeight: FontWeight.w500,
                           ),
@@ -231,6 +242,8 @@ class DashboardSummaryCard extends StatelessWidget {
                                 color: color,
                                 fontWeight: FontWeight.w600,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                       ],

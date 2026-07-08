@@ -281,24 +281,24 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
   }
 
   Widget _buildRoleSelection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8.0,
+      runSpacing: 8.0,
       children: UserRole.values.map((role) {
         final isSelected = _selectedRole == role;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: FilterChip(
-            selected: isSelected,
-            label: Text(role.displayName),
-            onSelected: (selected) {
-              if (selected) setState(() => _selectedRole = role);
-            },
-            selectedColor: AppTheme.primaryBlue.withValues(alpha: 0.2),
-            checkmarkColor: AppTheme.primaryBlue,
-            labelStyle: GoogleFonts.poppins(
-              color: isSelected ? AppTheme.primaryBlue : AppTheme.textSecondary,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
+        return FilterChip(
+          selected: isSelected,
+          label: Text(role.displayName),
+          onSelected: (selected) {
+            if (selected) setState(() => _selectedRole = role);
+          },
+          selectedColor: AppTheme.primaryBlue.withValues(alpha: 0.2),
+          checkmarkColor: AppTheme.primaryBlue,
+          labelStyle: GoogleFonts.poppins(
+            color: isSelected ? AppTheme.primaryBlue : AppTheme.textSecondary,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontSize: ResponsiveLayout.respSize(context, 12, 14, 15),
           ),
         );
       }).toList(),

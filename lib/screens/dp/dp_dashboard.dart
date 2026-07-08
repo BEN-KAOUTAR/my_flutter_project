@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -493,12 +493,14 @@ _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Prochains examens',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+              Expanded(
+                child: Text(
+                  'Prochains examens',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
               ),
               TextButton(
@@ -721,10 +723,10 @@ _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
 
         if (width > 800) {
           crossAxisCount = 4;
-          aspectRatio = 2.4;
+          aspectRatio = 2.0;
         } else {
           crossAxisCount = 2;
-          aspectRatio = 2.2;
+          aspectRatio = 1.8;
         }
 
         return GridView.count(
@@ -776,12 +778,14 @@ _notificationRefreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Alertes et validations en attente',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+            Expanded(
+              child: Text(
+                'Alertes et validations en attente',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.textPrimary,
+                ),
               ),
             ),
             TextButton(

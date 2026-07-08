@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -302,6 +302,8 @@ class _FormateursScreenState extends State<FormateursScreen> {
                         fontWeight: FontWeight.bold,
                         color: AppTheme.textPrimary,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                     Text(
                       formateur.specialite ?? "Digital Web",

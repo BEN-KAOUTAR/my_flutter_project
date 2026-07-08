@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/responsive_layout.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -70,8 +71,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 children: [
                   const Spacer(),
                   Container(
-                    width: 320,
-                    height: 320,
+                    width: ResponsiveLayout.respSize(context, 180, 260, 320),
+                    height: ResponsiveLayout.respSize(context, 180, 260, 320),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: [
@@ -85,21 +86,27 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
                       child: Image.asset(
-                        'assets/images/welcome.png',
+                        'assets/images/logo.png',
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 50),
-                  Text(
-                    'Welecome to Academic Pro',
-                    style: GoogleFonts.outfit(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF4A4A4A),
-                      letterSpacing: 1.2,
+                  const SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'Welcome to Academic Pro',
+                        style: GoogleFonts.outfit(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF4A4A4A),
+                          letterSpacing: 1.2,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const Spacer(),
                   Column(
