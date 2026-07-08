@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../models/user.dart';
@@ -154,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                       ],
                     ),
                     child: Image.asset(
-                      'assets/images/logo.jpg',
+                      'assets/images/logo.png',
                       width: isTablet ? 80 : 100,
                       height: isTablet ? 80 : 100
                     ),
@@ -229,7 +229,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                     ),
                   ],
                 ),
-                child: Image.asset('assets/images/logo.jpg', width: 60, height: 60),
+                child: Image.asset('assets/images/logo.png', width: 60, height: 60),
               ),
               const SizedBox(height: 24),
               Text(

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../models/user.dart';
@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     child: Image.asset(
-                      'assets/images/logo.jpg',
+                      'assets/images/logo.png',
                       width: isTablet ? 80 : 100,
                       height: isTablet ? 80 : 100,
                     ),
@@ -234,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            child: Image.asset('assets/images/logo.jpg', width: 90, height: 90),
+            child: Image.asset('assets/images/logo.png', width: 90, height: 90),
           ),
           const SizedBox(height: 24),
           Text(

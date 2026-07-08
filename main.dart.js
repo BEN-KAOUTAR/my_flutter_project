@@ -55146,7 +55146,7 @@ A.arK(s,A.hr(new A.aOX(r),null,t.z))},
 G(a){var s=null
 return A.jH(s,B.y,new A.YR(A.wl(!0,A.bE(A.dI(this.WI(!0),s,B.Z,B.aW,s,s,B.aH),s,s),B.av,!0),this.Wv(!0),this.akq(),s),s,s)},
 Wv(a){var s,r=null,q=B.R.V(0.05),p=a?24:32,o=A.b([new A.bp(0,B.aw,B.R.V(0.2),B.SP,40)],t.V),n=a?80:100
-p=A.T(r,A.b3O("assets/images/logo.jpg",r,a?80:100,n),B.z,r,r,new A.Z(B.y,r,r,r,o,r,B.cb),r,r,r,r,new A.ad(p,p,p,p),r,r,r)
+p=A.T(r,A.b3O("assets/images/logo.png",r,a?80:100,n),B.z,r,r,new A.Z(B.y,r,r,r,o,r,B.cb),r,r,r,r,new A.ad(p,p,p,p),r,r,r)
 o=A.c9(r,a?30:40,r)
 n=A.d("Academic Pro",r,r,r,r,A.i().$3$color$fontSize$fontWeight(B.W,a?34:42,B.I),r,r,r)
 s=t.p
@@ -55168,7 +55168,7 @@ p=t.p
 o=A.b([],p)
 if(a){n=A.y(20)
 m=A.b([new A.bp(0,B.aw,B.R.V(0.1),B.lb,20)],t.V)
-B.l.N(o,A.b([B.br,A.T(j,A.b3O("assets/images/logo.jpg",j,90,90),B.z,j,j,new A.Z(B.y,j,j,n,m,j,B.M),j,j,j,j,B.bg,j,j,j),B.aT,A.d("Academic Pro",j,j,j,j,A.i().$3$color$fontSize$fontWeight(B.W,34,B.I),j,j,j),A.d("Gestion P\xe9dagogique",j,j,j,j,A.i().$2$color$fontSize(B.x,18),j,j,j),B.Y0],p))}o.push(A.d("Bienvenue",j,j,j,j,A.i().$3$color$fontSize$fontWeight(B.W,s,B.I),j,j,j))
+B.l.N(o,A.b([B.br,A.T(j,A.b3O("assets/images/logo.png",j,90,90),B.z,j,j,new A.Z(B.y,j,j,n,m,j,B.M),j,j,j,j,B.bg,j,j,j),B.aT,A.d("Academic Pro",j,j,j,j,A.i().$3$color$fontSize$fontWeight(B.W,34,B.I),j,j,j),A.d("Gestion P\xe9dagogique",j,j,j,j,A.i().$2$color$fontSize(B.x,18),j,j,j),B.Y0],p))}o.push(A.d("Bienvenue",j,j,j,j,A.i().$3$color$fontSize$fontWeight(B.W,s,B.I),j,j,j))
 o.push(B.ax)
 o.push(A.d("Connectez-vous pour acc\xe9der \xe0 votre espace",j,j,j,j,A.i().$2$color$fontSize(B.x,r),j,j,j))
 o.push(B.Y_)
@@ -55730,7 +55730,7 @@ s=s.d!=null?"Groupe de discussion":A.b55(s.c.e)
 r=t.p
 s=A.qe(k,!0,B.y,k,k,1,k,B.ui,k,k,k,A.W(A.b([i,B.b0,A.M(A.b([j,A.d(s,k,k,k,k,A.i().$2$color$fontSize(B.x,10),k,k,k)],r),B.N,B.q,B.o,0,B.B)],r),B.w,B.q,B.o,0,k),k)
 if(l.w)j=B.bm
-else j=J.d9(l.r)?A.bE(A.d("Dites bonjour ! \xf0\u0178\u2018\u2039",k,k,k,k,A.i().$1$color(B.x),k,k,k),k,k):A.h4(l.e,new A.aGe(l),J.b_(l.r),B.bg,k,!1)
+else j=J.d9(l.r)?A.bE(A.d("Dites bonjour ! \ud83d\udc4b",k,k,k,k,A.i().$1$color(B.x),k,k,k),k,k):A.h4(l.e,new A.aGe(l),J.b_(l.r),B.bg,k,!1)
 j=A.a2(j,1)
 i=A.b([],r)
 if(l.as!=null||l.at!=null){q=A.b([],r)
@@ -61017,7 +61017,7 @@ m=s==null?n:B.l.gU(s.b.split(" "))
 if(m==null)m="Formateur"
 r=o.c
 r.toString
-r=A.d("Bonjour, "+m+" \xf0\u0178\u2018\u2039",n,n,n,n,A.i().$3$color$fontSize$fontWeight(B.W,A.d1(r,28,34,40),B.I),n,n,n)
+r=A.d("Bonjour, "+m+" \ud83d\udc4b",n,n,n,n,A.i().$3$color$fontSize$fontWeight(B.W,A.d1(r,28,34,40),B.I),n,n,n)
 m=o.c
 m.toString
 q=t.p
@@ -61781,7 +61781,7 @@ k=A.y(16)
 r=A.hK()
 q=A.b([new A.ar(B.bg,A.W(A.b([A.a2(A.d("Stagiaire",l,l,l,l,A.i().$1$fontWeight(B.I),l,l,l),3),A.a2(A.bE(A.d("Statut",l,l,l,l,A.i().$1$fontWeight(B.I),l,l,l),l,l),2)],s),B.w,B.q,B.o,0,l),l)],s)
 if(m.as){p=B.aL.V(0.1)
-q.push(A.T(l,A.bE(A.d("\xf0\u0178\u201d\u2019 Valid\xe9 par le Directeur P\xe9dagogique",l,l,l,l,A.i().$3$color$fontSize$fontWeight(B.aL,12,B.I),l,l,l),l,l),B.z,p,l,l,l,l,l,l,B.cj,l,l,1/0))}q.push(B.fb)
+q.push(A.T(l,A.bE(A.d("\ud83d\udd12 Valid\xe9 par le Directeur P\xe9dagogique",l,l,l,l,A.i().$3$color$fontSize$fontWeight(B.aL,12,B.I),l,l,l),l,l),B.z,p,l,l,l,l,l,l,B.cj,l,l,1/0))}q.push(B.fb)
 q.push(A.a2(A.H0(new A.aSI(m),J.b_(m.f),l,new A.aSJ(),!1),1))
 p=m.as
 o=p?l:m.gaAt()
